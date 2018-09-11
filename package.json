@@ -16,7 +16,8 @@
     "lint-fix": "yarn run lint --fix",
     "postlint-fix": "prettier --write './**/*.{js,jsx,json,md,css,scss}'",
     "prepare": "lerna run prepare",
-    "start": "yarn workspace tbd-backend-name start"
+    "start": "yarn workspace tbd-backend-name start",
+    "test": "lerna run test"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
@@ -63,7 +64,7 @@
   },
   "engines": {
     "node": ">=10",
-    "yarn": ">=1.9.4"
+    "yarn": ">=1"
   },
   "lint-staged": {
     "linters": {

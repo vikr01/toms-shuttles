@@ -7,7 +7,8 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "webpack --config ./webpack/webpack.config.prod.babel.js --colors",
-    "dev": "webpack-dev-server --config ./webpack/webpack.config.devserver.babel.js"
+    "dev": "webpack-dev-server --config ./webpack/webpack.config.devserver.babel.js",
+    "test": "jest"
   },
   "devDependencies": {
     "babel-loader": "^8.0.2",

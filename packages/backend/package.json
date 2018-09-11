@@ -10,7 +10,8 @@
     "clean": "rimraf dist",
     "dev": "cross-env NODE_ENV=development node -r @babel/register src/index.js",
     "postinstall": "node -r @babel/register scripts/postinstall.js",
-    "start": "cross-env NODE_ENV=production forever dist/index.js"
+    "start": "cross-env NODE_ENV=production forever dist/index.js",
+    "test": "jest"
   },
   "dependencies": {
     "bookshelf": "^0.13.3",
