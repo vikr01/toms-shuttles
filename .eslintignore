@@ -1,8 +1,7 @@
+package.json
+
 # Compiled files
 dist
-
-# Generated files
-.DS_Store
 
 # Logs
 logs

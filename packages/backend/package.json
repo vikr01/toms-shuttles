@@ -1,0 +1,30 @@
+{
+  "name": "tbd-backend-name",
+  "license": "MIT",
+  "author": "Vikram Rangaraj <vik120@icloud.com> (https://github.com/vikr01)",
+  "repository": "https://github.com/vikr01/tbd-project-name/tree/master/packages/backend",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "babel src --out-dir dist --copy-files --source-maps true",
+    "clean": "rimraf dist",
+    "dev": "cross-env NODE_ENV=development node -r @babel/register src/index.js",
+    "postinstall": "node -r @babel/register scripts/postinstall.js",
+    "start": "cross-env NODE_ENV=production forever dist/index.js"
+  },
+  "dependencies": {
+    "bookshelf": "^0.13.3",
+    "chalk": "^2.4.1",
+    "express": "^4.16.3",
+    "forever": "^0.15.3"
+  },
+  "peerDependencies": {
+    "tbd-frontend-name": "*"
+  },
+  "devDependencies": {
+    "babel-plugin-minify-constant-folding": "^0.4.3",
+    "babel-plugin-minify-dead-code-elimination": "^0.4.3",
+    "babel-plugin-minify-guarded-expressions": "^0.4.3",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.3"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "editor.tabSize": 2,
+
+  "files.insertFinalNewline": true,
+
+  "files.associations": {
+    ".babelrc": "jsonc",
+    ".eslintrc": "jsonc",
+    ".prettierrc": "jsonc",
+
+    ".stylelintrc": "json",
+
+    ".env": "ignore",
+    ".env.example": "ignore",
+    ".eslintignore": "ignore",
+    ".flowconfig": "ignore",
+    ".npmrc": "ignore",
+    ".yarnrc": "ignore"
+  },
+
+  "javascript.format.enable": false,
+  "javascript.validate.enable": false,
+  "typescript.format.enable": false,
+  "typescript.validate.enable": false,
+
+  "eslint.workingDirectories": ["."],
+  "eslint.packageManager": "yarn",
+  "eslint.validate": ["javascript", "javascriptreact"],
+  "eslint.autoFixOnSave": true,
+
+  "prettier.eslintIntegration": true,
+  "prettier.ignorePath": ".eslintignore"
+}
