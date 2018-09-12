@@ -1,4 +1,11 @@
 {
+  "folders": [
+    {
+      "path": "packages/frontend"
+    }
+  ],
+
+  "settings": {
   "editor.tabSize": 2,
 
   "files.insertFinalNewline": true,
@@ -24,7 +31,7 @@
   "typescript.validate.enable": false,
 
   "eslint.enable": true,
-  "eslint.workingDirectories": ["."],
+  "eslint.workingDirectories": [{"directory":"../..", "changeProcessCWD": true}],
   "eslint.packageManager": "yarn",
   "eslint.validate": ["javascript", "javascriptreact"],
   "eslint.autoFixOnSave": true,
@@ -33,4 +40,6 @@
 
   "prettier.eslintIntegration": true,
   "prettier.ignorePath": ".eslintignore"
+}
+
 }

@@ -6,7 +6,7 @@
   "version": "0.1.0",
   "main": "dist/index.js",
   "scripts": {
-    "build": "babel src --out-dir dist --copy-files --source-maps true",
+    "build": "babel src --out-dir dist --copy-files --source-maps",
     "clean": "rimraf dist",
     "dev": "cross-env NODE_ENV=development node -r @babel/register src/index.js",
     "postinstall": "node -r @babel/register scripts/postinstall.js",
@@ -16,8 +16,10 @@
   "dependencies": {
     "bookshelf": "^0.13.3",
     "chalk": "^2.4.1",
+    "dotenv": "^6.0.0",
     "express": "^4.16.3",
-    "forever": "^0.15.3"
+    "forever": "^0.15.3",
+    "pretty-error": "^2.1.1"
   },
   "peerDependencies": {
     "tbd-frontend-name": "*"

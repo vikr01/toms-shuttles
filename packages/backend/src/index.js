@@ -1,3 +1,5 @@
+import 'pretty-error/start';
+import 'dotenv/config';
 import express from 'express';
 import assets from 'tbd-frontend-name';
 import { promisify } from 'util';
