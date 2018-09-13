@@ -21,7 +21,7 @@ export default function(env, argv) {
     devServer: {
       https: false,
       open: true,
-      openPage: '/',
+      openPage: '../',
       overlay: true,
       compress: true,
       stats: 'errors-only',
