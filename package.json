@@ -17,7 +17,7 @@
     "postlint-fix": "prettier --write './**/*.{js,jsx,json,md,css,scss}'",
     "prepare": "lerna run prepare",
     "start": "yarn workspace tbd-backend-name start",
-    "test": "lerna run test"
+    "test": "jest"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
