@@ -1,7 +1,13 @@
 {
   "overrides": [
     {
-      "files": [".babelrc", ".eslintrc", ".prettierrc", ".stylelintrc"],
+      "files": [
+        ".babelrc",
+        ".eslintrc",
+        ".prettierrc",
+        ".stylelintrc",
+        "*.code-workspace"
+      ],
       "options": {
         "parser": "json",
         "bracketSpacing": false
