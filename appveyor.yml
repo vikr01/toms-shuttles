@@ -9,9 +9,7 @@ environment:
 
 cache:
   - '%LOCALAPPDATA%/Yarn'
-  - node_modules -> package.json
-  - flow-typed
-  - '%USERPROFILE%\.electron'
+  - node_modules -> yarn.lock
 
 matrix:
   fast_finish: true
@@ -34,8 +32,7 @@ install:
   - yarn install --ignore-scripts
 
 # NOTE: Remove this if your project is private and you don't have a paid greenkeeper account
-before_test:
-  - greenkeeper-lockfile-update
+before_test: greenkeeper-lockfile-update
 
 test_script:
   - yarn run lint
