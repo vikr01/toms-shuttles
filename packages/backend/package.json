@@ -10,7 +10,9 @@
     "clean": "rimraf dist",
     "dev": "cross-env NODE_ENV=development node -r @babel/register src/index.js",
     "postinstall": "node -r @babel/register scripts/postinstall.js",
-    "start": "cross-env NODE_ENV=production forever dist/index.js",
+    "prestart": "yarn run stop",
+    "start": "cross-env NODE_ENV=production forever start dist/index.js",
+    "stop": "forever stop dist/app.js; exit 0",
     "test": "jest"
   },
   "dependencies": {
