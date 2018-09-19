@@ -1,14 +1,23 @@
 {
   "groups": {
     "base": {
-      "packages": ["package.json"]
+      "packages": [
+        "package.json"
+      ]
     },
     "backend": {
-      "packages": ["packages/backend/package.json"]
+      "packages": [
+        "packages/backend/package.json"
+      ]
     },
     "frontend": {
-      "packages": ["packages/frontend/package.json"]
+      "packages": [
+        "packages/frontend/package.json"
+      ]
     }
   },
-  "ignore": ["tbd-backend-name", "tbd-frontend-name"]
+  "ignore": [
+    "tbd-backend-name",
+    "tbd-frontend-name"
+  ]
 }
