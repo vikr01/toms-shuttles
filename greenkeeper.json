@@ -1,6 +1,6 @@
 {
   "groups": {
-    "default": {
+    "base": {
       "packages": ["package.json"]
     },
     "backend": {
@@ -9,5 +9,6 @@
     "frontend": {
       "packages": ["packages/frontend/package.json"]
     }
-  }
+  },
+  "ignore": ["tbd-backend-name", "tbd-frontend-name"]
 }
