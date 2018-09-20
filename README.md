@@ -9,7 +9,7 @@
 First, clone the repo via git:
 
 ```bash
-git clone --depth=1 https://github.com/chentsulin/electron-react-boilerplate.git your-project-name
+git clone --depth=1 https://github.com/vikr01/tbd-project-name.git your-project-name
 ```
 
 And then install dependencies with yarn:

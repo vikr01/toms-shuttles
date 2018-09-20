@@ -4,15 +4,22 @@ import express from 'express';
 import assets from 'tbd-frontend-name';
 import { promisify } from 'util';
 
-(async () => {
-  const app = express();
-  app.set('port', process.env.PORT);
-  app.use(express.static(assets));
-
-  await promisify(app.listen).bind(app)(app.get('port'));
-  console.log('app started');
-})();
+const port = process.env.PORT || 2000;
 
 process.on('unhandledRejection', err => {
   throw err;
 });
+
+// this is where the app lifts
+(async () => {
+  const app = express();
+
+  // this sets the public directory to the frontend package's build directory
+  app.use(express.static(assets));
+
+  // set API routes here
+
+  // wait until the app starts
+  await promisify(app.listen).bind(app)(port);
+  console.log('app started');
+})();
