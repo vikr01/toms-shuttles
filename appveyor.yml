@@ -34,7 +34,7 @@ install:
   - yarn install --ignore-scripts
 
 # NOTE: Remove this if your project is private and you don't have a paid greenkeeper account
-before_test: greenkeeper-lockfile-update
+before_test: 'greenkeeper-lockfile-update || :'
 
 test_script:
   - yarn run lint
@@ -43,4 +43,4 @@ test_script:
   - yarn run test
 
 # NOTE: Remove this if your project is private and you don't have a paid greenkeeper account
-after_test: greenkeeper-lockfile-upload
+after_test: 'greenkeeper-lockfile-upload || :'
