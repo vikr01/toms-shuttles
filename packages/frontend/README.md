@@ -37,7 +37,7 @@ In this case, the server will be launched on [port 4000](http://localhost:3000).
 
 Alternatively, you can set your `PORT` environment variable in the `.env` file generated from [`.env.example`](./.env.example) after installation.
 
-```ignore
+```bash
 # .env file
 PORT=4000
 ```
