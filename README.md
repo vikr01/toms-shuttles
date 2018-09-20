@@ -23,9 +23,9 @@ yarn install
 
 It is recommended to run the backend and frontend in separate terminal sessions.
 
-See [the instructions in the frontend package](./packages/frontend) for starting the frontend.
+See [the instructions in the frontend package](./packages/frontend#tbd-project-frontend) for starting the frontend.
 
-See [the instructions in the backend package](./packages/backend) for starting the backend.
+See [the instructions in the backend package](./packages/backend#tbd-project-backend) for starting the backend.
 
 If you would rather run both frontend and backend in a single terminal session, you can run:
 
