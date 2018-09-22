@@ -25,6 +25,8 @@
       ".yarnrc": "ignore"
     },
 
+    "flow.useNPMPackagedFlow": true,
+
     "javascript.format.enable": false,
     "javascript.validate.enable": false,
     "typescript.format.enable": false,
