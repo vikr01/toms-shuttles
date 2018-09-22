@@ -5,6 +5,7 @@
         ".babelrc",
         ".eslintrc",
         ".prettierrc",
+        ".renovaterc",
         ".stylelintrc",
         "*.code-workspace"
       ],
