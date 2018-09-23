@@ -76,7 +76,7 @@
         "prettier --ignore-path .eslintignore --write",
         "git add"
       ],
-      "{*.{json,code-workspace},.{babelrc,eslintrc,prettierrc,renovaterc,stylelintrc}}": [
+      "{*.{json,code-workspace},.{babelrc,eslintrc,prettierrc,stylelintrc}}": [
         "prettier --ignore-path .eslintignore --write",
         "git add"
       ],

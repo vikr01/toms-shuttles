@@ -7,7 +7,6 @@
     ".babelrc": "jsonc",
     ".eslintrc": "jsonc",
     ".prettierrc": "jsonc",
-    ".renovaterc": "jsonc",
 
     ".stylelintrc": "json",
 
