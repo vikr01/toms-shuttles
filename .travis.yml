@@ -5,18 +5,9 @@ node_js:
 
 cache: yarn
 
-before_install:
-  - yarn global add greenkeeper-lockfile@1
-
 install: yarn install --ignore-scripts
 
 script:
   - yarn run lint
   - yarn run build
   - yarn run test
-
-after_script: greenkeeper-lockfile-upload
-
-env:
-  global:
-    secure: AlVyY/YubEJjVrqnW6z5Q9WEX4SaLX7oIN45naFlqG7F/O8ppBjCbiKBxKaO5Lx3UHNeNGCdjNCfEJy/phqczMfbOk85I5JkuSs0lkVFRGNDrzHYbEP0ODxb9ukShEN2OdW/sQ8zEncELeKe8GOZRQyn3Et6jTm99/UVaSyRfo7V5F9AX/OLKW7w6FHxK837GlxVEgzyiW4l3CJE8ZPy/e/tMsgbHDoB8F0Te9rA7bnELyK9Fy/EMTUKvCt0eCcIjhIMUKGSdpKrg3hf2F9PeMFbUtZOSi5vQdhTAtlIgS3tRu8DYJSGod84bFZAiCJQjYjiXun/0hM9LFp/DdEKGicTIYlKa4SgXGNUzyGdqzeebIIHKPyKm0duNW5xiz3dp4PpYzmMIeTHSa8OLfWvZPjJOCXRGfIHgmn/N4kgugmhb6HBH8yZdR/3P6QNjk2VdPwNrfrhP1XN3kE08+Zi4HCq5d3/5Fd5JSCCrJBev/bKY1QKvC0CVb3ELVnqynHcSCgYLZtqDsjwKcnIfClETxVNDIBJH/aVlWN8CXq9R82u82OFEIA73fRzljb7znCNz2LhyiGHTaYKoszARzWg/wBozR8577ADlqHLtxp706rUR0IU/8RvLgUzDUyrzh8cTuqzQKecKfGg0QaO4EKiPCWIvNTZxOBUqOgAnhHQIYg=

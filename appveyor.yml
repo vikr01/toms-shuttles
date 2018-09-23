@@ -6,8 +6,6 @@ platform:
 environment:
   matrix:
     - nodejs_version: 10
-  GH_TOKEN:
-    secure: FDbGe8YyNuaEX+KXyA3RYi4ALEPre+4JM1UpE5mj0hwfOPC5UnL4YVn73rTm5i5g
 
 cache:
   - '%LOCALAPPDATA%/Yarn'
@@ -29,18 +27,10 @@ install:
   - yarn --version
   - ps: Install-Product node $env:nodejs_version x64
   - set CI=true
-  # NOTE: Remove this if your project is private and you don't have a paid greenkeeper account
-  - yarn global add greenkeeper-lockfile@2
   - yarn install --ignore-scripts
-
-# NOTE: Remove this if your project is private and you don't have a paid greenkeeper account
-before_test: 'greenkeeper-lockfile-update || :'
 
 test_script:
   - yarn run lint
   # - yarn run flow
   - yarn run build
   - yarn run test
-
-# NOTE: Remove this if your project is private and you don't have a paid greenkeeper account
-after_test: 'greenkeeper-lockfile-upload || :'
