@@ -10,6 +10,7 @@
   "scripts": {
     "build": "lerna run build",
     "precommit": "lint-staged",
+    "dev": "lerna run dev",
     "heroku-postbuild": "yarn run build",
     "postinstall": "lerna run postinstall",
     "lint": "eslint .",
