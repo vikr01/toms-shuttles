@@ -26,7 +26,7 @@
     "tbd-frontend-name": "*"
   },
   "devDependencies": {
-    "babel-plugin-minify-constant-folding": "^0.4.3",
+    "babel-plugin-minify-constant-folding": "^0.5.0",
     "babel-plugin-minify-dead-code-elimination": "^0.5.0",
     "babel-plugin-minify-guarded-expressions": "^0.4.3",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3"
