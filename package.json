@@ -9,7 +9,6 @@
   ],
   "scripts": {
     "build": "lerna run build",
-    "precommit": "lint-staged",
     "dev": "lerna run dev",
     "heroku-postbuild": "yarn run build",
     "postinstall": "lerna run postinstall",
@@ -69,6 +68,11 @@
   "engines": {
     "node": ">=10",
     "yarn": ">=1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
     "linters": {
