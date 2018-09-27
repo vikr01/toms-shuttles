@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "mikestead.dotenv",
+    "bungcip.better-toml",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "rebornix.project-snippets",
