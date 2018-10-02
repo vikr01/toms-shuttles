@@ -1,6 +1,14 @@
 {
-  "extends": ["config:base", ":preserveSemverRanges"],
+  "extends": ["config:base"],
+
   "assignees": ["vikr01"],
+
+  "rangeStrategy": "replace",
+
+  "devDependencies": {
+    "rangeStrategy": "replace"
+  },
+
   "packageRules": [
     {
       "paths": ["packages/frontend/**"],
