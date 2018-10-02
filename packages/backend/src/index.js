@@ -1,6 +1,7 @@
 import 'pretty-error/start';
 import 'dotenv/config';
 import express from 'express';
+import session from 'express-session';
 import assets from 'tbd-frontend-name';
 import { promisify } from 'util';
 import { createConnection } from 'typeorm';
@@ -18,6 +19,15 @@ process.on('unhandledRejection', err => {
 
   // this sets the public directory to the frontend package's build directory
   app.use(express.static(assets));
+
+  // session middleware
+  app.use(
+    session({
+      resave: false,
+      saveUninitialized: false,
+      secret: 'not secret',
+    })
+  );
 
   // creates a connection to the database specified in connectionOptions
   const connection = await createConnection(connectionOptions);
