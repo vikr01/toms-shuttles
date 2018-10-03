@@ -12,6 +12,7 @@ import { createConnection } from 'typeorm';
 import frontendRoutes from 'tbd-frontend-name/src/routes';
 import { connectionOptions } from './db_connection';
 import routes from '../routes';
+import { User } from './entity/User';
 
 const port: number = process.env.PORT || 2000;
 
@@ -49,15 +50,35 @@ process.on('unhandledRejection', err => {
     throw err;
   }
 
-  app.post(routes.SIGNUP, (req, res, next) => {
+  app.post(routes.SIGNUP, async (req, res, next) => {
     const { username, firstName, lastName, password, accountType } = req.body;
 
-    if (!password) {
+    if (!password || !username) {
       return res.status(HttpStatus.NOT_FOUND).send('Not found');
+    }
+
+    if(connection.getRepository(User).findOne({username})) {
+      return res.status(HttpStatus.NOT_FOUND).send('User already exists');
     }
 
     const signature = generateSignature(password);
 
+    const newUser = Object.assign(new User(), ({
+      password: signature,
+      username,
+      firstName,
+      lastName,
+      // accountType
+    }));
+
+    try {
+      await connection.getRepository(User).save(newUser);
+    }
+    catch(err) {
+      res.status(HttpStatus.NOT_FOUND).send('Error');
+    }
+
+    return res.json('Successfully created user');
     // if(/* check if user already exists */) {
     //   return res.status(HttpStatus.NOT_FOUND).send('Not found');
     // }
@@ -66,17 +87,23 @@ process.on('unhandledRejection', err => {
     //   /* send some kind of json result */
     // );
 
-    return next(); // remove this once you've set the res.json
+    // return next(); // remove this once you've set the res.json
   });
 
   app.post(routes.AUTH, (req, res, next) => {
     const { username, password } = req.body;
 
-    if (!password) {
+    if (!password || !username) {
       return res.status(HttpStatus.NOT_FOUND).send('Not found');
     }
 
     const signature = generateSignature(password);
+
+    if(connection.getRepository(User).findOne({username, password: signature})) {
+      return res.status(HttpStatus.NOT_FOUND).send('Invalid username and/or password provided.');
+    }
+
+    return res.status(HttpStatus.OK).send('Successfully logged in');
 
     // if(/* check if user exists and credentials are correct */) {
     //   return res.status(HttpStatus.NOT_FOUND).send('Not found');
@@ -85,7 +112,7 @@ process.on('unhandledRejection', err => {
     // return res.json(
     //   /* send some kind of json result */
     // );
-    return next(); // remove this once you've set the res.json
+    // return next(); // remove this once you've set the res.json
   });
 
   // set API routes here

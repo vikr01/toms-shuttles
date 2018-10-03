@@ -4,7 +4,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { EntityBase } from '../entityBase';
 
 @Entity()
-export class User extends EntityBase {
+export class User /* extends EntityBase */ {
   // id: ?number;
 
   // firstName: string;
