@@ -3,10 +3,10 @@
 
   "assignees": ["vikr01"],
 
-  "rangeStrategy": "replace",
+  "rangeStrategy": "bump",
 
   "devDependencies": {
-    "rangeStrategy": "replace"
+    "rangeStrategy": "bump"
   },
 
   "packageRules": [
