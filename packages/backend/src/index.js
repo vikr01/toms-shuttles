@@ -49,8 +49,12 @@ process.on('unhandledRejection', err => {
     throw err;
   }
 
-  app.post(routes.SIGNUP, (req, res) => {
+  app.post(routes.SIGNUP, (req, res, next) => {
     const { username, firstName, lastName, password, accountType } = req.body;
+
+    if (!password) {
+      return res.status(HttpStatus.NOT_FOUND).send('Not found');
+    }
 
     const signature = generateSignature(password);
 
@@ -61,10 +65,16 @@ process.on('unhandledRejection', err => {
     // return res.json(
     //   /* send some kind of json result */
     // );
+
+    return next(); // remove this once you've set the res.json
   });
 
-  app.post(routes.AUTH, (req, res) => {
+  app.post(routes.AUTH, (req, res, next) => {
     const { username, password } = req.body;
+
+    if (!password) {
+      return res.status(HttpStatus.NOT_FOUND).send('Not found');
+    }
 
     const signature = generateSignature(password);
 
@@ -75,6 +85,7 @@ process.on('unhandledRejection', err => {
     // return res.json(
     //   /* send some kind of json result */
     // );
+    return next(); // remove this once you've set the res.json
   });
 
   // set API routes here
