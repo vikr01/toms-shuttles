@@ -2,6 +2,7 @@
 import 'pretty-error/start';
 import 'dotenv/config';
 import express from 'express';
+import bodyParser from 'body-parser';
 import assets from 'tbd-frontend-name';
 import chalk from 'chalk';
 import crypto from 'crypto';
@@ -32,6 +33,8 @@ process.on('unhandledRejection', err => {
 
   // this sets the public directory to the frontend package's build directory
   app.use(express.static(assets));
+  app.use(bodyParser.json({ type: 'application/json' }));
+  // app.use(app.router);
 
   app.get(routes.LOGIN, (req, res) => {
     res.redirect(path.join('/#/', frontendRoutes.LOGIN));
@@ -51,32 +54,36 @@ process.on('unhandledRejection', err => {
   }
 
   app.post(routes.SIGNUP, async (req, res, next) => {
+    console.log(req.body);
     const { username, firstName, lastName, password, accountType } = req.body;
 
     if (!password || !username) {
+      console.log('in first');
       return res.status(HttpStatus.NOT_FOUND).send('Not found');
     }
 
-    if(connection.getRepository(User).findOne({username})) {
-      return res.status(HttpStatus.NOT_FOUND).send('User already exists');
-    }
+    // if(connection.getRepository(User).findOne({username})) {
+    //   console.log('in sec')
+    //   return res.status(HttpStatus.NOT_FOUND).send('User already exists');
+    // }
 
     const signature = generateSignature(password);
 
-    const newUser = Object.assign(new User(), ({
+    const newUser = Object.assign(new User(), {
       password: signature,
       username,
       firstName,
       lastName,
       // accountType
-    }));
+    });
 
     try {
       await connection.getRepository(User).save(newUser);
-    }
-    catch(err) {
+    } catch (err) {
       res.status(HttpStatus.NOT_FOUND).send('Error');
     }
+
+    console.log(`Welcome, ${firstName}`);
 
     return res.json('Successfully created user');
     // if(/* check if user already exists */) {
@@ -91,6 +98,7 @@ process.on('unhandledRejection', err => {
   });
 
   app.post(routes.AUTH, (req, res, next) => {
+    console.log(req.body);
     const { username, password } = req.body;
 
     if (!password || !username) {
@@ -99,10 +107,14 @@ process.on('unhandledRejection', err => {
 
     const signature = generateSignature(password);
 
-    if(connection.getRepository(User).findOne({username, password: signature})) {
-      return res.status(HttpStatus.NOT_FOUND).send('Invalid username and/or password provided.');
+    if (
+      connection.getRepository(User).findOne({ username, password: signature })
+    ) {
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .send('Invalid username and/or password provided.');
     }
-
+    console.log(`Welcome back, ${username}`);
     return res.status(HttpStatus.OK).send('Successfully logged in');
 
     // if(/* check if user exists and credentials are correct */) {

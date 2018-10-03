@@ -16,6 +16,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
