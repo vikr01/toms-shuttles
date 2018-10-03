@@ -71,14 +71,20 @@ export default class SignInController extends Component {
     this.setState({ signinStatus: signinStatusEnums.ok });
   };
 
-  sendSignupRequest = async (user, firstName, lastName, pass, accountType) => {
+  sendSignupRequest = async (
+    username,
+    firstName,
+    lastName,
+    password,
+    accountType
+  ) => {
     let response;
     try {
       response = await axios.post(backendRoutes.SIGNUP, {
-        user,
+        username,
         firstName,
         lastName,
-        pass,
+        password,
         accountType,
       });
     } catch (e) {
