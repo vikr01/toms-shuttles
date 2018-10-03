@@ -2,6 +2,7 @@ import 'pretty-error/start';
 import 'dotenv/config';
 import express from 'express';
 import assets from 'tbd-frontend-name';
+import chalk from 'chalk';
 import { promisify } from 'util';
 import { createConnection } from 'typeorm';
 import { connectionOptions } from './db_connection';
@@ -20,7 +21,17 @@ process.on('unhandledRejection', err => {
   app.use(express.static(assets));
 
   // creates a connection to the database specified in connectionOptions
-  const connection = await createConnection(connectionOptions);
+  let connection;
+  try {
+    connection = await createConnection(connectionOptions);
+  } catch (err) {
+    console.error(
+      chalk.blue(
+        'Unable to establish a connection to the database. Did you make sure to set the correct environment variables?'
+      )
+    );
+    throw err;
+  }
 
   // set API routes here
 
