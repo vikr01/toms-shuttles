@@ -54,7 +54,7 @@ process.on('unhandledRejection', err => {
   }
 
   app.post(routes.SIGNUP, async (req, res, next) => {
-    console.log(req.body);
+    // console.log(req.body);
     const { username, firstName, lastName, password, accountType } = req.body;
 
     if (!password || !username) {
@@ -98,7 +98,7 @@ process.on('unhandledRejection', err => {
   });
 
   app.post(routes.AUTH, (req, res, next) => {
-    console.log(req.body);
+    // console.log(req.body);
     const { username, password } = req.body;
 
     if (!password || !username) {
