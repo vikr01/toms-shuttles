@@ -22,6 +22,7 @@
     "forever": "^0.15.3",
     "mysql": "^2.16.0",
     "pretty-error": "^2.1.1",
+    "strip-json-comments": "^2.0.1",
     "typeorm": "^0.2.7"
   },
   "peerDependencies": {

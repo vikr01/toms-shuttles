@@ -1,0 +1,10 @@
+{
+  "env": {
+    "es6": false,
+    "node": true
+  },
+
+  "rules": {
+    "import/no-commonjs": 0
+  }
+}

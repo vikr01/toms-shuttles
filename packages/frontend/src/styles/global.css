@@ -1,0 +1,44 @@
+.textCenter {
+  width: 'auto';
+  display: 'block';
+  text-align: center;
+}
+.layout {
+  width: 'auto';
+  display: 'block';
+  margin-left: 24px;
+  margin-right: 24px;
+}
+.paper {
+  margin-top: 64px;
+  display: 'flex';
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  flex-direction: 'column';
+  align-items: 'center';
+  padding: 16px 24px 24px;
+}
+.form {
+  width: '100%';
+  margin-top: 8;
+}
+.submit {
+  margin-top: 24;
+}
+.signup {
+  display: block;
+  margin: auto;
+  text-align: center;
+  padding-top: 12px;
+}
+
+.logo {
+  display: block;
+  margin: auto;
+  width: 40%;
+}
+
+.displayErrorSignup {
+  padding-top: 10px;
+}

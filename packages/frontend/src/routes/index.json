@@ -1,1 +1,5 @@
-{}
+{
+  "HOME": "/",
+  "SIGNUP": "/signup",
+  "DASHBOARD": "/dashboard"
+}
