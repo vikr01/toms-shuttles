@@ -53,19 +53,24 @@ process.on('unhandledRejection', err => {
     throw err;
   }
 
+  /** This route will handle a signup request.
+   * @returns an object with a HttpStatus code describing the outcome of the request.
+   *          - BAD_REQUEST if username or password is not specified.
+   *          - NOT_ACCEPTABLE if the username already exists in the database.
+   *          - INTERNAL_SERVER_ERROR if unable to save user to database.
+   *          - OK if all goes well and user is added to databse.
+   * */
   app.post(routes.SIGNUP, async (req, res, next) => {
-    // console.log(req.body);
     const { username, firstName, lastName, password, accountType } = req.body;
 
     if (!password || !username) {
-      console.log('in first');
-      return res.status(HttpStatus.NOT_FOUND).send('Not found');
+      return res.status(HttpStatus.BAD_REQUEST).send();
     }
 
-    // if(connection.getRepository(User).findOne({username})) {
-    //   console.log('in sec')
-    //   return res.status(HttpStatus.NOT_FOUND).send('User already exists');
-    // }
+    if (await connection.getRepository(User).findOne({ username })) {
+      // User already exists
+      return res.status(HttpStatus.NOT_ACCEPTABLE).send();
+    }
 
     const signature = generateSignature(password);
 
@@ -80,21 +85,12 @@ process.on('unhandledRejection', err => {
     try {
       await connection.getRepository(User).save(newUser);
     } catch (err) {
-      res.status(HttpStatus.NOT_FOUND).send('Error');
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
     }
 
     console.log(`Welcome, ${firstName}`);
 
-    return res.json('Successfully created user');
-    // if(/* check if user already exists */) {
-    //   return res.status(HttpStatus.NOT_FOUND).send('Not found');
-    // }
-
-    // return res.json(
-    //   /* send some kind of json result */
-    // );
-
-    // return next(); // remove this once you've set the res.json
+    return res.status(HttpStatus.OK).send();
   });
 
   app.post(routes.AUTH, (req, res, next) => {
