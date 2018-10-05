@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
+import HttpStatus from 'http-status-codes';
 import Prompt from './Prompt';
 import CreateAccount from '../CreateAccount';
 import routes from '../../routes';
@@ -10,7 +11,10 @@ const signinStatusEnums = {
   ok: 0,
   connection_error: 1,
   invalid_credentials: 2,
-  default: 3,
+  server_error: 3,
+  error: 4,
+  unknown: 5,
+  default: 6,
 };
 
 function signinStatusToString(e: signinStatusEnums): string {
@@ -31,7 +35,10 @@ const signupStatusEnums = {
   connection_error: 1,
   password_mismatch: 2,
   username_taken: 3,
-  default: 4,
+  server_error: 4,
+  error: 5,
+  unknown: 6,
+  default: 7,
 };
 
 function signupStatusToString(e: signupStatusEnums): string {
@@ -44,8 +51,29 @@ function signupStatusToString(e: signupStatusEnums): string {
       return 'Password comfirmation is not matching.';
     case signupStatusEnums.username_taken:
       return 'Username has already been taken.';
+    case signupStatusEnums.server_error:
+      return 'Something went wrong server-side.';
+    case signupStatusEnums.error:
+      return 'Invalid request. What did you do?';
+    case signupStatusEnums.unknown:
+      return 'Unknown error. no handle';
     default:
       return null;
+  }
+}
+
+function httpToSignupStatus(code: HttpStatus): signupStatusEnums {
+  switch (code) {
+    case HttpStatus.OK:
+      return signupStatusEnums.ok;
+    case HttpStatus.NOT_ACCEPTABLE:
+      return signupStatusEnums.username_taken;
+    case HttpStatus.INTERNAL_SERVER_ERROR:
+      return signupStatusEnums.server_error;
+    case HttpStatus.BAD_REQUEST:
+      return signupStatusEnums.error;
+    default:
+      return signupStatusEnums.unknown;
   }
 }
 
@@ -71,28 +99,28 @@ export default class SignInController extends Component {
     this.setState({ signinStatus: signinStatusEnums.ok });
   };
 
-  sendSignupRequest = async (user, firstName, lastName, pass, accountType) => {
+  sendSignupRequest = async (
+    username,
+    firstName,
+    lastName,
+    password,
+    accountType
+  ) => {
+    console.log('sending request');
     let response;
     try {
       response = await axios.post(backendRoutes.SIGNUP, {
-        user,
+        username,
         firstName,
         lastName,
-        pass,
+        password,
         accountType,
       });
     } catch (e) {
-      this.setState({ signupStatus: signupStatusEnums.connection_error });
+      this.setState({ signupStatus: httpToSignupStatus(e.response.status) });
       return;
     }
-
-    console.log(response); // check if data is a success
-    if (response.succcess) {
-      this.setState({ signupStatus: signupStatusEnums.ok });
-    } else {
-      // username must be taken
-      this.setState({ signupStatus: signupStatusEnums.username_taken });
-    }
+    this.setState({ signupStatus: httpToSignupStatus(response.status) });
   };
 
   doSignup = (username, firstName, lastName, pass1, pass2, accountType) => {
