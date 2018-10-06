@@ -48,13 +48,14 @@ process.on('unhandledRejection', err => {
 
   // middleware for session messages
   app.use((req, res, next) => {
-    const err = req.session.error;
-    const msg = req.session.success;
-    delete req.session.error;
-    delete req.session.success;
-    res.locals.message = '';
-    if (err) res.locals.message = `<p class="error">${err}</p>`;
-    if (msg) res.locals.message = `<p class="success">${msg}</p>`;
+    const { error: err, success: msg } = req.session;
+    if (err) {
+      res.locals.message = err;
+      req.session.error = null;
+    } else if (msg) {
+      res.locals.message = msg;
+      req.session.success = null;
+    } else res.locals.message = '';
     next();
   });
 
