@@ -2,6 +2,7 @@
 import 'pretty-error/start';
 import 'dotenv/config';
 import express from 'express';
+import session from 'express-session';
 import bodyParser from 'body-parser';
 import assets from 'tbd-frontend-name';
 import chalk from 'chalk';
@@ -36,6 +37,28 @@ process.on('unhandledRejection', err => {
   app.use(bodyParser.json({ type: 'application/json' }));
   // app.use(app.router);
 
+  // session initialization
+  app.use(
+    session({
+      resave: false,
+      saveUninitialized: false,
+      secret: process.env.SESSION_SECRET,
+    })
+  );
+
+  // middleware for session messages
+  app.use((req, res, next) => {
+    const { error: err, success: msg } = req.session;
+    if (err) {
+      res.locals.message = err;
+      req.session.error = null;
+    } else if (msg) {
+      res.locals.message = msg;
+      req.session.success = null;
+    } else res.locals.message = '';
+    next();
+  });
+
   app.get(routes.LOGIN, (req, res) => {
     res.redirect(path.join('/#/', frontendRoutes.LOGIN));
   });
@@ -53,12 +76,22 @@ process.on('unhandledRejection', err => {
     throw err;
   }
 
+  // on urls that need authentication, pass in this function i.e app.get('/', checkAuth, (req,res,next).....)
+  function checkAuth(req, res, next) {
+    if (req.session.user) {
+      next();
+    } else {
+      req.session.error = 'Denied access';
+      res.redirect(routes.LOGIN);
+    }
+  }
+
   /** This route will handle a signup request.
    * @returns an object with a HttpStatus code describing the outcome of the request.
    *          - BAD_REQUEST if username or password is not specified.
    *          - NOT_ACCEPTABLE if the username already exists in the database.
    *          - INTERNAL_SERVER_ERROR if unable to save user to database.
-   *          - OK if all goes well and user is added to databse.
+   *          - OK if all goes well and user is added to database.
    * */
   app.post(routes.SIGNUP, async (req, res, next) => {
     const { username, firstName, lastName, password, accountType } = req.body;
@@ -93,37 +126,41 @@ process.on('unhandledRejection', err => {
     return res.status(HttpStatus.OK).send();
   });
 
-  app.post(routes.AUTH, (req, res, next) => {
-    // console.log(req.body);
+  /**
+   * This route handles authenticating a user
+   * @returns an object with a HttpStatus code describing the outcome of the request.
+   *          - BAD_REQUEST if username or password is not specified.
+   *          - NOT_FOUND if username and password not found in database.
+   *          - OK if user is authenticated.
+   */
+  app.post(routes.AUTH, async (req, res, next) => {
     const { username, password } = req.body;
 
     if (!password || !username) {
-      return res.status(HttpStatus.NOT_FOUND).send('Not found');
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .send('Username and/or password not specified');
     }
 
     const signature = generateSignature(password);
 
-    if (
-      connection.getRepository(User).findOne({ username, password: signature })
-    ) {
+    const user = await connection
+      .getRepository(User)
+      .findOne({ username, password: signature });
+    if (!user) {
       return res
         .status(HttpStatus.NOT_FOUND)
         .send('Invalid username and/or password provided.');
     }
-    console.log(`Welcome back, ${username}`);
+
+    // create a session for user on auth
+    req.session.regenerate(() => {
+      req.session.user = `${user.firstName} ${user.lastName}`;
+    });
+
+    console.log(`Welcome back, ${user.firstName}`);
     return res.status(HttpStatus.OK).send('Successfully logged in');
-
-    // if(/* check if user exists and credentials are correct */) {
-    //   return res.status(HttpStatus.NOT_FOUND).send('Not found');
-    // }
-
-    // return res.json(
-    //   /* send some kind of json result */
-    // );
-    // return next(); // remove this once you've set the res.json
   });
-
-  // set API routes here
 
   // wait until the app starts
   await promisify(app.listen).bind(app)(port);
