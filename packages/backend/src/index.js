@@ -2,6 +2,7 @@
 import 'pretty-error/start';
 import 'dotenv/config';
 import express from 'express';
+import session from 'express-session';
 import bodyParser from 'body-parser';
 import assets from 'tbd-frontend-name';
 import chalk from 'chalk';
@@ -36,6 +37,27 @@ process.on('unhandledRejection', err => {
   app.use(bodyParser.json({ type: 'application/json' }));
   // app.use(app.router);
 
+  // session initialization
+  app.use(
+    session({
+      resave: false,
+      saveUninitialized: false,
+      secret: process.env.SESSION_SECRET,
+    })
+  );
+
+  // middleware for session messages
+  app.use((req, res, next) => {
+    const err = req.session.error;
+    const msg = req.session.success;
+    delete req.session.error;
+    delete req.session.success;
+    res.locals.message = '';
+    if (err) res.locals.message = `<p class="error">${err}</p>`;
+    if (msg) res.locals.message = `<p class="success">${msg}</p>`;
+    next();
+  });
+
   app.get(routes.LOGIN, (req, res) => {
     res.redirect(path.join('/#/', frontendRoutes.LOGIN));
   });
@@ -51,6 +73,16 @@ process.on('unhandledRejection', err => {
       )
     );
     throw err;
+  }
+
+  // on urls that need authentication, pass in this function i.e app.get('/', checkAuth, (req,res,next).....)
+  function checkAuth(req, res, next) {
+    if (req.session.user) {
+      next();
+    } else {
+      req.session.error = 'Denied access';
+      res.redirect(routes.LOGIN);
+    }
   }
 
   /** This route will handle a signup request.
@@ -93,8 +125,7 @@ process.on('unhandledRejection', err => {
     return res.status(HttpStatus.OK).send();
   });
 
-  app.post(routes.AUTH, (req, res, next) => {
-    // console.log(req.body);
+  app.post(routes.AUTH, async (req, res, next) => {
     const { username, password } = req.body;
 
     if (!password || !username) {
@@ -103,24 +134,22 @@ process.on('unhandledRejection', err => {
 
     const signature = generateSignature(password);
 
-    if (
-      connection.getRepository(User).findOne({ username, password: signature })
-    ) {
+    const user = await connection
+      .getRepository(User)
+      .findOne({ username, password: signature });
+    if (!user) {
       return res
         .status(HttpStatus.NOT_FOUND)
         .send('Invalid username and/or password provided.');
     }
-    console.log(`Welcome back, ${username}`);
+
+    // create a session for user on auth
+    req.session.regenerate(() => {
+      req.session.user = `${user.firstName} ${user.lastName}`;
+    });
+
+    console.log(`Welcome back, ${user.firstName}`);
     return res.status(HttpStatus.OK).send('Successfully logged in');
-
-    // if(/* check if user exists and credentials are correct */) {
-    //   return res.status(HttpStatus.NOT_FOUND).send('Not found');
-    // }
-
-    // return res.json(
-    //   /* send some kind of json result */
-    // );
-    // return next(); // remove this once you've set the res.json
   });
 
   // set API routes here
