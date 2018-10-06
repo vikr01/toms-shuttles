@@ -90,7 +90,7 @@ process.on('unhandledRejection', err => {
    *          - BAD_REQUEST if username or password is not specified.
    *          - NOT_ACCEPTABLE if the username already exists in the database.
    *          - INTERNAL_SERVER_ERROR if unable to save user to database.
-   *          - OK if all goes well and user is added to databse.
+   *          - OK if all goes well and user is added to database.
    * */
   app.post(routes.SIGNUP, async (req, res, next) => {
     const { username, firstName, lastName, password, accountType } = req.body;
@@ -125,11 +125,20 @@ process.on('unhandledRejection', err => {
     return res.status(HttpStatus.OK).send();
   });
 
+  /**
+   * This route handles authenticating a user
+   * @returns an object with a HttpStatus code describing the outcome of the request.
+   *          - BAD_REQUEST if username or password is not specified.
+   *          - NOT_FOUND if username and password not found in database.
+   *          - OK if user is authenticated.
+   */
   app.post(routes.AUTH, async (req, res, next) => {
     const { username, password } = req.body;
 
     if (!password || !username) {
-      return res.status(HttpStatus.NOT_FOUND).send('Not found');
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .send('Username and/or password not specified');
     }
 
     const signature = generateSignature(password);
@@ -151,8 +160,6 @@ process.on('unhandledRejection', err => {
     console.log(`Welcome back, ${user.firstName}`);
     return res.status(HttpStatus.OK).send('Successfully logged in');
   });
-
-  // set API routes here
 
   // wait until the app starts
   await promisify(app.listen).bind(app)(port);
