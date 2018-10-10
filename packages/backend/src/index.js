@@ -1,4 +1,5 @@
 // @flow
+
 import 'pretty-error/start';
 import 'dotenv/config';
 import express from 'express';
@@ -160,6 +161,37 @@ process.on('unhandledRejection', err => {
 
     console.log(`Welcome back, ${user.firstName}`);
     return res.status(HttpStatus.OK).send('Successfully logged in');
+  });
+
+  /**
+   * This route handles displaying all user info
+   */
+  app.get(routes.USER, async (req, res, next) => {
+    const response = await connection.getRepository(User).find({});
+    response.forEach(user => {
+      delete user.password;
+    });
+    res.status(HttpStatus.OK).json(response);
+  });
+
+  /**
+   * This route handles finding user information
+   * - NOT_FOUND if username not found in database.
+   * - OK if user is found in the database.
+   */
+  app.get(routes.SINGLE_USER, async (req, res, next) => {
+    const { username: name } = req.params;
+
+    const user = await connection
+      .getRepository(User)
+      .findOne({ username: name });
+
+    if (user) {
+      const { username, firstName, lastName } = user;
+      return res.status(HttpStatus.OK).json({ username, firstName, lastName });
+    }
+
+    return res.status(HttpStatus.NOT_FOUND).send('Invalid username');
   });
 
   // wait until the app starts

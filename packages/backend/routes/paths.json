@@ -3,5 +3,9 @@
 
   // authenticate
   "AUTH": "/api/authenticate",
-  "SIGNUP": "/api/signup"
+  "SIGNUP": "/api/signup",
+
+  //users
+  "USER": "/users",
+  "SINGLE_USER": "/users/:username"
 }
