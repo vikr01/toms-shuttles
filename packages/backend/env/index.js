@@ -10,6 +10,8 @@ if (existsSync(pathToDotEnv)) {
   const dotEnvContents = readFileSync(pathToDotEnv);
   const config = dotenv.parse(dotEnvContents);
   port = config.PORT;
+} else {
+  port = process.env.PORT;
 }
 
 module.exports = {
