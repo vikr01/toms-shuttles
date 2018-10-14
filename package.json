@@ -4,9 +4,11 @@
   "license": "MIT",
   "author": "Vikram Rangaraj <vik120@icloud.com> (https://github.com/vikr01)",
   "repository": "https://github.com/vikr01/tbd-project-name.git",
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
   "scripts": {
     "build": "lerna run build",
     "dev": "lerna run dev",
@@ -14,10 +16,11 @@
     "postinstall": "lerna run postinstall",
     "lint": "eslint .",
     "lint-fix": "yarn run lint --fix",
-    "postlint-fix": "prettier --write './**/*.{js,jsx,json,md,css,scss}'",
+    "postlint-fix": "prettier --ignore-path .eslintignore --write './**/*.{js,jsx,json,md,css,scss}'",
     "prepare": "lerna run prepare",
     "start": "yarn workspace tbd-backend-name start",
-    "test": "cross-env NODE_ENV=test jest --config jest.config.js"
+    "stop": "yarn workspace tbd-backend-name run stop",
+    "test": "cross-env NODE_ENV=test jest"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",

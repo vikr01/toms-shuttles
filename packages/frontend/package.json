@@ -8,6 +8,7 @@
   "scripts": {
     "build": "webpack --config ./webpack/webpack.config.prod.babel.js --colors",
     "dev": "webpack-dev-server --config ./webpack/webpack.config.devserver.babel.js",
+    "postinstall": "cross-env NODE_ENV=test node -r @babel/register scripts/postinstall.js",
     "test": "cross-env NODE_ENV=test jest"
   },
   "devDependencies": {
