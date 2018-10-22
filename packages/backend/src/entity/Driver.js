@@ -20,7 +20,7 @@ export class Driver /* extends EntityBase */ {
   @Column('int')
   totalReviews = 0;
 
-  @Column('bit')
+  @Column('tinyint')
   active = 0;
 }
 

@@ -1,4 +1,5 @@
 import { User } from './entity/User';
+import { Driver } from './entity/Driver';
 
 export const connectionOptions = {
   type: 'mysql',
@@ -9,7 +10,7 @@ export const connectionOptions = {
   database: process.env.DB_DATABASE,
   synchronize: true,
   logging: false,
-  entities: [User],
+  entities: [User, Driver],
 };
 
 export default connectionOptions;

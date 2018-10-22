@@ -16,6 +16,7 @@ import frontendRoutes from 'tbd-frontend-name/src/routes';
 import { connectionOptions } from './db_connection';
 import routes from '../routes';
 import { User } from './entity/User';
+import { Driver } from './entity/Driver';
 
 const port: number = process.env.PORT || 2000;
 
@@ -192,6 +193,76 @@ process.on('unhandledRejection', err => {
     }
 
     return res.status(HttpStatus.NOT_FOUND).send('Invalid username');
+  });
+
+  // app.post(routes.DRIVERS, async (req, res, next) => {
+  //   const driverBody = req.body;
+
+  //   const newDriver = Object.assign(new User(), driverBody);
+
+  //   await connection.getRepository(Driver).save(newDriver);
+
+  //   res.status(HttpStatus.OK).send('Done');
+  // });
+
+  app.get(routes.DRIVER, async (req, res, next) => {
+    const { username: name } = req.params;
+
+    let driver;
+    try {
+      driver = await connection
+        .getRepository(Driver)
+        .findOne({ username: name });
+    } catch (error) {
+      return res
+        .status(HttpStatus.IM_A_TEAPOT)
+        .send('Error accessing database');
+    }
+
+    if (driver) {
+      return res.status(HttpStatus.OK).json(driver);
+    }
+
+    return res.status(HttpStatus.NOT_FOUND).send('Invalid username');
+  });
+
+  app.put(routes.DRIVER, async (req, res, next) => {
+    const { username: name } = req.params;
+    let repo;
+    let driver;
+
+    try {
+      repo = await connection.getRepository(Driver);
+      driver = await repo.findOne({ username: name });
+    } catch (error) {
+      res.status(HttpStatus.IM_A_TEAPOT).send('Error accessing database');
+    }
+
+    if (!driver) {
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .send(`Invalid username:${name}`);
+    }
+
+    Object.entries(req.body).forEach(([key, value]) => {
+      if (driver.hasOwnProperty(key)) {
+        driver[key] = value;
+      } else {
+        console.warn(
+          chalk.blue(
+            `Discarding non-existent key, ${key}, for username: ${name}`
+          )
+        );
+      }
+    });
+
+    try {
+      await repo.save(driver);
+    } catch (error) {
+      res.status(HttpStatus.IM_A_TEAPOT).send('Error updating database');
+    }
+
+    return res.status(HttpStatus.OK).json(driver);
   });
 
   // wait until the app starts
