@@ -1,20 +1,11 @@
 // @flow
 
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
 import { EntityBase } from '../entityBase';
+import { CreditCard } from './CreditCard';
 
 @Entity()
 export class User /* extends EntityBase */ {
-  // id: ?number;
-
-  // firstName: string;
-
-  // lastName: string;
-
-  // userName: string;
-
-  // password: string;
-
   @PrimaryGeneratedColumn()
   id = undefined;
 
@@ -29,6 +20,9 @@ export class User /* extends EntityBase */ {
 
   @Column('varchar')
   password = '';
+
+  @OneToOne(type => CreditCard, creditcard => creditcard.id)
+  creditCard: CreditCard;
 }
 
 export default User;

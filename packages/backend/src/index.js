@@ -2,6 +2,7 @@
 
 import 'pretty-error/start';
 import 'dotenv/config';
+import axios from 'axios';
 import express from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
@@ -11,6 +12,7 @@ import crypto from 'crypto';
 import path from 'path';
 import HttpStatus from 'http-status-codes';
 import { promisify } from 'util';
+import { forEach } from 'p-iteration';
 import { createConnection } from 'typeorm';
 import frontendRoutes from 'tbd-frontend-name/src/routes';
 import { connectionOptions } from './db_connection';
@@ -34,8 +36,6 @@ process.on('unhandledRejection', err => {
 (async () => {
   const app = express();
 
-  // this sets the public directory to the frontend package's build directory
-  app.use(express.static(assets));
   app.use(bodyParser.json({ type: 'application/json' }));
   // app.use(app.router);
 
@@ -195,15 +195,15 @@ process.on('unhandledRejection', err => {
     return res.status(HttpStatus.NOT_FOUND).send('Invalid username');
   });
 
-  // app.post(routes.DRIVERS, async (req, res, next) => {
-  //   const driverBody = req.body;
+  app.post(routes.DRIVERS, async (req, res, next) => {
+    const driverBody = req.body;
 
-  //   const newDriver = Object.assign(new User(), driverBody);
+    const newDriver = Object.assign(new User(), driverBody);
 
-  //   await connection.getRepository(Driver).save(newDriver);
+    await connection.getRepository(Driver).save(newDriver);
 
-  //   res.status(HttpStatus.OK).send('Done');
-  // });
+    res.status(HttpStatus.OK).send('Done');
+  });
 
   app.get(routes.DRIVER, async (req, res, next) => {
     const { username: name } = req.params;
@@ -265,7 +265,58 @@ process.on('unhandledRejection', err => {
     return res.status(HttpStatus.OK).json(driver);
   });
 
+  function correctLat(latitude) {
+    return latitude <= 90 && latitude >= -90;
+  }
+
+  function correctLong(longitude) {
+    return longitude <= 180 && longitude >= -180;
+  }
+
+  app.get(routes.CLOSEST_DRIVER, async (req, res, next) => {
+    const { lat, long, destination } = req.query;
+
+    if (!correctLat(parseFloat(lat)) || !correctLong(parseFloat(long))) {
+      return res.status(HttpStatus.BAD_REQUEST).send('Invalid arguments');
+    }
+
+    // query only active drivers
+    const drivers = await connection.getRepository(Driver).find({ active: 1 });
+    let closestDriver = {};
+    let leastTime = 10000000;
+    await forEach(drivers, async driver => {
+      const result = await axios.get(
+        'https://maps.googleapis.com/maps/api/distancematrix/json',
+        {
+          params: {
+            units: 'imperial',
+            origins: `${driver.currentLatitude},${driver.currentLongitude}`,
+            destinations: `${lat},${long}`,
+            key: process.env.API_KEY,
+          },
+        }
+      );
+      const duration = result.data.rows[0].elements[0].duration.value;
+      if (duration < leastTime) {
+        leastTime = duration;
+        closestDriver = driver;
+      }
+    });
+
+    if (Object.keys(closestDriver).keys().length === 0) {
+      return res.status(HttpStatus.NOT_FOUND).send('Could not find a driver');
+    }
+
+    // add name of driver in response only if already authenticated
+    closestDriver.name = req.session.user;
+
+    return res.status(HttpStatus.OK).json(closestDriver);
+  });
+
+  // this sets the public directory to the frontend package's build directory
+  app.use('*', express.static(assets));
+
   // wait until the app starts
   await promisify(app.listen).bind(app)(port);
-  console.log('app started');
+  console.log(`App started on port ${port}`);
 })();

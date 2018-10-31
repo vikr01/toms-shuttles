@@ -1,7 +1,8 @@
 // @flow
 
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToMany } from 'typeorm';
 import { EntityBase } from '../entityBase';
+import { Passenger } from './Passenger';
 
 @Entity()
 export class Driver /* extends EntityBase */ {
@@ -22,6 +23,9 @@ export class Driver /* extends EntityBase */ {
 
   @Column('tinyint')
   active = 0;
+
+  @OneToMany(type => Passenger, passenger => passenger.username)
+  passengers: Passenger[];
 }
 
 export default Driver;

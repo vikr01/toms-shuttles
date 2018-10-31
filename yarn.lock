@@ -7334,9 +7334,9 @@ npm-path@^2.0.2:
   dependencies:
     which "^1.2.10"
 
-npm-pick-manifest@^2.1.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/npm-pick-manifest/-/npm-pick-manifest-2.2.0.tgz#43bb722c08caff83c9822d0011f9f5951c219505"
+npm-pick-manifest@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/npm-pick-manifest/-/npm-pick-manifest-2.2.1.tgz#a528c8540f3e181bad4bca7a1ad458097dd02225"
   dependencies:
     figgy-pudding "^3.5.1"
     npm-package-arg "^6.0.0"
@@ -7640,6 +7640,10 @@ p-is-promise@^1.1.0:
   version "1.1.0"
   resolved "http://registry.npmjs.org/p-is-promise/-/p-is-promise-1.1.0.tgz#9c9456989e9f6588017b0434d56097675c3da05e"
 
+p-iteration@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/p-iteration/-/p-iteration-1.1.7.tgz#9e71d79ede244b9f52592521f4487a56b6fb50fa"
+
 p-limit@^1.1.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/p-limit/-/p-limit-1.3.0.tgz#b86bd5f0c25690911c7590fcbfc2010d54b3ccb8"
@@ -7703,8 +7707,8 @@ p-waterfall@^1.0.0:
     p-reduce "^1.0.0"
 
 pacote@^9.1.0:
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/pacote/-/pacote-9.1.1.tgz#25091f75a25021de8be8d34cc6408728fca3579b"
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/pacote/-/pacote-9.2.0.tgz#3c7ed5b1d284f1623cc925f6973252c96c0f9500"
   dependencies:
     bluebird "^3.5.2"
     cacache "^11.2.0"
@@ -7720,7 +7724,7 @@ pacote@^9.1.0:
     normalize-package-data "^2.4.0"
     npm-package-arg "^6.1.0"
     npm-packlist "^1.1.12"
-    npm-pick-manifest "^2.1.0"
+    npm-pick-manifest "^2.2.1"
     npm-registry-fetch "^3.8.0"
     osenv "^0.1.5"
     promise-inflight "^1.0.1"
@@ -9754,8 +9758,8 @@ stylelint-config-recommended@^2.1.0:
   resolved "https://registry.yarnpkg.com/stylelint-config-recommended/-/stylelint-config-recommended-2.1.0.tgz#f526d5c771c6811186d9eaedbed02195fee30858"
 
 stylelint@^9.5.0:
-  version "9.7.0"
-  resolved "https://registry.yarnpkg.com/stylelint/-/stylelint-9.7.0.tgz#d43de95ff5f875facfa31f811ea7b749020f1620"
+  version "9.7.1"
+  resolved "https://registry.yarnpkg.com/stylelint/-/stylelint-9.7.1.tgz#522f8795832a9f7e062e5e4105c0e05fb53f827f"
   dependencies:
     autoprefixer "^9.0.0"
     balanced-match "^1.0.0"
