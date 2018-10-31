@@ -20,7 +20,7 @@ const SignIn = ({ handleSubmit, status }: Props): Node => (
     <CssBaseline />
     <Paper className="paper">
       <img src={logo} className="logo" alt="logo" />
-      <Typography variant="headline" align="center">
+      <Typography variant="h5" align="center">
         Sign in
       </Typography>
       <form

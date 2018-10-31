@@ -19,6 +19,17 @@
   align-items: 'center';
   padding: 16px 24px 24px;
 }
+.paperDashboard {
+  margin-top: 88px;
+  margin-bottom: 24px;
+  margin-left: auto;
+  width: 80vw;
+  margin-right: auto;
+  padding: 16px 24px 24px;
+}
+.rest {
+  height: 100vh;
+}
 .form {
   width: '100%';
   margin-top: 8;
@@ -41,4 +52,34 @@
 
 .displayErrorSignup {
   padding-top: 10px;
+}
+
+.dashboardComponent {
+  flex-grow: 1;
+  padding: 12px;
+  height: '100vh';
+  overflow: 'auto';
+  padding-top: 88px;
+  padding-left: 24px;
+}
+.dashboardComponent2 {
+  flex-grow: 1;
+  padding: 12px;
+  height: '100vh';
+  overflow: 'auto';
+  padding-top: 12px;
+  padding-left: 24px;
+}
+
+.accountOverviewItem {
+  padding-left: 24px;
+}
+
+.requestFormToggleLocation {
+  height: 156;
+  padding: 4px 8px;
+  display: 'flex';
+  align-items: 'center';
+  justify-content: 'flex-start';
+  margin: 4px 0px;
 }

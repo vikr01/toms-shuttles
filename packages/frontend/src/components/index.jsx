@@ -15,7 +15,21 @@ const SignIn = () => (
 );
 const Dashboard = () => (
   <CreateLoadable
-    loader={() => import(/* webpackChunkName: "Dashboard" */ './Dashboard')}
+    loader={() => import(/* webpackChunkName: "Dashboard" */ './Dashboard/')}
+  />
+);
+const CreditCardAdd = () => (
+  <CreateLoadable
+    loader={() =>
+      import(/* webpackChunkName: "CreditCardAdd" */ './Dashboard/AccountInfo/CreditCardAdd/')
+    }
+  />
+);
+const CarSeatSet = () => (
+  <CreateLoadable
+    loader={() =>
+      import(/* webpackChunkName: "CarSeatSet" */ './Dashboard/AccountInfo/CarSeatSet/')
+    }
   />
 );
 
@@ -25,6 +39,8 @@ const App = (): Node => (
       <Header />
       <Route path={`(${routes.HOME}|${routes.SIGNUP})`} component={SignIn} />
       <Route path={routes.DASHBOARD} component={Dashboard} />
+      <Route path={routes.CREDITCARD_ADD} component={CreditCardAdd} />
+      <Route path={routes.CARSEATS_SET} component={CarSeatSet} />
     </Fragment>
   </HashRouter>
 );

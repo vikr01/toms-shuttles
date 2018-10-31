@@ -98,7 +98,7 @@ export default class CreateAccount extends Component<Props, State> {
             <Button
               type="submit"
               fullWidth
-              variant="raised"
+              variant="contained"
               color="primary"
               className="submit"
             >

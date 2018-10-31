@@ -14,7 +14,7 @@ const DisplayStatus = ({ status }: Props): Node => {
   return (
     <Typography
       className="displayErrorSignup"
-      variant="subheading"
+      variant="subtitle1"
       align="center"
       color="error"
     >

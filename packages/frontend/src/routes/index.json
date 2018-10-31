@@ -2,5 +2,7 @@
   "HOME": "/",
   "SIGNUP": "/signup",
   "DASHBOARD": "/dashboard",
-  "LOGIN": "/signup"
+  "LOGIN": "/signup",
+  "CREDITCARD_ADD": "/creditcardAdd",
+  "CARSEATS_SET": "/carseatSet"
 }

@@ -5,7 +5,7 @@
   "AUTH": "/api/authenticate",
   "SIGNUP": "/api/signup",
 
-  //users
+  // users
   "USER": "/users",
   "SINGLE_USER": "/users/:username",
 

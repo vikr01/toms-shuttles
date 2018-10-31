@@ -139,8 +139,8 @@ export default class SignInController extends Component {
           exact
           path={routes.HOME}
           render={props =>
-            signinStatus === signinStatus.ok ? (
-              <Redirect to={routes.DASHBOARD} />
+            signinStatus === signinStatusEnums.ok ? (
+              <Redirect push to={routes.DASHBOARD} />
             ) : (
               <Prompt
                 {...props}
@@ -154,7 +154,7 @@ export default class SignInController extends Component {
           path={routes.SIGNUP}
           render={props =>
             signupStatus === signupStatusEnums.ok ? (
-              <Redirect to={routes.HOME} />
+              <Redirect push to={routes.HOME} />
             ) : (
               <CreateAccount
                 {...props}

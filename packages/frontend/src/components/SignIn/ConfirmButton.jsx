@@ -7,7 +7,7 @@ const SignInButton = (): Node => (
   <Button
     type="submit"
     fullWidth
-    variant="raised"
+    variant="contained"
     color="primary"
     className="submit"
   >
