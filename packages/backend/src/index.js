@@ -274,9 +274,9 @@ process.on('unhandledRejection', err => {
   }
 
   app.get(routes.CLOSEST_DRIVER, async (req, res, next) => {
-    const { lat, long, destination } = req.query;
+    const { lat, lng, destination } = req.query;
 
-    if (!correctLat(parseFloat(lat)) || !correctLong(parseFloat(long))) {
+    if (!correctLat(parseFloat(lat)) || !correctLong(parseFloat(lng))) {
       return res.status(HttpStatus.BAD_REQUEST).send('Invalid arguments');
     }
 
@@ -291,7 +291,7 @@ process.on('unhandledRejection', err => {
           params: {
             units: 'imperial',
             origins: `${driver.currentLatitude},${driver.currentLongitude}`,
-            destinations: `${lat},${long}`,
+            destinations: `${lat},${lng}`,
             key: process.env.API_KEY,
           },
         }
@@ -303,7 +303,7 @@ process.on('unhandledRejection', err => {
       }
     });
 
-    if (Object.keys(closestDriver).keys().length === 0) {
+    if (Object.keys(closestDriver).length === 0) {
       return res.status(HttpStatus.NOT_FOUND).send('Could not find a driver');
     }
 
