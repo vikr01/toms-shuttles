@@ -75,6 +75,10 @@
     "node": ">=10",
     "yarn": ">=1"
   },
+  "cacheDirectories": [
+    "node_modules",
+    "packages/*/node_modules"
+  ],
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"

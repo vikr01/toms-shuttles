@@ -1,0 +1,10 @@
+.eslint*
+.prettier*
+.stylelint*
+.travis.yml
+appveyor.yml
+*.code-workspace
+renovate.json
+netlify.toml
+test
+.slugignore
