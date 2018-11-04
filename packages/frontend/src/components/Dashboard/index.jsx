@@ -8,6 +8,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
+import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
@@ -19,6 +21,7 @@ import ListItems from './ListItems';
 import RidesView from './Rides';
 import AccountInfoView from './AccountInfo';
 import OverviewView from './Overview';
+import routes from '../../routes';
 
 const drawerWidth = 240;
 
@@ -117,8 +120,25 @@ class Dashboard extends Component<Props> {
 
   state = {
     open: true,
+    redirectToLogin: false,
+    checkedForLogin: false,
     page: 'Dashboard',
   };
+
+  async componentDidMount() {
+    try {
+      await axios.get(backendRoutes.LOGGED_IN);
+      this.setState({
+        redirectToLogin: false,
+        checkedForLogin: true,
+      });
+    } catch (e) {
+      this.setState({
+        redirectToLogin: true,
+        checkedForLogin: true,
+      });
+    }
+  }
 
   handleDrawerOpen = () => {
     this.setState({ open: true });
@@ -134,7 +154,14 @@ class Dashboard extends Component<Props> {
 
   render() {
     const { classes } = this.props;
-    const { open, page } = this.state;
+    const { open, page, redirectToLogin, checkedForLogin } = this.state;
+    console.log(redirectToLogin);
+    if (!checkedForLogin) {
+      return <Typography>Logging in...</Typography>;
+    }
+    if (redirectToLogin) {
+      return <Redirect to={routes.HOME} />;
+    }
     return (
       <Fragment>
         <CssBaseline />

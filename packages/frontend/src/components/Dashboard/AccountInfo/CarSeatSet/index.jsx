@@ -20,7 +20,7 @@ export default class CarSeatSet extends Component<Props> {
   sendToBackend = async count => {
     console.log('sending count to backend', count);
     try {
-      await axios.post(backendRoutes.SETSEATCOUNT, count);
+      await axios.put(backendRoutes.DRIVERS, { numOfSeats: count });
       this.setState({
         redirect: true,
         status: 'we got your seat count saved!',

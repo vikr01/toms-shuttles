@@ -4,7 +4,7 @@ import { Paper } from '@material-ui/core';
 import MapView from './MapView';
 
 class OverviewView extends React.Component {
-  state = { showMap: false };
+  state = { showMap: true };
 
   doRequest() {
     this.setState({ showMap: true });

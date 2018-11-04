@@ -1,13 +1,7 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {
-  RadioGroup,
-  Radio,
-  Button,
-  FormLabel,
-  Typography,
-} from '@material-ui/core';
+import { RadioGroup, Radio, Button, Typography } from '@material-ui/core';
 import MyStandaloneSearchBox from './MyStandaloneSearchBox';
 
 type Props = {
@@ -39,10 +33,11 @@ export default class LocationPicker extends Component<Props> {
       if (show === 1) {
         return (
           <Fragment>
+            <br />
+            <Typography variant="h5">
+              Select airport you wish to go to
+            </Typography>
             <RadioGroup value={value} onChange={this.handleChange}>
-              <Typography variant="h5">
-                Select airport you wish to go to
-              </Typography>
               <FormControlLabel value="SFO" control={<Radio />} label="SFO" />
               <FormControlLabel value="OAK" control={<Radio />} label="OAK" />
               <FormControlLabel value="SJC" control={<Radio />} label="SJC" />

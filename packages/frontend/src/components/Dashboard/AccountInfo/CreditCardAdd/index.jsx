@@ -4,8 +4,8 @@ import { Button, CssBaseline, Paper, Typography } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import ValueForm from '../ValueForm';
-import DisplayStatus from '../../../DisplayStatus';
 import routes from '../../../../routes';
+import AlertDialog from '../../Overview/AlertDialog';
 
 function cardOk(card: string) {
   const len = card.length;
@@ -22,15 +22,19 @@ export default class CreditCardAdd extends Component<Props> {
   state = {
     redirect: false,
     status: '',
+    showOkDialog: false,
   };
 
   sendToBackend = async card => {
     console.log('sending card to backend', card);
     try {
-      await axios.post(backendRoutes.ADDCREDITCARD, card);
-      this.setState({ redirect: true, status: 'we got your card saved!' });
+      await axios.post(backendRoutes.ADDCREDITCARD, { card });
+      this.setState({ showOkDialog: true, status: 'we got your card saved!' });
     } catch (e) {
-      this.setState({ status: 'Issue connecting to server' });
+      this.setState({
+        showOkDialog: true,
+        status: 'Issue connecting to server',
+      });
     }
   };
 
@@ -43,18 +47,27 @@ export default class CreditCardAdd extends Component<Props> {
       this.setState({ status: 'Invalid card number' });
       return;
     }
-
     this.sendToBackend(card);
   };
 
+  onDialogClose = () => {
+    this.setState({ redirect: true });
+  };
+
   render() {
-    const { redirect, status } = this.state;
+    const { redirect, status, showOkDialog } = this.state;
 
     if (redirect) {
       return <Redirect push to={routes.DASHBOARD} />;
     }
     return (
       <Fragment>
+        <AlertDialog
+          open={showOkDialog}
+          onClose={this.onDialogClose}
+          title=""
+          text={status}
+        />
         <CssBaseline />
         <Paper className="paper">
           <Typography variant="headline" className="textCenter">
@@ -71,7 +84,6 @@ export default class CreditCardAdd extends Component<Props> {
             >
               Add
             </Button>
-            <DisplayStatus status={status} />
           </form>
         </Paper>
       </Fragment>
