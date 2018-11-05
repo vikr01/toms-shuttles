@@ -25,7 +25,7 @@ export default merge.smartStrategy({
         uglifyOptions: {
           mangle: true,
           compress: {
-            drop_console: true,
+            // drop_console: true,
           },
         },
       }),
