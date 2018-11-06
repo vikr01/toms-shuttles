@@ -15,6 +15,9 @@ export class Driver /* extends EntityBase */ {
   @Column('float')
   currentLongitude = 0;
 
+  @Column('int')
+  numOfSeats = 0;
+
   @Column('float')
   rating = 0;
 
@@ -24,7 +27,7 @@ export class Driver /* extends EntityBase */ {
   @Column('tinyint')
   active = 0;
 
-  @OneToMany(type => Passenger, passenger => passenger.username)
+  @OneToMany(type => Passenger)
   passengers: Passenger[];
 }
 
