@@ -1,9 +1,18 @@
 // @flow
 
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { EntityBase } from '../entityBase';
+import { CreditCard } from './CreditCard';
+import { Driver } from './Driver';
 
 @Entity()
-export class User {
+export class User /* extends EntityBase */ {
   @PrimaryGeneratedColumn()
   id = undefined;
 
@@ -18,6 +27,17 @@ export class User {
 
   @Column('varchar')
   password = '';
+
+  @Column('varchar')
+  accountType = '';
+
+  @OneToOne(type => CreditCard)
+  @JoinColumn()
+  creditCard = CreditCard;
+
+  @OneToOne(type => Driver)
+  @JoinColumn()
+  driverInfo = Driver;
 }
 
 export default User;

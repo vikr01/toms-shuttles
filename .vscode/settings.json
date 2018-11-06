@@ -7,6 +7,7 @@
     ".babelrc": "jsonc",
     ".eslintrc": "jsonc",
     ".prettierrc": "jsonc",
+    "**/packages/backend/routes/paths.json": "jsonc",
 
     ".stylelintrc": "json",
 
@@ -15,6 +16,7 @@
     ".eslintignore": "ignore",
     ".flowconfig": "ignore",
     ".npmrc": "ignore",
+    ".slugignore": "ignore",
     ".yarnrc": "ignore"
   },
 

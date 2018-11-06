@@ -1,13 +1,13 @@
 // @flow
 import 'dotenv/config';
-import { EnvironmentPlugin, ProvidePlugin } from 'webpack';
-import CleanWebpackPlugin from 'clean-webpack-plugin';
+import { EnvironmentPlugin, ProvidePlugin, DefinePlugin } from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 import titleCase from 'title-case';
+import backendRoutes from 'tbd-backend-name/routes';
 import Globals from './globals';
 import { productName as name } from '../package.json';
-import outputDir from '../lib/index';
+import outputDir from '../lib';
 
 const title = titleCase(name);
 
@@ -45,11 +45,6 @@ export default {
   },
 
   plugins: [
-    new CleanWebpackPlugin([outputDir], {
-      verbose: process.env.VERBOSE === 'true',
-      allowExternal: true,
-    }),
-
     new EnvironmentPlugin({
       DEBUG: JSON.stringify(process.env.DEBUG) || false,
       TITLE: title,
@@ -57,6 +52,10 @@ export default {
     }),
 
     new ProvidePlugin(Globals),
+
+    new DefinePlugin({
+      backendRoutes: JSON.stringify(backendRoutes),
+    }),
 
     new HtmlWebpackPlugin({
       title,

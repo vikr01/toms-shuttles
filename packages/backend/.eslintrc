@@ -7,12 +7,12 @@
   "parserOptions": {
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true,
-      "jsx": true,
+      "experimentalDecorators": true,
       "legacyDecorators": true
     },
     "sourceType": "module"
   },
-  "plugins": ["flowtype", "import", "promise", "react", "security"],
+  "plugins": ["flowtype", "import", "promise", "security"],
   "extends": [
     "plugin:promise/recommended",
     "plugin:flowtype/recommended",
@@ -23,29 +23,18 @@
   ],
   "rules": {
     "comma-dangle": 0,
-    "import/dynamic-import-chunkname": "error",
+    "consistent-return": 0,
     "import/no-commonjs": "error",
     "indent": [2, 2, {"SwitchCase": 1}],
     "no-console": 0,
     "no-magic-numbers": 0,
+    "no-param-reassign": ["error", {"props": false}],
+    "no-prototype-builtins": 0,
     "no-unused-vars": "warn",
     "quotes": [
       "error",
       "single",
       {"avoidEscape": true, "allowTemplateLiterals": true}
-    ],
-    "react/jsx-filename-extension": ["error", {"extensions": [".jsx"]}],
-    "react/sort-comp": [
-      "error",
-      {
-        "order": [
-          "type-annotations",
-          "static-methods",
-          "lifecycle",
-          "everything-else",
-          "render"
-        ]
-      }
     ]
   }
 }

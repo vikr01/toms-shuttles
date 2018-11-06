@@ -1,1 +1,8 @@
-{}
+{
+  "HOME": "/",
+  "SIGNUP": "/signup",
+  "DASHBOARD": "/dashboard",
+  "LOGIN": "/signup",
+  "CREDITCARD_ADD": "/creditcardAdd",
+  "CARSEATS_SET": "/carseatSet"
+}

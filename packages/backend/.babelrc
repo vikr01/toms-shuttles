@@ -14,7 +14,8 @@
   "plugins": [
     ["@babel/plugin-proposal-decorators", {"legacy": true}],
     ["@babel/plugin-proposal-class-properties", {"loose": true}],
-    "@babel/plugin-transform-flow-comments"
+    "@babel/plugin-transform-flow-comments",
+    "dynamic-import-node"
   ],
 
   "env": {
@@ -22,8 +23,8 @@
       "plugins": [
         ["transform-inline-environment-variables", {"include": ["NODE_ENV"]}],
         "minify-constant-folding",
-        "minify-guarded-expressions",
-        "minify-dead-code-elimination"
+        "minify-guarded-expressions"
+        // "minify-dead-code-elimination"
       ]
     }
   }

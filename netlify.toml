@@ -1,3 +1,7 @@
 [build]
-  command = "yarn run build"
   publish = "packages/frontend/dist"
+  command = "yarn run build"
+
+[build.environment]
+  YARN_VERSION = "1.10.1"
+  YARN_FLAGS = "--ignore-scripts"
