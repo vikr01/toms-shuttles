@@ -26,7 +26,6 @@ export default merge.smartStrategy({
             options: {
               cacheDirectory: true,
               babelrc: true,
-              plugins: ['react-hot-loader/babel'],
               envName: 'development',
             },
           },

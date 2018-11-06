@@ -6,12 +6,13 @@
   "version": "0.1.0",
   "main": "dist/index.js",
   "scripts": {
+    "prebuild": "yarn run clean",
     "build": "cross-env NODE_ENV=production babel src --out-dir dist --copy-files --source-maps",
     "clean": "rimraf dist",
     "dev": "cross-env NODE_ENV=development node -r @babel/register src/index.js",
     "postinstall": "node -r @babel/register scripts/postinstall.js",
     "prestart": "yarn run stop",
-    "start": "cross-env NODE_ENV=production forever start dist/index.js",
+    "start": "cross-env NODE_ENV=production forever dist/index.js",
     "stop": "forever stop dist/app.js; exit 0",
     "test": "cross-env NODE_ENV=test jest"
   },
@@ -19,11 +20,13 @@
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
+    "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "forever": "^0.15.3",
     "http-status-codes": "^1.3.0",
+    "is-heroku": "^2.0.0",
     "mysql": "^2.16.0",
     "ncp": "^2.0.0",
     "p-iteration": "^1.1.7",
@@ -33,11 +36,5 @@
   },
   "peerDependencies": {
     "tbd-frontend-name": "*"
-  },
-  "devDependencies": {
-    "babel-plugin-minify-constant-folding": "^0.5.0",
-    "babel-plugin-minify-dead-code-elimination": "^0.5.0",
-    "babel-plugin-minify-guarded-expressions": "^0.4.3",
-    "babel-plugin-transform-inline-environment-variables": "^0.4.3"
   }
 }

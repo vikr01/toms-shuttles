@@ -1,7 +1,6 @@
 // @flow
 import 'dotenv/config';
 import { EnvironmentPlugin, ProvidePlugin, DefinePlugin } from 'webpack';
-import CleanWebpackPlugin from 'clean-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 import titleCase from 'title-case';
@@ -46,11 +45,6 @@ export default {
   },
 
   plugins: [
-    new CleanWebpackPlugin([outputDir], {
-      verbose: process.env.VERBOSE === 'true',
-      allowExternal: true,
-    }),
-
     new EnvironmentPlugin({
       DEBUG: JSON.stringify(process.env.DEBUG) || false,
       TITLE: title,

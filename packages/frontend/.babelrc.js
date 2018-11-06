@@ -39,6 +39,7 @@ module.exports = api => {
         require('@babel/plugin-transform-runtime'),
         { helpers: false, regenerator: true },
       ],
-    ],
+      isDevEnv ? require('react-hot-loader/babel') : null,
+    ].filter(Boolean),
   };
 };

@@ -4,13 +4,12 @@
   "license": "MIT",
   "author": "Vikram Rangaraj <vik120@icloud.com> (https://github.com/vikr01)",
   "repository": "https://github.com/vikr01/tbd-project-name.git",
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ]
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "lerna run build",
+    "clean": "lerna run clean",
     "dev": "lerna run dev",
     "heroku-postbuild": "yarn run build",
     "postinstall": "lerna run postinstall",
@@ -40,6 +39,10 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-plugin-dynamic-import-node": "^2.2.0",
+    "babel-plugin-minify-constant-folding": "^0.5.0",
+    "babel-plugin-minify-dead-code-elimination": "^0.5.0",
+    "babel-plugin-minify-guarded-expressions": "^0.4.3",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.18",
     "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
@@ -69,15 +72,16 @@
     "stylelint": "^9.5.0",
     "stylelint-config-prettier": "^4.0.0",
     "stylelint-config-recommended": "^2.1.0",
-    "yarn": "^1.9.4"
+    "yarn": "^1.10.0"
   },
   "engines": {
-    "node": ">=10",
-    "yarn": ">=1"
+    "node": ">=10 <11",
+    "yarn": ">=1.10.x"
   },
   "cacheDirectories": [
     "node_modules",
-    "packages/*/node_modules"
+    "packages/backend/node_modules",
+    "packages/frontend/node_modules"
   ],
   "husky": {
     "hooks": {

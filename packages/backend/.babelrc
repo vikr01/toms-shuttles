@@ -23,8 +23,8 @@
       "plugins": [
         ["transform-inline-environment-variables", {"include": ["NODE_ENV"]}],
         "minify-constant-folding",
-        "minify-guarded-expressions",
-        "minify-dead-code-elimination"
+        "minify-guarded-expressions"
+        // "minify-dead-code-elimination"
       ]
     }
   }
