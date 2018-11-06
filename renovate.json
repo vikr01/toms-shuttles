@@ -1,22 +1,31 @@
 {
   "extends": ["config:base"],
 
-  "assignees": ["vikr01"],
+  "baseBranches": ["dev"],
 
   "rangeStrategy": "bump",
 
-  "devDependencies": {
-    "rangeStrategy": "bump"
+  "engines": {
+    "rangeStrategy": "replace"
   },
 
-  "packageRules": [
+  "separateMinorPatch": true,
+  "patch": {
+    "automerge": true
+  },
+
+  "packages": [
     {
-      "paths": ["packages/frontend/**"],
-      "assignees": ["toep"]
+      "packagePattern": "(^|.*-)(eslint|prettier|stylelint)(-.*|$)",
+      "groupName": "linters"
     },
     {
-      "paths": ["packages/backend/**"],
-      "assignees": ["grivoire1", "surajsetty97"]
+      "packagePattern": "^babel-(plugin|preset)-.*",
+      "groupName": "babel"
     }
-  ]
+  ],
+
+  "schedule": "after 6am and before 5pm on saturday",
+
+  "timezone": "America/Los_Angeles"
 }
