@@ -10,6 +10,7 @@ environment:
 cache:
   - '%LOCALAPPDATA%/Yarn'
   - node_modules -> yarn.lock
+  - packages/*/node_modules -> yarn.lock
 
 matrix:
   fast_finish: true
@@ -23,14 +24,17 @@ shallow_clone: true
 clone_depth: 1
 
 install:
+  - ps: Install-Product node $env:nodejs_version x64
+  - ps: | # Install latest yarn version
+      (New-Object Net.WebClient).DownloadFile("https://nightly.yarnpkg.com/latest.msi", "$env:temp\yarn.msi")
+      cmd /c start /wait msiexec.exe /i $env:temp\yarn.msi /quiet /qn /norestart
   - node --version
   - yarn --version
-  - ps: Install-Product node $env:nodejs_version x64
   - set CI=true
-  - yarn install --ignore-scripts
+  - yarn install --ignore-scripts --ignore-engines
 
 test_script:
   - yarn run lint
   # - yarn run flow
   - yarn run build
-  - yarn run test
+  - yarn test
