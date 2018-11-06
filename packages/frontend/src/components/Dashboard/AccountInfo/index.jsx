@@ -68,15 +68,15 @@ export default class AccountInfoView extends Component {
         </Typography>
         <div>
           <Typography variant="h5" className="accountOverviewItem">
-            Name: {name}
+            {`Name: ${name}`}
           </Typography>
           <Typography variant="h5" className="accountOverviewItem">
-            Username: {username}
+            {`Username: ${username}`}
           </Typography>
           {accountType === 'User' && (
             <Fragment>
               <Typography variant="h5" className="accountOverviewItem">
-                Card number: {creditInfo}
+                {`Card number: ${creditInfo}`}
               </Typography>
               <Link to={routes.CREDITCARD_ADD} className="accountOverviewItem">
                 Enter Credit card info

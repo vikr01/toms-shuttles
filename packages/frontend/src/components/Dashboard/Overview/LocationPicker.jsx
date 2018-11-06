@@ -8,6 +8,7 @@ type Props = {
   show: int,
   sendRequestToAirport: func,
   sendRequestFromAirport: func,
+  haveUserPosition: boolean,
 };
 
 export default class LocationPicker extends Component<Props> {
@@ -27,7 +28,12 @@ export default class LocationPicker extends Component<Props> {
   };
 
   render() {
-    const { show, sendRequestToAirport, sendRequestFromAirport } = this.props;
+    const {
+      show,
+      sendRequestToAirport,
+      sendRequestFromAirport,
+      haveUserPosition,
+    } = this.props;
     const { value, enteredLocation, destinationSet } = this.state;
     if (show) {
       if (show === 1) {
@@ -42,10 +48,31 @@ export default class LocationPicker extends Component<Props> {
               <FormControlLabel value="OAK" control={<Radio />} label="OAK" />
               <FormControlLabel value="SJC" control={<Radio />} label="SJC" />
             </RadioGroup>
+            {!haveUserPosition && (
+              <Fragment>
+                <Typography variant="h5">
+                  Enter your current location
+                </Typography>
+                <MyStandaloneSearchBox
+                  onSet={(lat, lng) =>
+                    this.handleLocationEnteredChange(lat, lng)
+                  }
+                  placeholder="current location"
+                />
+              </Fragment>
+            )}
             <Button
               variant="contained"
               disabled={value === ''}
-              onClick={() => sendRequestToAirport(value)}
+              onClick={() =>
+                haveUserPosition
+                  ? sendRequestToAirport(value)
+                  : sendRequestToAirport(
+                      value,
+                      enteredLocation.lat,
+                      enteredLocation.lng
+                    )
+              }
             >
               Show route
             </Button>
@@ -67,6 +94,7 @@ export default class LocationPicker extends Component<Props> {
             <Typography variant="h5">Enter your destination</Typography>
             <MyStandaloneSearchBox
               onSet={(lat, lng) => this.handleLocationEnteredChange(lat, lng)}
+              placeholder="your destination"
             />
             <Button
               variant="contained"

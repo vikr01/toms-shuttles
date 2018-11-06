@@ -49,7 +49,7 @@ const MyStandaloneSearchbox = compose(
     >
       <input
         type="text"
-        placeholder="Enter destination"
+        placeholder={props.placeholder}
         style={{
           boxSizing: `border-box`,
           border: `1px solid transparent`,

@@ -29,17 +29,25 @@ function LiveGMapView({
         <RequestForm
           sendRequestToAirport={doRequestToAirport}
           sendRequestFromAirport={doRequestFromAirport}
+          haveUserPosition={coords !== undefined}
         />
         {duration &&
           distance && (
             <Fragment>
               <Typography variant="h4">
-                Estimated duration: {duration.text}
+                {`Estimated duration: ${duration.text}`}
               </Typography>
               <CostEstimater meters={distance.value} />
               <Button variant="contained" onClick={requestRide}>
                 Make request
               </Button>
+              {assignedDriver && (
+                <Typography variant="h4">
+                  {`You have been assigned to driver ${
+                    assignedDriver.username
+                  }`}
+                </Typography>
+              )}
               <br />
             </Fragment>
           )}
@@ -114,18 +122,16 @@ class MapView extends React.Component<Props> {
     return null;
   }
 
-  doRequestToAirport = airport => {
+  doRequestToAirport = (airport, lat = null, lng = null) => {
     const { coords, isGeolocationEnabled, isGeolocationAvailable } = this.props;
     console.log('we are doing stuf', airport);
     console.log(coords);
     console.log('isGeolocationEnabled', isGeolocationEnabled);
-    if (!isGeolocationEnabled) {
-      alert(
-        'Unable to locate you. Please enable location service in order to get picked up from home'
-      );
-    }
-    console.log('isGeolocationAvailable', isGeolocationAvailable);
-    const fromCoords = { lat: coords.latitude, lng: coords.longitude };
+
+    const fromCoords =
+      coords !== null
+        ? { lat: coords.latitude, lng: coords.longitude }
+        : { lat, lng };
     const toCoords = airportToCoords(airport);
     this.setState({ data: { to: toCoords, from: fromCoords }, route: true });
   };
@@ -148,7 +154,7 @@ class MapView extends React.Component<Props> {
     let response;
     try {
       response = await axios.get(
-        `${backendRoutes.CLOSEST_DRIVER}?lat=${data.from.lat}&long=${
+        `${backendRoutes.CLOSEST_DRIVER}?lat=${data.from.lat}&lng=${
           data.from.lng
         }`
       );

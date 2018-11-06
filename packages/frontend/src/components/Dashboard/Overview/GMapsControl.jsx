@@ -133,12 +133,20 @@ const GMapsControl = compose(
       await this.setState({
         atUser: false,
         atDestination: false,
-        onArrivalToDestinationDialogClosed: routeCost => {
+        onArrivalToDestinationDialogClosed: async routeCost => {
           console.log('payment stuff happens here, ', routeCost);
-          axios.post(backendRoutes.ARRIVAL, {
-            cost: routeCost,
-            location: this.props.to,
-          });
+
+          try {
+            await axios.post(backendRoutes.ARRIVAL, {
+              cost: routeCost,
+              location: this.props.to,
+            });
+            console.log('success');
+            // TODO: reset frontend to prepare for other trip. Leave ratings?
+          } catch (e) {
+            // something went wrong.
+            console.error(e);
+          }
         },
         onDriverArrivedDialogClosed: () => {
           this.setState({

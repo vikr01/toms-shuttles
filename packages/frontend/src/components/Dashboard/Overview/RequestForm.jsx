@@ -7,6 +7,7 @@ import LocationPicker from './LocationPicker';
 type Props = {
   sendRequestToAirport: func,
   sendRequestFromAirport: func,
+  haveUserPosition: boolean,
 };
 
 export default class RequestForm extends Component<Props> {
@@ -18,7 +19,12 @@ export default class RequestForm extends Component<Props> {
 
   render() {
     const { value } = this.state;
-    const { sendRequestToAirport, sendRequestFromAirport } = this.props;
+    const {
+      sendRequestToAirport,
+      sendRequestFromAirport,
+      haveUserPosition,
+    } = this.props;
+    console.log('have user position? ', haveUserPosition);
     return (
       <div className="requestFormToggleLocation">
         <ToggleButtonGroup value={value} exclusive onChange={this.handleChange}>
@@ -29,6 +35,7 @@ export default class RequestForm extends Component<Props> {
           show={value}
           sendRequestToAirport={sendRequestToAirport}
           sendRequestFromAirport={sendRequestFromAirport}
+          haveUserPosition={haveUserPosition}
         />
       </div>
     );

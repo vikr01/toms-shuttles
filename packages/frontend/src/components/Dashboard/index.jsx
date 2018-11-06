@@ -18,7 +18,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ListItems from './ListItems';
-import RidesView from './Rides';
 import AccountInfoView from './AccountInfo';
 import OverviewView from './Overview';
 import routes from '../../routes';
@@ -233,9 +232,6 @@ type MainContentProps = {
 };
 
 const ShowMainContent = ({ page, classes }: MainContentProps) => {
-  if (page === 'Rides') {
-    return <RidesView classes={classes} />;
-  }
   if (page === 'Account') {
     return <AccountInfoView />;
   }
