@@ -35,7 +35,7 @@ const unsetEnvVars = requiredEnvVars.filter(
 
 if (unsetEnvVars.length > 0) {
   throw new Error(
-    `You're missing some required environemnt variables: ${unsetEnvVars.join(
+    `You're missing some required environment variables: ${unsetEnvVars.join(
       ', '
     )}`
   );
