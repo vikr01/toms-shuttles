@@ -3,7 +3,7 @@
   "license": "MIT",
   "author": "Vikram Rangaraj <vik120@icloud.com> (https://github.com/vikr01)",
   "repository": "https://github.com/vikr01/tbd-project-name/tree/master/packages/frontend",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "lib/index.js",
   "scripts": {
     "prebuild": "yarn run clean",
