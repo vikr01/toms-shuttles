@@ -221,8 +221,9 @@ process.on('unhandledRejection', err => {
           'username',
           'accountType',
           'creditCard',
+          'driverInfo',
         ],
-        relations: ['creditCard'],
+        relations: ['creditCard', 'driverInfo'],
         where: {
           username: name,
         },
@@ -232,7 +233,14 @@ process.on('unhandledRejection', err => {
     }
 
     if (user) {
-      const { username, firstName, lastName, accountType, creditCard } = user;
+      const {
+        username,
+        firstName,
+        lastName,
+        accountType,
+        creditCard,
+        driverInfo,
+      } = user;
       const cardNum = creditCard ? creditCard.cardNum : '';
       return res.status(HttpStatus.OK).json({
         username,
@@ -240,6 +248,7 @@ process.on('unhandledRejection', err => {
         lastName,
         accountType,
         creditCard: cardNum,
+        driverInfo,
       });
     }
 
