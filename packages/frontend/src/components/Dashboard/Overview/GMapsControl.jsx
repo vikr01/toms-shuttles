@@ -11,7 +11,6 @@ import {
   Marker,
 } from 'react-google-maps';
 import axios from 'axios';
-import { Typography } from '@material-ui/core';
 import AlertDialog from './AlertDialog';
 import { estimateCost } from './CostEstimater';
 

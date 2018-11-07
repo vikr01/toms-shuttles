@@ -131,7 +131,7 @@ class MapView extends React.Component<Props> {
   }
 
   doRequestToAirport = (airport, lat = null, lng = null) => {
-    const { coords, isGeolocationEnabled, isGeolocationAvailable } = this.props;
+    const { coords, isGeolocationEnabled } = this.props;
     console.log('we are doing stuf', airport);
     console.log(coords);
     console.log('isGeolocationEnabled', isGeolocationEnabled);
@@ -164,7 +164,7 @@ class MapView extends React.Component<Props> {
       response = await axios.get(
         `${backendRoutes.CLOSEST_DRIVER}?lat=${data.from.lat}&lng=${
           data.from.lng
-        }`
+        }&groupSize=1`
       );
     } catch (error) {
       console.error(error);

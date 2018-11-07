@@ -48,7 +48,7 @@ const DisplayDashboardContent = ({
     return <MapView showMap={showMap} startRequest={() => doRequest()} />;
   }
   if (accountType === 'Driver') {
-    return <DriverMapView showMap={showMap} startRequest={() => doRequest()} />;
+    return <DriverMapView showMap={showMap} />;
   }
   return null;
 };
