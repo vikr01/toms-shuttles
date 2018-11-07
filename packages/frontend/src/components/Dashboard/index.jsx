@@ -121,17 +121,20 @@ class Dashboard extends Component<Props> {
     open: true,
     redirectToLogin: false,
     checkedForLogin: false,
+    accountType: null,
     page: 'Dashboard',
   };
 
   async componentDidMount() {
     try {
-      await axios.get(backendRoutes.LOGGED_IN);
+      const res = await axios.get(backendRoutes.LOGGED_IN);
       this.setState({
         redirectToLogin: false,
         checkedForLogin: true,
+        accountType: res.data,
       });
     } catch (e) {
+      console.error(e);
       this.setState({
         redirectToLogin: true,
         checkedForLogin: true,
@@ -153,8 +156,13 @@ class Dashboard extends Component<Props> {
 
   render() {
     const { classes } = this.props;
-    const { open, page, redirectToLogin, checkedForLogin } = this.state;
-    console.log(redirectToLogin);
+    const {
+      open,
+      page,
+      redirectToLogin,
+      checkedForLogin,
+      accountType,
+    } = this.state;
     if (!checkedForLogin) {
       return <Typography>Logging in...</Typography>;
     }
@@ -219,7 +227,7 @@ class Dashboard extends Component<Props> {
               />
             </List>
           </Drawer>
-          <ShowMainContent page={page} classes={classes} />
+          <ShowMainContent accountType={accountType} page={page} />
         </div>
       </Fragment>
     );
@@ -228,15 +236,15 @@ class Dashboard extends Component<Props> {
 
 type MainContentProps = {
   page: string,
-  classes: object,
+  accountType: string,
 };
 
-const ShowMainContent = ({ page, classes }: MainContentProps) => {
+const ShowMainContent = ({ page, accountType }: MainContentProps) => {
   if (page === 'Account') {
     return <AccountInfoView />;
   }
   if (page === 'Dashboard') {
-    return <OverviewView classes={classes} />;
+    return <OverviewView accountType={accountType} />;
   }
   return null;
 };

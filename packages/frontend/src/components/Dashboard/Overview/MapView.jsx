@@ -22,6 +22,7 @@ function LiveGMapView({
   assignedDriver,
   driverArriving,
   coords,
+  disableRequestButtons,
 }: props) {
   if (showMap) {
     return (
@@ -30,6 +31,7 @@ function LiveGMapView({
           sendRequestToAirport={doRequestToAirport}
           sendRequestFromAirport={doRequestFromAirport}
           haveUserPosition={coords !== undefined}
+          disableRequestButtons={disableRequestButtons}
         />
         {duration &&
           distance && (
@@ -38,9 +40,15 @@ function LiveGMapView({
                 {`Estimated duration: ${duration.text}`}
               </Typography>
               <CostEstimater meters={distance.value} />
-              <Button variant="contained" onClick={requestRide}>
+              <Button
+                variant="contained"
+                onClick={requestRide}
+                disabled={disableRequestButtons}
+              >
                 Make request
               </Button>
+              <div stype={{ height: '10px' }} />
+
               {assignedDriver && (
                 <Typography variant="h4">
                   {`You have been assigned to driver ${
@@ -51,8 +59,7 @@ function LiveGMapView({
               <br />
             </Fragment>
           )}
-
-        <div style={{ height: '100vh', width: '100%' }}>
+        <div style={{ height: '80vh', width: '100%' }}>
           <GMapsControl
             data={data}
             route={route}
@@ -109,6 +116,7 @@ class MapView extends React.Component<Props> {
       route: false,
       assignedDriver: null,
       driverArriving: false,
+      disableRequestButtons: false,
     },
     duration: null,
     distance: null,
@@ -129,7 +137,7 @@ class MapView extends React.Component<Props> {
     console.log('isGeolocationEnabled', isGeolocationEnabled);
 
     const fromCoords =
-      coords !== null
+      lat === null
         ? { lat: coords.latitude, lng: coords.longitude }
         : { lat, lng };
     const toCoords = airportToCoords(airport);
@@ -161,7 +169,11 @@ class MapView extends React.Component<Props> {
     } catch (error) {
       console.error(error);
     }
-    this.setState({ assignedDriver: response.data, driverArriving: true });
+    this.setState({
+      assignedDriver: response.data,
+      driverArriving: true,
+      disableRequestButtons: true,
+    });
   };
 
   render() {
@@ -174,12 +186,10 @@ class MapView extends React.Component<Props> {
       driverArriving,
       assignedDriver,
       coords,
+      disableRequestButtons,
     } = this.state;
     return (
       <Fragment>
-        <Typography variant="h4" className="dashboardComponent2">
-          Map
-        </Typography>
         <RequestButton showMap={showMap} startRequest={startRequest} />
         <LiveGMapView
           showMap={showMap}
@@ -196,6 +206,7 @@ class MapView extends React.Component<Props> {
           driverArriving={driverArriving}
           assignedDriver={assignedDriver}
           coords={coords}
+          disableRequestButtons={disableRequestButtons}
         />
       </Fragment>
     );

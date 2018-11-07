@@ -11,6 +11,7 @@ import {
   Marker,
 } from 'react-google-maps';
 import axios from 'axios';
+import { Typography } from '@material-ui/core';
 import AlertDialog from './AlertDialog';
 import { estimateCost } from './CostEstimater';
 
@@ -81,11 +82,8 @@ const GMapsControl = compose(
                     lat: assignedDriver.currentLatitude,
                     lng: assignedDriver.currentLongitude,
                   },
-                  // fromMarker: <Marker
-                  //  position={new window.google.maps.LatLng(assignedDriver.currentLatitude, assignedDriver.currentLongitude)}
-                  // icon={{url:'car_topview.png', scaledSize: new google.maps.Size(16, 32)}}
-                  // />,
                   userLocation: data.from,
+                  boundsDriver: result.routes[0].bounds,
                 });
                 const { duration } = result.routes[0].legs[0];
 
@@ -147,6 +145,7 @@ const GMapsControl = compose(
             // something went wrong.
             console.error(e);
           }
+          window.location.reload();
         },
         onDriverArrivedDialogClosed: () => {
           this.setState({
@@ -211,7 +210,11 @@ const GMapsControl = compose(
       }}
     />
     <GoogleMap
-      ref={map => map && props.bounds && map.fitBounds(props.bounds)}
+      ref={map =>
+        map &&
+        props.boundsDriver &&
+        map.fitBounds(props.userInCar ? props.bounds : props.boundsDriver)
+      }
       defaultZoom={11}
       defaultCenter={new google.maps.LatLng(37.3352, -121.8811)}
     >

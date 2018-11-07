@@ -167,7 +167,7 @@ process.on('unhandledRejection', err => {
     req.session.regenerate(err => {});
     req.session.username = user.username;
     req.session.save(err => {
-      console.log('saved session, ', err);
+      console.log('saved session');
     });
 
     console.log(`Welcome back, ${user.firstName}`);
@@ -178,8 +178,11 @@ process.on('unhandledRejection', err => {
    * Check if user is logged in
    */
   app.get(routes.LOGGED_IN, async (req, res, next) => {
-    if (req.session.username) {
-      return res.status(HttpStatus.OK).send('User is logged in');
+    const user = await connection
+      .getRepository(User)
+      .findOne({ username: req.session.username });
+    if (user) {
+      return res.status(HttpStatus.OK).send(user.accountType);
     }
     return res.status(HttpStatus.NOT_FOUND).send('User is not logged in');
   });
@@ -256,13 +259,13 @@ process.on('unhandledRejection', err => {
   });
 
   app.put(routes.DRIVERS, async (req, res, next) => {
-    const { username: name } = req.session;
+    const { username } = req.session;
     let repo;
     let driver;
 
     try {
       repo = await connection.getRepository(Driver);
-      driver = await repo.findOne({ username: name });
+      driver = await repo.findOne({ username });
     } catch (error) {
       res.status(HttpStatus.IM_A_TEAPOT).send('Error accessing database');
     }
@@ -270,7 +273,7 @@ process.on('unhandledRejection', err => {
     if (!driver) {
       return res
         .status(HttpStatus.BAD_REQUEST)
-        .send(`Invalid username:${name}`);
+        .send(`Invalid username:${username}`);
     }
 
     Object.entries(req.body).forEach(([key, value]) => {
@@ -279,7 +282,7 @@ process.on('unhandledRejection', err => {
       } else {
         console.warn(
           chalk.blue(
-            `Discarding non-existent key, ${key}, for username: ${name}`
+            `Discarding non-existent key, ${key}, for username: ${username}`
           )
         );
       }

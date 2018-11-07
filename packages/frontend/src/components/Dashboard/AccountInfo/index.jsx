@@ -31,8 +31,9 @@ export default class AccountInfoView extends Component {
     this.setState({
       name: `${response.data.firstName} ${response.data.lastName}`,
       username: response.data.username,
-      creditInfo: response.data.creditInfo,
+      creditInfo: response.data.creditCard,
       accountType: response.data.accountType,
+      seatNumber: response.data.seatNumber,
       error: false,
       loaded: true,
     });
@@ -46,6 +47,7 @@ export default class AccountInfoView extends Component {
       username,
       creditInfo,
       accountType,
+      seatNumber,
     } = this.state;
     if (!loaded) {
       return (
@@ -64,7 +66,7 @@ export default class AccountInfoView extends Component {
     return (
       <Fragment>
         <Typography variant="h4" gutterBottom component="h2">
-          AccountInfoView
+          Account details
         </Typography>
         <div>
           <Typography variant="h5" className="accountOverviewItem">
@@ -73,7 +75,7 @@ export default class AccountInfoView extends Component {
           <Typography variant="h5" className="accountOverviewItem">
             {`Username: ${username}`}
           </Typography>
-          {accountType === 'User' && (
+          {accountType === 'Client' && (
             <Fragment>
               <Typography variant="h5" className="accountOverviewItem">
                 {`Card number: ${creditInfo}`}
@@ -85,6 +87,9 @@ export default class AccountInfoView extends Component {
           )}
           {accountType === 'Driver' && (
             <Fragment>
+              <Typography variant="h5" className="accountOverviewItem">
+                {`Seat count: ${seatNumber}`}
+              </Typography>
               <Link to={routes.CARSEATS_SET} className="accountOverviewItem">
                 Change seat count
               </Link>

@@ -26,6 +26,7 @@ export default class CarSeatSet extends Component<Props> {
         status: 'we got your seat count saved!',
       });
     } catch (e) {
+      console.error(e);
       this.setState({ status: 'Issue connecting to server' });
     }
   };

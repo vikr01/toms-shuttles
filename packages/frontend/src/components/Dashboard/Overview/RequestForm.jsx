@@ -8,6 +8,7 @@ type Props = {
   sendRequestToAirport: func,
   sendRequestFromAirport: func,
   haveUserPosition: boolean,
+  disableRequestButtons: boolean,
 };
 
 export default class RequestForm extends Component<Props> {
@@ -23,6 +24,7 @@ export default class RequestForm extends Component<Props> {
       sendRequestToAirport,
       sendRequestFromAirport,
       haveUserPosition,
+      disableRequestButtons,
     } = this.props;
     console.log('have user position? ', haveUserPosition);
     return (
@@ -36,6 +38,7 @@ export default class RequestForm extends Component<Props> {
           sendRequestToAirport={sendRequestToAirport}
           sendRequestFromAirport={sendRequestFromAirport}
           haveUserPosition={haveUserPosition}
+          disableRequestButtons={disableRequestButtons}
         />
       </div>
     );
