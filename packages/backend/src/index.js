@@ -14,7 +14,7 @@ import path from 'path';
 import HttpStatus from 'http-status-codes';
 import { promisify } from 'util';
 import { forEach } from 'p-iteration';
-import { createConnection } from 'typeorm';
+import { createConnection, MoreThan } from 'typeorm';
 import frontendRoutes from 'tbd-frontend-name/src/routes';
 import { connectionOptions } from './db_connection';
 import routes from '../routes';
@@ -122,7 +122,26 @@ process.on('unhandledRejection', err => {
       driverInfo: null,
     });
 
-    console.log(newUser);
+    if (accountType === 'Driver') {
+      const newDriver = Object.assign(new Driver(), {
+        username,
+        currentLatitude: 0,
+        currentLongitude: 0,
+        rating: 0,
+        totalReviews: 0,
+        active: 0,
+        passengers: null,
+      });
+
+      try {
+        await connection.getRepository(Driver).save(newDriver);
+      } catch (err) {
+        console.log(err);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+      }
+
+      newUser.driverInfo = newDriver;
+    }
 
     try {
       await connection.getRepository(User).save(newUser);
@@ -306,16 +325,39 @@ process.on('unhandledRejection', err => {
   }
 
   app.get(routes.CLOSEST_DRIVER, async (req, res, next) => {
-    const { lat, lng, destination } = req.query;
+    try {
+      const creditCard = await connection.getRepository(User).findOne({
+        select: ['creditCard'],
+        relations: ['creditCard'],
+        where: {
+          username: req.session.username,
+        },
+      });
+      if (!creditCard) {
+        res
+          .status(HttpStatus.NOT_FOUND)
+          .json({ error: 'No credit card on file' });
+      }
+    } catch (err) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+    }
+    const { lat, lng, destination, groupSize } = req.query;
 
-    if (!correctLat(parseFloat(lat)) || !correctLong(parseFloat(lng))) {
+    if (
+      !correctLat(parseFloat(lat)) ||
+      !correctLong(parseFloat(lng)) ||
+      !groupSize
+    ) {
       return res.status(HttpStatus.BAD_REQUEST).send('Invalid arguments');
     }
 
     // query only active drivers
-    const drivers = await connection.getRepository(Driver).find({ active: 1 });
+    const drivers = await connection.getRepository(Driver).find({
+      active: 1,
+      numOfSeats: MoreThan(groupSize - 1),
+    });
     let closestDriver = {};
-    let leastTime = 10000000;
+    let leastTime = Number.POSITIVE_INFINITY;
     await forEach(drivers, async driver => {
       const result = await axios.get(
         'https://maps.googleapis.com/maps/api/distancematrix/json',
@@ -339,8 +381,31 @@ process.on('unhandledRejection', err => {
       return res.status(HttpStatus.NOT_FOUND).send('Could not find a driver');
     }
 
-    // add name of driver in response only if already authenticated
-    closestDriver.name = req.session.user;
+    const newPassenger = Object.assign(new Passenger(), {
+      username: req.session.username,
+      groupSize,
+    });
+
+    try {
+      await connection.getRepository(Passenger).save(newPassenger);
+    } catch (err) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+    }
+
+    if (closestDriver.passengers) closestDriver.passengers.push(newPassenger);
+    else closestDriver.passengers = [newPassenger];
+
+    // update driver's available seats
+    closestDriver.numOfSeats -= groupSize;
+
+    try {
+      await connection.getRepository(Driver).save(closestDriver);
+    } catch (err) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+    }
+
+    // add user's driver to their session
+    req.session.driver = closestDriver;
 
     return res.status(HttpStatus.OK).json(closestDriver);
   });

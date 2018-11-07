@@ -27,6 +27,12 @@ export class Driver /* extends EntityBase */ {
   @Column('tinyint')
   active = 0;
 
+  @Column('float')
+  destLatitude = 0;
+
+  @Column('float')
+  destLongitude = 0;
+
   @OneToMany(type => Passenger)
   passengers: Passenger[];
 }
