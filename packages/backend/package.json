@@ -36,5 +36,9 @@
   },
   "peerDependencies": {
     "tbd-frontend-name": "*"
+  },
+  "devDependencies": {
+    "sqlite3": "^4.0.3",
+    "supertest": "^3.3.0"
   }
 }

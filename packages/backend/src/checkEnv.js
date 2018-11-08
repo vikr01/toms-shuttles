@@ -17,11 +17,12 @@ if (isHeroku && existsSync(pathToEnvFile)) {
   );
 }
 
+const NON_SQLITE_VARS = ['DB_HOST', 'DB_PASSWORD', 'DB_DATABASE'];
+
 const requiredEnvVars = [
   'NODE_ENV',
-  'DB_HOST',
-  'DB_PASSWORD',
-  'DB_DATABASE',
+  'DB_TYPE',
+  ...(process.env.DB_TYPE !== 'sqlite' ? NON_SQLITE_VARS : []),
   'HASH_ALGO',
   'HASH_KEY',
   'DIGESTION_TYPE',

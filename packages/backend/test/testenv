@@ -1,0 +1,8 @@
+DB_TYPE=sqlite
+
+HASH_ALGO=sha256
+HASH_KEY=this-is-the-test-environment
+DIGESTION_TYPE=base64
+SESSION_SECRET=test-secret
+
+API_KEY=null
