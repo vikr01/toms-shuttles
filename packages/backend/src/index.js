@@ -396,6 +396,7 @@ process.on('unhandledRejection', err => {
     const newPassenger = Object.assign(new Passenger(), {
       username: req.session.username,
       groupSize,
+      driver: null,
     });
 
     try {
@@ -420,6 +421,43 @@ process.on('unhandledRejection', err => {
     req.session.driver = closestDriver;
 
     return res.status(HttpStatus.OK).json(closestDriver);
+  });
+
+  app.post(routes.ARRIVED, async (req, res, next) => {
+    const { username } = req.session;
+
+    let info;
+    try {
+      info = await connection.getRepository(Passenger).findOne({
+        select: ['username', 'groupSize', 'driver'],
+        relations: ['driver'],
+        where: {
+          username,
+        },
+      });
+    } catch (err) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+    }
+
+    const { groupSize, driver } = info;
+
+    console.log(groupSize);
+
+    driver.numOfSeats += groupSize;
+
+    try {
+      await connection.getRepository(Driver).save(driver);
+    } catch (err) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+    }
+
+    try {
+      await connection.getRepository(Passenger).remove(info);
+    } catch (err) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+    }
+
+    return res.status(HttpStatus.OK).send('Processed arrival');
   });
 
   app.post(routes.ADDCREDITCARD, async (req, res, next) => {

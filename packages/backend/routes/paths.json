@@ -15,6 +15,7 @@
 
   //location api
   "CLOSEST_DRIVER": "/api/nearestDriver",
+  "ARRIVED": "/api/arrival",
 
   //credit card api
   "ADDCREDITCARD": "/api/creditCard"
