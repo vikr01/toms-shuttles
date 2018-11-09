@@ -351,7 +351,7 @@ process.on('unhandledRejection', err => {
     } catch (err) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
     }
-    const { lat, lng, destination, groupSize } = req.query;
+    const { lat, lng, destLat, destLng, groupSize } = req.query;
 
     if (
       !correctLat(parseFloat(lat)) ||
@@ -396,26 +396,26 @@ process.on('unhandledRejection', err => {
       groupSize,
     });
 
-    // try {
-    //   await connection.getRepository(Passenger).save(newPassenger);
-    // } catch (err) {
-    //   return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
-    // }
+    try {
+      await connection.getRepository(Passenger).save(newPassenger);
+    } catch (err) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+    }
 
-    // if (closestDriver.passengers) closestDriver.passengers.push(newPassenger);
-    // else closestDriver.passengers = [newPassenger];
+    if (closestDriver.passengers) closestDriver.passengers.push(newPassenger);
+    else closestDriver.passengers = [newPassenger];
 
-    // // update driver's available seats
-    // closestDriver.numOfSeats -= groupSize;
+    // update driver's available seats
+    closestDriver.numOfSeats -= groupSize;
 
-    // try {
-    //   await connection.getRepository(Driver).save(closestDriver);
-    // } catch (err) {
-    //   return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
-    // }
+    try {
+      await connection.getRepository(Driver).save(closestDriver);
+    } catch (err) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+    }
 
-    // // add user's driver to their session
-    // req.session.driver = closestDriver;
+    // add user's driver to their session
+    req.session.driver = closestDriver;
 
     return res.status(HttpStatus.OK).json(closestDriver);
   });
