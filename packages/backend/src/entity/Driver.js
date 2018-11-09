@@ -45,7 +45,7 @@ export class Driver /* extends EntityBase */ {
   @Column('float')
   destLng3 = undefined;
 
-  @OneToMany(type => Passenger)
+  @OneToMany(type => Passenger, passenger => passenger.driver)
   passengers: Passenger[];
 }
 

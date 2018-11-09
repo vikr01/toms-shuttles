@@ -361,10 +361,12 @@ process.on('unhandledRejection', err => {
       return res.status(HttpStatus.BAD_REQUEST).send('Invalid arguments');
     }
 
-    // query only active drivers
+    // query only active drivers with seats and an open destination
     const drivers = await connection.getRepository(Driver).find({
       active: 1,
       numOfSeats: MoreThan(Number(groupSize) - 1),
+      destLat3: 0,
+      destLng3: 0,
     });
     let closestDriver = {};
     let leastTime = Number.POSITIVE_INFINITY;
