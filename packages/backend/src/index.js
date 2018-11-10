@@ -411,6 +411,19 @@ process.on('unhandledRejection', err => {
     // update driver's available seats
     closestDriver.numOfSeats -= groupSize;
 
+    // set their destination
+    closestDriver.destLat1 = destLat;
+    closestDriver.destLng1 = destLng;
+
+    // either dest2 or 3 is available. Set the users location to the available one
+    if (closestDriver.destLat2 === 0) {
+      closestDriver.destLat2 = lat;
+      closestDriver.destLng2 = lng;
+    } else {
+      closestDriver.destLat3 = lat;
+      closestDriver.destLng3 = lng;
+    }
+
     try {
       await connection.getRepository(Driver).save(closestDriver);
     } catch (err) {
@@ -421,6 +434,15 @@ process.on('unhandledRejection', err => {
     req.session.driver = closestDriver;
 
     return res.status(HttpStatus.OK).json(closestDriver);
+  });
+
+  app.get(routes.MY_DRIVER, async (req, res, next) => {
+    if (req.session.driver) {
+      return res.status(HttpStatus.OK).json(req.session.driver);
+    }
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .send('No driver assigned to you');
   });
 
   app.post(routes.ARRIVED, async (req, res, next) => {
@@ -444,6 +466,20 @@ process.on('unhandledRejection', err => {
     console.log(groupSize);
 
     driver.numOfSeats += groupSize;
+
+    if (driver.destLat1 !== 0) {
+      driver.currentLatitude = driver.destLat1;
+      driver.currentLongitude = driver.destLng1;
+    }
+
+    driver.destLat1 = 0;
+    driver.destLng1 = 0;
+
+    driver.destLat2 = 0;
+    driver.destLng2 = 0;
+
+    driver.destLat3 = 0;
+    driver.destLng3 = 0;
 
     try {
       await connection.getRepository(Driver).save(driver);
