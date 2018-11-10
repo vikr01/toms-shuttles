@@ -28,6 +28,7 @@ const GMapsControl = compose(
     componentDidUpdate() {
       if (this.state.atDestination) {
         clearInterval(this.state.toLocationInterval);
+        clearInterval(this.state.toLocationCheckInterval);
       }
       if (this.state.atUser && this.state.userInCar) {
         clearInterval(this.state.toUserInterval);
@@ -36,6 +37,19 @@ const GMapsControl = compose(
         const ticksPerInterval =
           this.state.directions.length / (timeToDest / timePerInterval);
         let c = 0;
+
+        // Ask backend every second if another passenger needs to be picked up
+        const checkInterval = setInterval(async () => {
+          let response;
+          try {
+            response = await axios.get(backendRoutes.MY_DRIVER);
+            console.log(response);
+          } catch (error) {
+            console.error(error);
+          }
+        }, 1000);
+
+        // animate going from user to destination.
         const interval = setInterval(() => {
           if (c < this.state.directions.length - 1) {
             const pos1 = this.state.directions[parseInt(c, 10)];
@@ -153,8 +167,12 @@ const GMapsControl = compose(
             atUserDialogShow: false,
           });
         },
-        setLocationInterval: interval => {
-          this.setState({ toLocationInterval: interval, atUser: false });
+        setLocationInterval: (interval, checkInterval) => {
+          this.setState({
+            toLocationInterval: interval,
+            atUser: false,
+            toLocationCheckInterval: checkInterval,
+          });
         },
         onDirectionChange: () => {
           const { data, routeSet } = this.props;
