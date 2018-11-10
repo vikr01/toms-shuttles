@@ -164,7 +164,7 @@ class MapView extends React.Component<Props> {
       response = await axios.get(
         `${backendRoutes.CLOSEST_DRIVER}?lat=${data.from.lat}&lng=${
           data.from.lng
-        }&groupSize=1`
+        }&destLat=${data.to.lat}&destLng=${data.to.lng}&groupSize=1`
       );
     } catch (error) {
       console.error(error);
