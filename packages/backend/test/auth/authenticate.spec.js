@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import '../helpers/loadTestEnv';
 import { createConnection } from 'typeorm';
 import request from 'supertest';
