@@ -95,13 +95,13 @@ function RequestButton({ showMap, startRequest }: RequestButtonProps) {
 
 function airportToCoords(airport) {
   if (airport === 'SFO') {
-    return { lat: 37.6213129, lng: -122.3811441 };
+    return { lat: 37.6213, lng: -122.381 };
   }
   if (airport === 'OAK') {
-    return { lat: 37.7125689, lng: -122.2219315 };
+    return { lat: 37.7126, lng: -122.222 };
   }
   if (airport === 'SJC') {
-    return { lat: 37.3639472, lng: -121.9311262 };
+    return { lat: 37.364, lng: -121.931 };
   }
   return null;
 }
