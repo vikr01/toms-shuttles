@@ -8,6 +8,7 @@ import axios from 'axios';
 import RequestForm from './RequestForm';
 import GMapsControl from './GMapsControl';
 import CostEstimater, { estimateCost } from './CostEstimater';
+import AlertDialog from './AlertDialog';
 
 function LiveGMapView({
   showMap,
@@ -121,6 +122,7 @@ class MapView extends React.Component<Props> {
     },
     duration: null,
     distance: null,
+    status: '',
   };
 
   static getDerivedStateFromProps(nextProps, state) {
@@ -175,10 +177,15 @@ class MapView extends React.Component<Props> {
         disableRequestButtons: true,
       });
     } catch (error) {
+      console.log(error.response.data);
+      this.setState({ status: error.response.data });
       console.error(error);
-
       // handle error
     }
+  };
+
+  onAlertClose = () => {
+    this.setState({ status: '' });
   };
 
   render() {
@@ -192,9 +199,16 @@ class MapView extends React.Component<Props> {
       assignedDriver,
       coords,
       disableRequestButtons,
+      status,
     } = this.state;
     return (
       <Fragment>
+        <AlertDialog
+          text={status}
+          title="Issue"
+          onClose={this.onAlertClose}
+          open={status !== ''}
+        />
         <RequestButton showMap={showMap} startRequest={startRequest} />
         <LiveGMapView
           showMap={showMap}
