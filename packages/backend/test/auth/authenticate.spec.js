@@ -9,8 +9,8 @@ import routes from '../../routes';
 let connection;
 let app;
 
-console.log('sqlite3 exists ', require.resolve('sqlite3'));
-console.log('typeorm exists ', require.resolve('typeorm'));
+console.log('sqlite3 exists ', require('sqlite3'));
+console.log('typeorm exists ', require('typeorm'));
 
 beforeAll(async () => {
   connection = await createConnection(connectionOptions);
