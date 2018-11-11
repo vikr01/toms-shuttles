@@ -5,9 +5,9 @@ node_js:
   - 10
 
 cache:
-  yarn: true
-  directories:
-    - .npm
+  yarn: false # true
+  # directories:
+  #   - .npm
 
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh

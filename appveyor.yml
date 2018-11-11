@@ -7,10 +7,10 @@ environment:
   matrix:
     - nodejs_version: 10
 
-cache:
-  - '%LOCALAPPDATA%/Yarn'
-  - node_modules -> yarn.lock
-  - packages/*/node_modules -> yarn.lock
+# cache:
+#   - '%LOCALAPPDATA%/Yarn'
+#   - node_modules -> yarn.lock
+#   - packages/*/node_modules -> yarn.lock
 
 matrix:
   fast_finish: true
