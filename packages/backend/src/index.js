@@ -262,7 +262,7 @@ process.on('unhandledRejection', err => {
 
     await connection.getRepository(Driver).save(newDriver);
 
-    res.status(HttpStatus.OK).send('Done');
+    return res.status(HttpStatus.OK).send('Done');
   });
 
   app.get(routes.DRIVER, async (req, res, next) => {
@@ -323,7 +323,7 @@ process.on('unhandledRejection', err => {
     try {
       await repo.save(driver);
     } catch (error) {
-      res.status(HttpStatus.IM_A_TEAPOT).send('Error updating database');
+      return res.status(HttpStatus.IM_A_TEAPOT).send('Error updating database');
     }
 
     return res.status(HttpStatus.OK).json(driver);
@@ -541,7 +541,7 @@ process.on('unhandledRejection', err => {
     }
 
     if (!user) {
-      res.statusCode(HttpStatus.NOT_FOUND).send('Could not find user');
+      return res.statusCode(HttpStatus.NOT_FOUND).send('Could not find user');
     }
 
     const newCard = Object.assign(new CreditCard(), {
