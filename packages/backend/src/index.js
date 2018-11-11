@@ -287,15 +287,19 @@ process.on('unhandledRejection', err => {
   });
 
   app.put(routes.DRIVERS, async (req, res, next) => {
-    const { username } = req.session;
+    const { username } = req.body.username ? req.body : req.session;
     let repo;
     let driver;
 
+    console.log('DRIVERS put username: ', username);
     try {
       repo = await connection.getRepository(Driver);
       driver = await repo.findOne({ username });
     } catch (error) {
-      res.status(HttpStatus.IM_A_TEAPOT).send('Error accessing database');
+      console.log(error);
+      return res
+        .status(HttpStatus.IM_A_TEAPOT)
+        .send('Error accessing database');
     }
 
     if (!driver) {
@@ -437,7 +441,7 @@ process.on('unhandledRejection', err => {
   });
 
   app.get(routes.MY_DRIVER, async (req, res, next) => {
-    if (req.session.driver) {
+    if (req.session.username) {
       return res.status(HttpStatus.OK).json(req.session.driver);
     }
     return res
@@ -465,21 +469,23 @@ process.on('unhandledRejection', err => {
 
     console.log(groupSize);
 
-    driver.numOfSeats += groupSize;
+    if (driver) {
+      driver.numOfSeats += groupSize;
 
-    if (driver.destLat1 !== 0) {
-      driver.currentLatitude = driver.destLat1;
-      driver.currentLongitude = driver.destLng1;
+      if (driver.destLat1 !== 0) {
+        driver.currentLatitude = driver.destLat1;
+        driver.currentLongitude = driver.destLng1;
+      }
+
+      driver.destLat1 = 0;
+      driver.destLng1 = 0;
+
+      driver.destLat2 = 0;
+      driver.destLng2 = 0;
+
+      driver.destLat3 = 0;
+      driver.destLng3 = 0;
     }
-
-    driver.destLat1 = 0;
-    driver.destLng1 = 0;
-
-    driver.destLat2 = 0;
-    driver.destLng2 = 0;
-
-    driver.destLat3 = 0;
-    driver.destLng3 = 0;
 
     try {
       await connection.getRepository(Driver).save(driver);
