@@ -104,6 +104,7 @@ var PlatformTools = /** @class */ (function () {
                 * sqlite
                 */
                 case "sqlite3":
+                    console.log('requiring sqlite3');
                     return require("sqlite3");
                 /**
                 * sql.js
@@ -128,10 +129,12 @@ var PlatformTools = /** @class */ (function () {
                 * default
                 */
                 default:
+                    console.log('requiring ', name);
                     return require(name);
             }
         }
         catch (err) {
+            console.log(err);
             if (!path.isAbsolute(name) && name.substr(0, 2) !== "./" && name.substr(0, 3) !== "../") {
                 return require(path.resolve(process.cwd() + "/node_modules/" + name));
             }
