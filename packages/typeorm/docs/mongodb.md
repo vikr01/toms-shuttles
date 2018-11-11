@@ -1,50 +1,52 @@
 # MongoDB
 
-- [MongoDB support](#mongodb-support)
-- [Defining entities and columns](#defining-entities-and-columns)
-- [Defining subdocuments (embed documents)](#defining-subdocuments-embed-documents)
-- [Using `MongoEntityManager` and `MongoRepository`](#using-mongoentitymanager-and-mongorepository)
+* [MongoDB support](#mongodb-support)
+* [Defining entities and columns](#defining-entities-and-columns)
+* [Defining subdocuments (embed documents)](#defining-subdocuments-embed-documents)
+* [Using `MongoEntityManager` and `MongoRepository`](#using-mongoentitymanager-and-mongorepository)
 
 ## MongoDB support
 
 TypeORM has basic MongoDB support.
-Most of TypeORM functionality is RDBMS-specific,
+Most of TypeORM functionality is RDBMS-specific, 
 this page contains all MongoDB-specific functionality documentation.
 
 ## Defining entities and columns
 
-Defining entities and columns is almost the same as in relational databases,
-the main difference is that you must use `@ObjectIdColumn`
+Defining entities and columns is almost the same as in relational databases, 
+the main difference is that you must use `@ObjectIdColumn` 
 instead of `@PrimaryColumn` or `@PrimaryGeneratedColumn`.
 
 Simple entity example:
 
 ```typescript
-import { Entity, ObjectID, ObjectIdColumn, Column } from 'typeorm';
+import {Entity, ObjectID, ObjectIdColumn, Column} from "typeorm";
 
 @Entity()
 export class User {
-  @ObjectIdColumn()
-  id: ObjectID;
-
-  @Column()
-  firstName: string;
-
-  @Column()
-  lastName: string;
+    
+    @ObjectIdColumn()
+    id: ObjectID;
+    
+    @Column()
+    firstName: string;
+    
+    @Column()
+    lastName: string;
+    
 }
 ```
 
 And this is how you bootstrap the app:
 
 ```typescript
-import { createConnection, Connection } from 'typeorm';
+import {createConnection, Connection} from "typeorm";
 
 const connection: Connection = await createConnection({
-  type: 'mongodb',
-  host: 'localhost',
-  port: 27017,
-  database: 'test',
+    type: "mongodb",
+    host: "localhost",
+    port: 27017,
+    database: "test"
 });
 ```
 
@@ -54,78 +56,84 @@ Since MongoDB stores objects and objects inside objects (or documents inside doc
 you can do the same in TypeORM:
 
 ```typescript
-import { Entity, ObjectID, ObjectIdColumn, Column } from 'typeorm';
+import {Entity, ObjectID, ObjectIdColumn, Column} from "typeorm";
 
 export class Profile {
-  @Column()
-  about: string;
-
-  @Column()
-  education: string;
-
-  @Column()
-  career: string;
+    
+    @Column()
+    about: string;
+    
+    @Column()
+    education: string;
+    
+    @Column()
+    career: string;
+    
 }
 ```
 
 ```typescript
-import { Entity, ObjectID, ObjectIdColumn, Column } from 'typeorm';
+import {Entity, ObjectID, ObjectIdColumn, Column} from "typeorm";
 
 export class Photo {
-  @Column()
-  url: string;
-
-  @Column()
-  description: string;
-
-  @Column()
-  size: number;
-
-  constructor(url: string, description: string, size: number) {
-    this.url = url;
-    this.description = description;
-    this.size = size;
-  }
+    
+    @Column()
+    url: string;
+    
+    @Column()
+    description: string;
+    
+    @Column()
+    size: number;
+    
+    constructor(url: string, description: string, size: number) {
+        this.url = url;
+        this.description = description;
+        this.size = size;
+    }
+    
 }
 ```
 
 ```typescript
-import { Entity, ObjectID, ObjectIdColumn, Column } from 'typeorm';
+import {Entity, ObjectID, ObjectIdColumn, Column} from "typeorm";
 
 @Entity()
 export class User {
-  @ObjectIdColumn()
-  id: ObjectID;
-
-  @Column()
-  firstName: string;
-
-  @Column()
-  lastName: string;
-
-  @Column(type => Profile)
-  profile: Profile;
-
-  @Column(type => Photo)
-  photos: Photo[];
+    
+    @ObjectIdColumn()
+    id: ObjectID;
+    
+    @Column()
+    firstName: string;
+    
+    @Column()
+    lastName: string;
+    
+    @Column(type => Profile)
+    profile: Profile;
+    
+    @Column(type => Photo)
+    photos: Photo[];
+    
 }
 ```
 
 If you save this entity:
 
 ```typescript
-import { getMongoManager } from 'typeorm';
+import {getMongoManager} from "typeorm";
 
 const user = new User();
-user.firstName = 'Timber';
-user.lastName = 'Saw';
+user.firstName = "Timber";
+user.lastName = "Saw";
 user.profile = new Profile();
-user.profile.about = 'About Trees and Me';
-user.profile.education = 'Tree School';
-user.profile.career = 'Lumberjack';
+user.profile.about = "About Trees and Me";
+user.profile.education = "Tree School";
+user.profile.career = "Lumberjack";
 user.photos = [
-  new Photo('me-and-trees.jpg', 'Me and Trees', 100),
-  new Photo('me-and-chakram.jpg', 'Me and Chakram', 200),
+    new Photo("me-and-trees.jpg", "Me and Trees", 100),
+    new Photo("me-and-chakram.jpg", "Me and Chakram", 200),
 ];
 
 const manager = getMongoManager();
@@ -136,25 +144,25 @@ Following document will be saved in the database:
 
 ```json
 {
-  "firstName": "Timber",
-  "lastName": "Saw",
-  "profile": {
-    "about": "About Trees and Me",
-    "education": "Tree School",
-    "career": "Lumberjack"
-  },
-  "photos": [
-    {
-      "url": "me-and-trees.jpg",
-      "description": "Me and Trees",
-      "size": 100
+    "firstName": "Timber",
+    "lastName": "Saw",
+    "profile": {
+        "about": "About Trees and Me",
+        "education": "Tree School",
+        "career": "Lumberjack"
     },
-    {
-      "url": "me-and-chakram.jpg",
-      "description": "Me and Chakram",
-      "size": 200
-    }
-  ]
+    "photos": [
+        {
+            "url": "me-and-trees.jpg",
+            "description": "Me and Trees",
+            "size": 100
+        },
+        {
+            "url": "me-and-chakram.jpg",
+            "description": "Me and Chakram",
+            "size": 200
+        }
+    ]
 }
 ```
 
@@ -164,37 +172,28 @@ You can use the majority of methods inside the `EntityManager` (except for RDBMS
 For example:
 
 ```typescript
-import { getManager } from 'typeorm';
+import {getManager} from "typeorm";
 
 const manager = getManager(); // or connection.manager
-const timber = await manager.findOne(User, {
-  firstName: 'Timber',
-  lastName: 'Saw',
-});
+const timber = await manager.findOne(User, { firstName: "Timber", lastName: "Saw" });
 ```
 
 For MongoDB there is also a separate `MongoEntityManager` which extends `EntityManager`.
 
 ```typescript
-import { getMongoManager } from 'typeorm';
+import {getMongoManager} from "typeorm";
 
 const manager = getMongoManager(); // or connection.mongoManager
-const timber = await manager.findOne(User, {
-  firstName: 'Timber',
-  lastName: 'Saw',
-});
+const timber = await manager.findOne(User, { firstName: "Timber", lastName: "Saw" });
 ```
 
 Just like separate like `MongoEntityManager` there is a `MongoRepository` with extended `Repository`:
 
 ```typescript
-import { getMongoRepository } from 'typeorm';
+import {getMongoRepository} from "typeorm";
 
 const userRepository = getMongoRepository(User); // or connection.getMongoManager
-const timber = await userRepository.findOne({
-  firstName: 'Timber',
-  lastName: 'Saw',
-});
+const timber = await userRepository.findOne({ firstName: "Timber", lastName: "Saw" });
 ```
 
 Both `MongoEntityManager` and `MongoRepository` contain lot of useful MongoDB-specific methods:
@@ -340,3 +339,4 @@ Updates multiple documents within the collection based on the filter.
 #### `updateOne`
 
 Updates a single document within the collection based on the filter.
+

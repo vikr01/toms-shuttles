@@ -1,10 +1,10 @@
 # Indices
 
-- [Column indices](#column-indices)
-- [Unique indices](#unique-indices)
-- [Indices with multiple columns](#indices-with-multiple-columns)
-- [Spatial Indices](#spatial-indices)
-- [Disabling synchronization](#disabling-synchronization)
+* [Column indices](#column-indices)
+* [Unique indices](#unique-indices)
+* [Indices with multiple columns](#indices-with-multiple-columns)
+* [Spatial Indices](#spatial-indices)
+* [Disabling synchronization](#disabling-synchronization)
 
 ## Column indices
 
@@ -13,40 +13,42 @@ You can create indices for any columns of your entity.
 Example:
 
 ```typescript
-import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, Index} from "typeorm";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Index()
-  @Column()
-  firstName: string;
-
-  @Column()
-  @Index()
-  lastName: string;
+    
+    @PrimaryGeneratedColumn()
+    id: number;
+    
+    @Index()
+    @Column()
+    firstName: string;
+    
+    @Column()
+    @Index()
+    lastName: string;
 }
 ```
 
 You can also specify an index name:
 
 ```typescript
-import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, Index} from "typeorm";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Index('name1-idx')
-  @Column()
-  firstName: string;
-
-  @Column()
-  @Index('name2-idx')
-  lastName: string;
+    
+    @PrimaryGeneratedColumn()
+    id: number;
+    
+    @Index("name1-idx")
+    @Column()
+    firstName: string;
+    
+    @Column()
+    @Index("name2-idx")
+    lastName: string;
 }
 ```
 
@@ -55,20 +57,21 @@ export class User {
 To create an unique index you need to specify `{ unique: true }` in the index options:
 
 ```typescript
-import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, Index} from "typeorm";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Index({ unique: true })
-  @Column()
-  firstName: string;
-
-  @Column()
-  @Index({ unique: true })
-  lastName: string;
+    
+    @PrimaryGeneratedColumn()
+    id: number;
+    
+    @Index({ unique: true })
+    @Column()
+    firstName: string;
+    
+    @Column()
+    @Index({ unique: true })
+    lastName: string;
 }
 ```
 
@@ -79,23 +82,25 @@ and specify all column property names which should be included in the index.
 Example:
 
 ```typescript
-import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, Index} from "typeorm";
 
 @Entity()
-@Index(['firstName', 'lastName'])
-@Index(['firstName', 'middleName', 'lastName'], { unique: true })
+@Index(["firstName", "lastName"])
+@Index(["firstName", "middleName", "lastName"], { unique: true })
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+    
+    @PrimaryGeneratedColumn()
+    id: number;
+    
+    @Column()
+    firstName: string;
 
-  @Column()
-  firstName: string;
+    @Column()
+    middleName: string;
 
-  @Column()
-  middleName: string;
+    @Column()
+    lastName: string;
 
-  @Column()
-  lastName: string;
 }
 ```
 
@@ -103,16 +108,17 @@ export class User {
 
 MySQL and PostgreSQL (when PostGIS is available) both support spatial indices.
 
-To create a spatial index on a column in MySQL, add an `Index` with `spatial: true` on a column that uses a spatial type (`geometry`, `point`, `linestring`,
+To create a spatial index on a column in MySQL, add an `Index` with `spatial:
+true` on a column that uses a spatial type (`geometry`, `point`, `linestring`,
 `polygon`, `multipoint`, `multilinestring`, `multipolygon`,
 `geometrycollection`):
 
 ```typescript
 @Entity()
 export class Thing {
-  @Column('point')
-  @Index({ spatial: true })
-  point: string;
+    @Column("point")
+    @Index({ spatial: true })
+    point: string;
 }
 ```
 
@@ -121,12 +127,12 @@ To create a spatial index on a column in PostgreSQL, add an `Index` with `spatia
 ```typescript
 @Entity()
 export class Thing {
-  @Column('geometry', {
-    spatialFeatureType: 'Point',
-    srid: 4326,
-  })
-  @Index({ spatial: true })
-  point: Geometry;
+    @Column("geometry", {
+      spatialFeatureType: "Point",
+      srid: 4326
+    })
+    @Index({ spatial: true })
+    point: Geometry;
 }
 ```
 
@@ -147,12 +153,17 @@ after that, you should disable synchronization for this index to avoid deletion 
 
 ```ts
 @Entity()
-@Index('POST_NAME_INDEX', { synchronize: false })
+@Index("POST_NAME_INDEX", { synchronize: false })
 export class Post {
-  @PrimaryGeneratedColumn()
-  id: number;
 
-  @Column()
-  name: string;
+    @PrimaryGeneratedColumn()
+    id: number;
+    
+    @Column()
+    name: string;
+
 }
 ```
+
+
+

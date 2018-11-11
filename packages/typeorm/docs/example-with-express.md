@@ -1,8 +1,8 @@
 # Example using TypeORM with Express
 
-- [Initial setup](#initial-setup)
-- [Adding Express to the application](#adding-express-to-the-application)
-- [Adding TypeORM to the application](#adding-typeorm-to-the-application)
+* [Initial setup](#initial-setup)
+* [Adding Express to the application](#adding-express-to-the-application)
+* [Adding TypeORM to the application](#adding-typeorm-to-the-application)
 
 ## Initial setup
 
@@ -21,7 +21,7 @@ Then switch to the directory and create a new project:
 ```
 cd user
 npm init
-```
+``` 
 
 Finish the init process by filling in all required application information.
 
@@ -31,7 +31,7 @@ Now we need to install and setup a TypeScript compiler. Lets install it first:
 npm i typescript --save-dev
 ```
 
-Then let's create a `tsconfig.json` file which contains the configuration required for the application to
+Then let's create a `tsconfig.json` file which contains the configuration required for the application to 
 compile and run. Create it using your favorite editor and put the following configuration:
 
 ```json
@@ -45,7 +45,7 @@ compile and run. Create it using your favorite editor and put the following conf
     "experimentalDecorators": true
   }
 }
-```
+``` 
 
 Now let's create a main application endpoint - `app.ts` inside the `src` directory:
 
@@ -58,7 +58,7 @@ touch app.ts
 Let's add a simple `console.log` inside it:
 
 ```typescript
-console.log('Application is up and running');
+console.log("Application is up and running");
 ```
 
 Now it's time to run our application.
@@ -88,17 +88,17 @@ Let's add Express to our application. First, let's install the packages we need:
 npm i express body-parser @types/express @types/body-parser --save
 ```
 
-- `express` is the express engine itself. It allows us to create a web api
-- `body-parser` is used to setup how express would handle body sent by a client
-- `@types/express` is used to have a type information when using express
-- `@types/body-parser` is used to have a type information when using body parser
+* `express` is the express engine itself. It allows us to create a web api
+* `body-parser` is used to setup how express would handle body sent by a client
+* `@types/express` is used to have a type information when using express
+* `@types/body-parser` is used to have a type information when using body parser
 
 Let's edit the `src/app.ts` file and add express-related logic:
 
 ```typescript
-import * as express from 'express';
-import { Request, Response } from 'express';
-import * as bodyParser from 'body-parser';
+import * as express from "express";
+import {Request, Response} from "express";
+import * as bodyParser from  "body-parser";
 
 // create and setup express app
 const app = express();
@@ -106,24 +106,24 @@ app.use(bodyParser.json());
 
 // register routes
 
-app.get('/users', function(req: Request, res: Response) {
-  // here we will have logic to return all users
+app.get("/users", function(req: Request, res: Response) {
+    // here we will have logic to return all users
 });
 
-app.get('/users/:id', function(req: Request, res: Response) {
-  // here we will have logic to return user by id
+app.get("/users/:id", function(req: Request, res: Response) {
+    // here we will have logic to return user by id
 });
 
-app.post('/users', function(req: Request, res: Response) {
-  // here we will have logic to save a user
+app.post("/users", function(req: Request, res: Response) {
+    // here we will have logic to save a user
 });
 
-app.put('/users/:id', function(req: Request, res: Response) {
-  // here we will have logic to update a user by a given user id
+app.put("/users/:id", function(req: Request, res: Response) {
+    // here we will have logic to update a user by a given user id
 });
 
-app.delete('/users/:id', function(req: Request, res: Response) {
-  // here we will have logic to delete a user by a given user id
+app.delete("/users/:id", function(req: Request, res: Response) {
+    // here we will have logic to delete a user by a given user id
 });
 
 // start express server
@@ -136,7 +136,7 @@ However, those routes do not return any content yet.
 
 ## Adding TypeORM to the application
 
-Finally, let's add TypeORM to the application.
+Finally, let's add TypeORM to the application. 
 In this example, we will use `mysql` driver.
 Setup process for other drivers is similar.
 
@@ -146,24 +146,24 @@ Let's install the required packages first:
 npm i typeorm mysql reflect-metadata --save
 ```
 
-- `typeorm` is the typeorm package itself
-- `mysql` is the underlying database driver.
-  If you are using a diffrent database system, you must install the appropriate package
-- `reflect-metadata` is required to make decorators to work properly
+* `typeorm` is the typeorm package itself
+* `mysql` is the underlying database driver. 
+If you are using a diffrent database system,  you must install the appropriate package
+* `reflect-metadata` is required to make decorators to work properly
 
 Now let's create `ormconfig.json` with the database connection configuration we will use.
 
 ```json
-{
-  "type": "mysql",
-  "host": "localhost",
-  "port": 3306,
-  "username": "test",
-  "password": "test",
-  "database": "test",
-  "entities": ["src/entity/*.js"],
-  "logging": true
-}
+  {
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "test",
+    "password": "test",
+    "database": "test",
+    "entities": ["src/entity/*.js"],
+    "logging": true
+  }
 ```
 
 Configure each option as you need.
@@ -172,59 +172,61 @@ Learn more about [connection options](./connection-options.md).
 Let's create a `User` entity inside `src/entity`:
 
 ```typescript
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn} from "typeorm";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
 
-  @Column()
-  firstName: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column()
-  lastName: string;
+    @Column()
+    firstName: string;
+
+    @Column()
+    lastName: string;
+    
 }
 ```
 
 Let's change `src/app.ts`:
 
 ```typescript
-import * as express from 'express';
-import { Request, Response } from 'express';
-import * as bodyParser from 'body-parser';
-import { createConnection } from 'typeorm';
-import { User } from './User';
+import * as express from "express";
+import {Request, Response} from "express";
+import * as bodyParser from  "body-parser";
+import {createConnection} from "typeorm";
+import {User} from "./User";
 
 // create typeorm connection
 createConnection().then(connection => {
-  const userRepository = connection.getRepository(User);
-
-  // create and setup express app
-  const app = express();
-  app.use(bodyParser.json());
-
-  // register routes
-
-  app.get('/users', async function(req: Request, res: Response) {
-    return userRepository.find();
-  });
-
-  app.get('/users/:id', async function(req: Request, res: Response) {
-    return userRepository.findOne(req.params.id);
-  });
-
-  app.post('/users', async function(req: Request, res: Response) {
-    const user = userRepository.create(req.body);
-    return userRepository.save(user);
-  });
-
-  app.delete('/users/:id', async function(req: Request, res: Response) {
-    return userRepository.remove(req.params.id);
-  });
-
-  // start express server
-  app.listen(3000);
+    const userRepository = connection.getRepository(User);
+    
+    // create and setup express app
+    const app = express();
+    app.use(bodyParser.json());
+    
+    // register routes
+    
+    app.get("/users", async function(req: Request, res: Response) {
+        return userRepository.find();
+    });
+    
+    app.get("/users/:id", async function(req: Request, res: Response) {
+        return userRepository.findOne(req.params.id);
+    });
+    
+    app.post("/users", async function(req: Request, res: Response) {
+        const user = userRepository.create(req.body);
+        return userRepository.save(user);
+    });
+    
+    app.delete("/users/:id", async function(req: Request, res: Response) {
+        return userRepository.remove(req.params.id);
+    });
+    
+    // start express server
+    app.listen(3000);
 });
 ```
 
@@ -232,23 +234,21 @@ If you want to extract action callbacks into separate files and you need the `co
 you can simply use `getConnection`:
 
 ```typescript
-import { getConnection } from 'typeorm';
-import { User } from './User';
+import {getConnection} from "typeorm";
+import {User} from "./User";
 
 export function UsersListAction(req: Request, res: Response) {
-  return getConnection()
-    .getRepository(User)
-    .find();
+    return getConnection().getRepository(User).find();
 }
 ```
 
 You don't even need `getConnection` in this example - you can directly use the `getRepository` function:
 
 ```typescript
-import { getRepository } from 'typeorm';
-import { User } from './User';
+import {getRepository} from "typeorm";
+import {User} from "./User";
 
 export function UsersListAction(req: Request, res: Response) {
-  return getRepository(User).find();
+    return getRepository(User).find();
 }
 ```

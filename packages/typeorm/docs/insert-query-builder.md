@@ -4,18 +4,19 @@ You can create `INSERT` queries using `QueryBuilder`.
 Examples:
 
 ```typescript
-import { getConnection } from 'typeorm';
+import {getConnection} from "typeorm";
 
 await getConnection()
-  .createQueryBuilder()
-  .insert()
-  .into(User)
-  .values([
-    { firstName: 'Timber', lastName: 'Saw' },
-    { firstName: 'Phantom', lastName: 'Lancer' },
-  ])
-  .execute();
+    .createQueryBuilder()
+    .insert()
+    .into(User)
+    .values([
+        { firstName: "Timber", lastName: "Saw" }, 
+        { firstName: "Phantom", lastName: "Lancer" }
+     ])
+    .execute();
 ```
 
 This is the most efficient way in terms of performance to insert rows into your database.
 You can also perform bulk insertions this way.
+     

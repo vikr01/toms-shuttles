@@ -1,14 +1,14 @@
 # Entity Listeners and Subscribers
 
-- [What is an Entity Listener](#what-is-an-entity-listener)
-  - [`@AfterLoad`](#afterload)
-  - [`@BeforeInsert`](#beforeinsert)
-  - [`@AfterInsert`](#afterinsert)
-  - [`@BeforeUpdate`](#beforeupdate)
-  - [`@AfterUpdate`](#afterupdate)
-  - [`@BeforeRemove`](#beforeremove)
-  - [`@AfterRemove`](#afterremove)
-- [What is a Subscriber](#what-is-a-subscriber)
+* [What is an Entity Listener](#what-is-an-entity-listener)
+    * [`@AfterLoad`](#afterload)
+    * [`@BeforeInsert`](#beforeinsert)
+    * [`@AfterInsert`](#afterinsert)
+    * [`@BeforeUpdate`](#beforeupdate)
+    * [`@AfterUpdate`](#afterupdate)
+    * [`@BeforeRemove`](#beforeremove)
+    * [`@AfterRemove`](#afterremove)
+* [What is a Subscriber](#what-is-a-subscriber)
 
 ## What is an Entity Listener
 
@@ -18,17 +18,19 @@ You must mark those methods with special decorators depending on what event you 
 ### `@AfterLoad`
 
 You can define a method with any name in entity and mark it with `@AfterLoad`
-and TypeORM will call it each time the entity
+and TypeORM will call it each time the entity 
 is loaded using `QueryBuilder` or repository/manager find methods.
 Example:
 
 ```typescript
 @Entity()
 export class Post {
-  @AfterLoad()
-  updateCounters() {
-    if (this.likesCount === undefined) this.likesCount = 0;
-  }
+    
+    @AfterLoad()
+    updateCounters() {
+        if (this.likesCount === undefined)
+            this.likesCount = 0;
+    }
 }
 ```
 
@@ -41,10 +43,11 @@ Example:
 ```typescript
 @Entity()
 export class Post {
-  @BeforeInsert()
-  updateDates() {
-    this.createdDate = new Date();
-  }
+    
+    @BeforeInsert()
+    updateDates() {
+        this.createdDate = new Date();
+    }
 }
 ```
 
@@ -57,10 +60,11 @@ Example:
 ```typescript
 @Entity()
 export class Post {
-  @AfterInsert()
-  resetCounters() {
-    this.counters = 0;
-  }
+    
+    @AfterInsert()
+    resetCounters() {
+        this.counters = 0;
+    }
 }
 ```
 
@@ -73,10 +77,11 @@ Example:
 ```typescript
 @Entity()
 export class Post {
-  @BeforeUpdate()
-  updateDates() {
-    this.updatedDate = new Date();
-  }
+    
+    @BeforeUpdate()
+    updateDates() {
+        this.updatedDate = new Date();
+    }
 }
 ```
 
@@ -89,10 +94,11 @@ Example:
 ```typescript
 @Entity()
 export class Post {
-  @AfterUpdate()
-  updateCounters() {
-    this.counter = 0;
-  }
+    
+    @AfterUpdate()
+    updateCounters() {
+        this.counter = 0;
+    }
 }
 ```
 
@@ -105,10 +111,11 @@ Example:
 ```typescript
 @Entity()
 export class Post {
-  @BeforeRemove()
-  updateStatus() {
-    this.status = 'removed';
-  }
+    
+    @BeforeRemove()
+    updateStatus() {
+        this.status = "removed";
+    }
 }
 ```
 
@@ -121,10 +128,11 @@ Example:
 ```typescript
 @Entity()
 export class Post {
-  @AfterRemove()
-  updateStatus() {
-    this.status = 'removed';
-  }
+    
+    @AfterRemove()
+    updateStatus() {
+        this.status = "removed";
+    }
 }
 ```
 
@@ -137,19 +145,22 @@ Example:
 ```typescript
 @EventSubscriber()
 export class PostSubscriber implements EntitySubscriberInterface<Post> {
-  /**
-   * Indicates that this subscriber only listen to Post events.
-   */
-  listenTo() {
-    return Post;
-  }
 
-  /**
-   * Called before post insertion.
-   */
-  beforeInsert(event: InsertEvent<Post>) {
-    console.log(`BEFORE POST INSERTED: `, event.entity);
-  }
+    
+    /**
+     * Indicates that this subscriber only listen to Post events.
+     */
+    listenTo() {
+        return Post;
+    }
+    
+    /**
+     * Called before post insertion.
+     */
+    beforeInsert(event: InsertEvent<Post>) {
+        console.log(`BEFORE POST INSERTED: `, event.entity);
+    }
+
 }
 ```
 
@@ -159,11 +170,13 @@ To listen to any entity you just omit `listenTo` method and use `any`:
 ```typescript
 @EventSubscriber()
 export class PostSubscriber implements EntitySubscriberInterface {
-  /**
-   * Called before entity insertion.
-   */
-  beforeInsert(event: InsertEvent<any>) {
-    console.log(`BEFORE ENTITY INSERTED: `, event.entity);
-  }
+    
+    /**
+     * Called before entity insertion.
+     */
+    beforeInsert(event: InsertEvent<any>) {
+        console.log(`BEFORE ENTITY INSERTED: `, event.entity);
+    }
+
 }
 ```

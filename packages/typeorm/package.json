@@ -23,7 +23,6 @@
   "scripts": {
     "compile": "rimraf ./build && tsc",
     "package": "gulp package",
-    "prepare": "yarn run compile",
     "test": "rimraf ./build && tsc && mocha --file ./build/compiled/test/utils/test-setup.js --bail --recursive --timeout 30000  ./build/compiled/test",
     "test-ci": "gulp ci-tests"
   },

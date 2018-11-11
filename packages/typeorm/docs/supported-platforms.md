@@ -1,22 +1,22 @@
 # Supported platforms
 
-- [NodeJS](#nodejs)
-- [Browser](#browser)
-- [Cordova / PhoneGap / Ionic apps](#cordova--phonegap--ionic-apps)
-- [React Native](#react-native)
-- [Expo](#expo)
-- [NativeScript](#nativescript)
+* [NodeJS](#nodejs)
+* [Browser](#browser)
+* [Cordova / PhoneGap / Ionic apps](#cordova--phonegap--ionic-apps)
+* [React Native](#react-native)
+* [Expo](#expo)
+* [NativeScript](#nativescript)
 
 ## NodeJS
 
-TypeORM was tested on Node.js version 4 and above.
+TypeORM was tested on Node.js version 4 and above. 
 
 ## Browser
 
 You can use [sql.js](https://github.com/kripken/sql.js) in the browser.
 
 **Webpack configuration**
-
+    
 In the `browser` folder the package also includes a version compiled as a ES2015 module. If you want to use a different loader this is the point to start. Prior to TypeORM 0.1.7, the package is setup in a way that loaders like webpack will automatically use the `browser` folder. With 0.1.7 this was dropped to support Webpack usage in Node.js projects. This means, that the `NormalModuleReplacementPlugin` has to be used to insure that the correct version is loaded for browser projects. The configuration in your webpack config file, for this plugin looks like this:
 
 ```js
@@ -35,14 +35,16 @@ plugins: [
 
 ```typescript
 createConnection({
-  type: 'sqljs',
-  entities: [Photo],
-  synchronize: true,
+    type: "sqljs",
+    entities: [
+        Photo
+    ],
+    synchronize: true
 });
 ```
 
 **Don't forget to include reflect-metadata**
-
+    
 In your main html page, you need to include refllect-metadata:
 
 ```html
@@ -53,11 +55,10 @@ In your main html page, you need to include refllect-metadata:
 
 TypeORM is able to run on Cordova, PhoneGap, Ionic apps using the
 [cordova-sqlite-storage](https://github.com/litehelpers/Cordova-sqlite-storage) plugin
-You have the option to choose between module loaders just like in browser package.
+You have the option to choose between module loaders just like in browser package. 
 For an example how to use TypeORM in Cordova see [typeorm/cordova-example](https://github.com/typeorm/cordova-example) and for Ionic see [typeorm/ionic-example](https://github.com/typeorm/ionic-example). **Important**: For use with Ionic, a custom webpack config file is needed! Please checkout the example to see the needed changes.
 
 ## React Native
-
 TypeORM is able to on React Native apps using the [react-native-sqlite-storage](https://github.com/andpor/react-native-sqlite-storage) plugin. For an example see [typeom/react-native-example](https://github.com/typeorm/react-native-example).
 
 ## Expo
@@ -69,20 +70,19 @@ TypeORM is able to run on Expo apps using the [Expo SQLite API](https://docs.exp
 1. `tns install webpack` (read below why webpack is required)
 2. `tns plugin add nativescript-sqlite`
 3. Create Database connetion in your app's entry point
+    ```typescript
+    import driver from 'nativescript-sqlite'
 
-   ```typescript
-   import driver from 'nativescript-sqlite';
-
-   const connection = await createConnection({
-     database: 'test.db',
-     type: 'nativescript',
-     driver,
-     entities: [
-       Todo, //... whatver entities you have
-     ],
-     logging: true,
-   });
-   ```
+    const connection = await createConnection({
+        database: 'test.db',
+        type: 'nativescript',
+        driver,
+        entities: [
+            Todo //... whatver entities you have
+        ],
+        logging: true
+    })
+    ```
 
 Note: This works only with NativeScript 4.x and above
 
