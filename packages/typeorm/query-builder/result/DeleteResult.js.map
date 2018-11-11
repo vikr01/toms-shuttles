@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/query-builder/result/DeleteResult.ts"],"names":[],"mappings":";;AAAA;;GAEG;AACH;IAAA;IAIA,CAAC;IAAD,mBAAC;AAAD,CAJA,AAIC,IAAA;AAJY,oCAAY","file":"DeleteResult.js","sourcesContent":["/**\n * Result object returned by DeleteQueryBuilder execution.\n */\nexport class DeleteResult {\n\n    raw: any;\n\n}"],"sourceRoot":"../.."}
