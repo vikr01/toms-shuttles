@@ -10,6 +10,7 @@ let connection;
 let app;
 
 console.log('sqlite3 exists ', require.resolve('sqlite3'));
+console.log('typeorm exists ', require.resolve('typeorm'));
 
 beforeAll(async () => {
   connection = await createConnection(connectionOptions);
