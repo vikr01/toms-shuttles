@@ -7,7 +7,7 @@ import { geolocated, geoPropTypes } from 'react-geolocated';
 import axios from 'axios';
 import RequestForm from './RequestForm';
 import GMapsControl from './GMapsControl';
-import CostEstimater from './CostEstimater';
+import CostEstimater, { estimateCost } from './CostEstimater';
 
 function LiveGMapView({
   showMap,
@@ -67,6 +67,7 @@ function LiveGMapView({
             assignedDriver={assignedDriver}
             driverArriving={driverArriving}
             coords={coords}
+            distance={distance}
           />
         </div>
       </Fragment>
@@ -166,14 +167,18 @@ class MapView extends React.Component<Props> {
           data.from.lng
         }&destLat=${data.to.lat}&destLng=${data.to.lng}&groupSize=1`
       );
+
+      console.log(response);
+      this.setState({
+        assignedDriver: response.data,
+        driverArriving: true,
+        disableRequestButtons: true,
+      });
     } catch (error) {
       console.error(error);
+
+      // handle error
     }
-    this.setState({
-      assignedDriver: response.data,
-      driverArriving: true,
-      disableRequestButtons: true,
-    });
   };
 
   render() {
