@@ -4,13 +4,7 @@ node_js:
   - node
   - 10
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.5
-    packages:
-      - clang-3.5
+os: osx
 
 cache:
   yarn: false # true
