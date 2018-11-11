@@ -4,9 +4,11 @@
   "license": "MIT",
   "author": "Vikram Rangaraj <vik120@icloud.com> (https://github.com/vikr01)",
   "repository": "https://github.com/vikr01/tbd-project-name.git",
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
   "scripts": {
     "build": "lerna run build",
     "clean": "lerna run clean",
