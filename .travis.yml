@@ -16,6 +16,7 @@ before_install:
 install: yarn install --ignore-scripts --ignore-engines
 
 script:
+  - yarn workspace typeorm run compile
   - yarn run lint
   - yarn run build
   - yarn run test

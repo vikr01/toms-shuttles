@@ -34,6 +34,7 @@ install:
   - yarn install --ignore-scripts --ignore-engines
 
 test_script:
+  - yarn workspace typeorm run compile
   - yarn run lint
   # - yarn run flow
   - yarn run build
