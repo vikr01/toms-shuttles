@@ -14,7 +14,7 @@ import path from 'path';
 import HttpStatus from 'http-status-codes';
 import { promisify } from 'util';
 import { forEach } from 'p-iteration';
-import { createConnection, MoreThan } from 'typeorm';
+import { createConnection, MoreThan, In } from 'typeorm';
 import frontendRoutes from 'tbd-frontend-name/src/routes';
 import { connectionOptions } from './db_connection';
 import routes from '../routes';
@@ -360,6 +360,8 @@ process.on('unhandledRejection', err => {
     if (
       !correctLat(parseFloat(lat)) ||
       !correctLong(parseFloat(lng)) ||
+      !correctLat(parseFloat(destLat)) ||
+      !correctLong(parseFloat(destLng)) ||
       !groupSize
     ) {
       return res.status(HttpStatus.BAD_REQUEST).send('Invalid arguments');
@@ -371,9 +373,12 @@ process.on('unhandledRejection', err => {
       numOfSeats: MoreThan(Number(groupSize) - 1),
       destLat3: 0,
       destLng3: 0,
+      destLat1: In([Number(destLat), 0]),
+      destLng1: In([Number(destLng), 0]),
     });
     let closestDriver = {};
     let leastTime = Number.POSITIVE_INFINITY;
+    let existingDriver = false;
     await forEach(drivers, async driver => {
       const result = await axios.get(
         'https://maps.googleapis.com/maps/api/distancematrix/json',
@@ -386,14 +391,23 @@ process.on('unhandledRejection', err => {
           },
         }
       );
-      const duration = result.data.rows[0].elements[0].duration.value;
-      if (duration < leastTime) {
-        leastTime = duration;
-        closestDriver = driver;
+      try {
+        const METERSINMILE = 1610;
+        const time = result.data.rows[0].elements[0].duration.value;
+        const distance = result.data.rows[0].elements[0].distance.value;
+        existingDriver = true;
+        if (time < leastTime && distance <= METERSINMILE) {
+          leastTime = time;
+          closestDriver = driver;
+        }
+      } catch (err) {
+        console.log(chalk.red(`Discarding bad driver with error:${err}`));
       }
     });
 
     if (Object.keys(closestDriver).length === 0) {
+      if (existingDriver === true)
+        return res.status(HttpStatus.NOT_FOUND).send('No closeby driver');
       return res.status(HttpStatus.NOT_FOUND).send('Could not find a driver');
     }
 
