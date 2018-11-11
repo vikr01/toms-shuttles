@@ -9,6 +9,8 @@ import routes from '../../routes';
 let connection;
 let app;
 
+console.log('sqlite3 exists ', require.resolve('sqlite3'));
+
 beforeAll(async () => {
   connection = await createConnection(connectionOptions);
   app = server(connection);
