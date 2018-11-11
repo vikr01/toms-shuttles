@@ -348,9 +348,7 @@ process.on('unhandledRejection', err => {
       });
       console.log(userInfo);
       if (!userInfo.creditCard) {
-        res
-          .status(HttpStatus.NOT_FOUND)
-          .json({ error: 'No credit card on file' });
+        return res.status(HttpStatus.NOT_FOUND).send('No credit card on file');
       }
     } catch (err) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
@@ -367,6 +365,7 @@ process.on('unhandledRejection', err => {
       return res.status(HttpStatus.BAD_REQUEST).send('Invalid arguments');
     }
 
+    console.log('check if dest matches ', destLat, ' ', Number(destLat));
     // query only active drivers with seats and an open destination
     const drivers = await connection.getRepository(Driver).find({
       active: 1,
@@ -379,7 +378,9 @@ process.on('unhandledRejection', err => {
     let closestDriver = {};
     let leastTime = Number.POSITIVE_INFINITY;
     let existingDriver = false;
+    console.log('list of potential drivers:');
     await forEach(drivers, async driver => {
+      console.log(driver);
       const result = await axios.get(
         'https://maps.googleapis.com/maps/api/distancematrix/json',
         {
