@@ -91,6 +91,7 @@ There are several ways how you can create a `Query Builder`:
   ```
 
 - Using repository:
+
   ```typescript
   import { getRepository } from 'typeorm';
 
@@ -132,6 +133,7 @@ There are 5 different `QueryBuilder` types available:
   ```
 
 - `UpdateQueryBuilder` - used to build and execute `UPDATE` queries. Example:
+
   ```typescript
   import { getConnection } from 'typeorm';
 
@@ -142,6 +144,7 @@ There are 5 different `QueryBuilder` types available:
     .where('id = :id', { id: 1 })
     .execute();
   ```
+
 - `DeleteQueryBuilder` - used to build and execute `DELETE` queries. Example:
 
   ```typescript

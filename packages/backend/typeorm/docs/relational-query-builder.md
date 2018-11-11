@@ -63,8 +63,7 @@ await getConnection()
   .add({ firstCategoryId: 2, secondCategoryId: 4 });
 ```
 
-You can remove entities the same way you add them:  
-
+You can remove entities the same way you add them:
 
 ```typescript
 import { getConnection } from 'typeorm';
