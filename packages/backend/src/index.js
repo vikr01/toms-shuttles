@@ -393,10 +393,17 @@ process.on('unhandledRejection', err => {
       );
       try {
         const METERSINMILE = 1610;
+        const SECSIN30MIN = 60 * 30;
         const time = result.data.rows[0].elements[0].duration.value;
         const distance = result.data.rows[0].elements[0].distance.value;
         existingDriver = true;
-        if (time < leastTime && distance <= METERSINMILE) {
+        if (
+          (time < leastTime && distance <= METERSINMILE) ||
+          (time <= leastTime &&
+            time <= SECSIN30MIN &&
+            driver.destLat1 === 0 &&
+            driver.destLng1 === 0)
+        ) {
           leastTime = time;
           closestDriver = driver;
         }
