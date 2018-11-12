@@ -27,37 +27,7 @@ const GMapsControl = compose(
   lifecycle({
     async componentDidUpdate() {
       if (this.state.atUser) {
-        const { destNumToRemove } = this.state;
-        const { data, assignedDriver } = this.props;
-        // update driver location on backend
-        try {
-          console.log('removing dest: ', destNumToRemove);
-          if (destNumToRemove === 3)
-            await axios.put(backendRoutes.DRIVERS, {
-              username: assignedDriver.username,
-              currentLatitude: data.from.lat,
-              currentLongitude: data.from.lng,
-              destLat3: 0,
-              destLng3: 0,
-            });
-          else
-            await axios.put(backendRoutes.DRIVERS, {
-              username: assignedDriver.username,
-              currentLatitude: data.from.lat,
-              currentLongitude: data.from.lng,
-              destLat2: 0,
-              destLng2: 0,
-            });
-          console.log('we set the drivers new data');
-          const set = () => {
-            this.setState({
-              atUser: false,
-            });
-          };
-          set();
-        } catch (e) {
-          console.error(e);
-        }
+        // pass
       }
       if (this.state.route) {
         this.state.onDirectionChange();
@@ -127,12 +97,43 @@ const GMapsControl = compose(
           }
           window.location.reload();
         },
-        onDriverArrivedDialogClosed: () => {
+        onDriverArrivedDialogClosed: async () => {
           this.setState({
             atUser: true,
             userInCar: true,
             atUserDialogShow: false,
           });
+          const { destNumToRemove } = this.state;
+          const { data, assignedDriver } = this.props;
+          // update driver location on backend
+          try {
+            console.log('removing dest: ', destNumToRemove);
+            if (destNumToRemove === 3)
+              await axios.put(backendRoutes.DRIVERS, {
+                username: assignedDriver.username,
+                currentLatitude: data.from.lat,
+                currentLongitude: data.from.lng,
+                destLat3: 0,
+                destLng3: 0,
+              });
+            else
+              await axios.put(backendRoutes.DRIVERS, {
+                username: assignedDriver.username,
+                currentLatitude: data.from.lat,
+                currentLongitude: data.from.lng,
+                destLat2: 0,
+                destLng2: 0,
+              });
+            console.log('we set the drivers new data');
+            const set = () => {
+              this.setState({
+                atUser: false,
+              });
+            };
+            set();
+          } catch (e) {
+            console.error(e);
+          }
           this.doCleartoUserInterval();
         },
         setLocationInterval: interval => {
