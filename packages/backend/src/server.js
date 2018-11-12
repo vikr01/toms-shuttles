@@ -244,6 +244,23 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
     return res.status(HttpStatus.OK).send('Done');
   });
 
+  app.get(routes.ALL_ACTIVE_DRIVERS, async (req, res, next) => {
+    let drivers = {};
+    try {
+      drivers = await connection.getRepository(Driver).find({ active: 1 });
+    } catch (error) {
+      return res
+        .status(HttpStatus.IM_A_TEAPOT)
+        .send('Error accessing database');
+    }
+
+    if (drivers) {
+      return res.status(HttpStatus.OK).json(drivers);
+    }
+
+    return res.status(HttpStatus.NOT_FOUND).send('No active drivers found');
+  });
+
   app.get(routes.DRIVER, async (req, res, next) => {
     const { username: name } = req.params;
 

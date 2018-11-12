@@ -13,6 +13,7 @@
   //drivers
   "DRIVER": "/drivers/:username",
   "DRIVERS": "/drivers",
+  "ALL_ACTIVE_DRIVERS": "/driversAll",
 
   //location api
   "CLOSEST_DRIVER": "/api/nearestDriver",
