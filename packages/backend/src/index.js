@@ -14,7 +14,7 @@ import path from 'path';
 import HttpStatus from 'http-status-codes';
 import { promisify } from 'util';
 import { forEach } from 'p-iteration';
-import { createConnection, MoreThan, In } from 'typeorm';
+import { createConnection, MoreThan, In, Between } from 'typeorm';
 import frontendRoutes from 'tbd-frontend-name/src/routes';
 import { connectionOptions } from './db_connection';
 import routes from '../routes';
@@ -365,16 +365,18 @@ process.on('unhandledRejection', err => {
       return res.status(HttpStatus.BAD_REQUEST).send('Invalid arguments');
     }
 
+    const DELTA = 0.005;
     console.log('check if dest matches ', destLat, ' ', Number(destLat));
     // query only active drivers with seats and an open destination
-    const drivers = await connection.getRepository(Driver).find({
-      active: 1,
-      numOfSeats: MoreThan(Number(groupSize) - 1),
-      destLat3: 0,
-      destLng3: 0,
-      destLat1: In([Number(destLat), 0]),
-      destLng1: In([Number(destLng), 0]),
-    });
+    const drivers = await connection
+      .getRepository(Driver)
+      .query(
+        `select * from driver where destLat1 Between ${parseFloat(destLat) -
+          DELTA} and  ${parseFloat(destLat) +
+          DELTA} or destLat1 = 0 and destLng1 Between ${parseFloat(destLng) -
+          DELTA} and  ${parseFloat(destLng) +
+          DELTA} or destLng1 = 0 and active = 1 and numOfSeats >= ${groupSize} and destLat3 = 0 and destLng3 = 0;`
+      );
     let closestDriver = {};
     let leastTime = Number.POSITIVE_INFINITY;
     let existingDriver = false;
@@ -399,7 +401,7 @@ process.on('unhandledRejection', err => {
         const distance = result.data.rows[0].elements[0].distance.value;
         existingDriver = true;
         if (
-          (time < leastTime && distance <= METERSINMILE) ||
+          (time < leastTime && distance <= METERSINMILE * 2) ||
           (time <= leastTime &&
             time <= SECSIN30MIN &&
             driver.destLat1 === 0 &&
