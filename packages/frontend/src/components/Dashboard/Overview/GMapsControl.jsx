@@ -77,8 +77,8 @@ const GMapsControl = compose(
     doCleartoUserInterval() {
       clearInterval(this.state.toUserInterval);
     },
-    isLocationIntervalSet() {
-      return this.state.toLocationCheckInterval;
+    clearLocationInterval() {
+      clearInterval(this.state.toLocationCheckInterval);
     },
     clearAllDrivers() {
       this.setState({ allDrivers: null });
@@ -159,7 +159,7 @@ const GMapsControl = compose(
           console.log('making route request!', data);
           this.setState({ route: false });
           let currentDestination = 0;
-          if (this.isLocationIntervalSet()) return;
+          this.clearLocationInterval();
           const checkInterval = setInterval(async () => {
             let response;
             const { assignedDriver } = this.props;
