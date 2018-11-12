@@ -10,7 +10,7 @@ import chalk from 'chalk';
 import path from 'path';
 import HttpStatus from 'http-status-codes';
 import { forEach } from 'p-iteration';
-import { MoreThan, In, Between } from 'typeorm';
+import { MoreThan } from 'typeorm';
 import frontendRoutes from 'tbd-frontend-name/src/routes';
 import routes from '../routes';
 import { User } from './entity/User';
@@ -271,6 +271,7 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
     let driver;
 
     console.log('DRIVERS put username: ', username);
+
     try {
       repo = await connection.getRepository(Driver);
       driver = await repo.findOne({ username });
@@ -440,16 +441,8 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
     // add user's driver to their session
     req.session.driver = closestDriver;
 
-    return res.status(HttpStatus.OK).json(closestDriver);
-  });
 
-  app.get(routes.MY_DRIVER, async (req, res, next) => {
-    if (req.session.username) {
-      return res.status(HttpStatus.OK).json(req.session.driver);
-    }
-    return res
-      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .send('No driver assigned to you');
+    return res.status(HttpStatus.OK).json(closestDriver);
   });
 
   app.post(routes.ARRIVED, async (req, res, next) => {
