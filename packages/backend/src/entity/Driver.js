@@ -28,12 +28,24 @@ export class Driver /* extends EntityBase */ {
   active = 0;
 
   @Column('float')
-  destLatitude = 0;
+  destLat1 = undefined;
 
   @Column('float')
-  destLongitude = 0;
+  destLng1 = undefined;
 
-  @OneToMany(type => Passenger)
+  @Column('float')
+  destLat2 = undefined;
+
+  @Column('float')
+  destLng2 = undefined;
+
+  @Column('float')
+  destLat3 = undefined;
+
+  @Column('float')
+  destLng3 = undefined;
+
+  @OneToMany(type => Passenger, passenger => passenger.driver)
   passengers: Passenger[];
 }
 

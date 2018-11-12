@@ -241,7 +241,24 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
 
     await connection.getRepository(Driver).save(newDriver);
 
-    res.status(HttpStatus.OK).send('Done');
+    return res.status(HttpStatus.OK).send('Done');
+  });
+
+  app.get(routes.ALL_ACTIVE_DRIVERS, async (req, res, next) => {
+    let drivers = {};
+    try {
+      drivers = await connection.getRepository(Driver).find({ active: 1 });
+    } catch (error) {
+      return res
+        .status(HttpStatus.IM_A_TEAPOT)
+        .send('Error accessing database');
+    }
+
+    if (drivers) {
+      return res.status(HttpStatus.OK).json(drivers);
+    }
+
+    return res.status(HttpStatus.NOT_FOUND).send('No active drivers found');
   });
 
   app.get(routes.DRIVER, async (req, res, next) => {
@@ -266,15 +283,20 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
   });
 
   app.put(routes.DRIVERS, async (req, res, next) => {
-    const { username } = req.session;
+    const { username } = req.body.username ? req.body : req.session;
     let repo;
     let driver;
+
+    console.log('DRIVERS put username: ', username);
 
     try {
       repo = await connection.getRepository(Driver);
       driver = await repo.findOne({ username });
     } catch (error) {
-      res.status(HttpStatus.IM_A_TEAPOT).send('Error accessing database');
+      console.log(error);
+      return res
+        .status(HttpStatus.IM_A_TEAPOT)
+        .send('Error accessing database');
     }
 
     if (!driver) {
@@ -298,7 +320,7 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
     try {
       await repo.save(driver);
     } catch (error) {
-      res.status(HttpStatus.IM_A_TEAPOT).send('Error updating database');
+      return res.status(HttpStatus.IM_A_TEAPOT).send('Error updating database');
     }
 
     return res.status(HttpStatus.OK).json(driver);
@@ -323,31 +345,41 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
       });
       console.log(userInfo);
       if (!userInfo.creditCard) {
-        res
-          .status(HttpStatus.NOT_FOUND)
-          .json({ error: 'No credit card on file' });
+        return res.status(HttpStatus.NOT_FOUND).send('No credit card on file');
       }
     } catch (err) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
     }
-    const { lat, lng, destination, groupSize } = req.query;
+    const { lat, lng, destLat, destLng, groupSize } = req.query;
 
     if (
       !correctLat(parseFloat(lat)) ||
       !correctLong(parseFloat(lng)) ||
+      !correctLat(parseFloat(destLat)) ||
+      !correctLong(parseFloat(destLng)) ||
       !groupSize
     ) {
       return res.status(HttpStatus.BAD_REQUEST).send('Invalid arguments');
     }
 
-    // query only active drivers
-    const drivers = await connection.getRepository(Driver).find({
-      active: 1,
-      numOfSeats: MoreThan(Number(groupSize) - 1),
-    });
+    const DELTA = 0.005;
+    console.log('check if dest matches ', destLat, ' ', Number(destLat));
+    // query only active drivers with seats and an open destination
+    const drivers = await connection
+      .getRepository(Driver)
+      .query(
+        `select * from driver where destLat1 Between ${parseFloat(destLat) -
+          DELTA} and  ${parseFloat(destLat) +
+          DELTA} or destLat1 = 0 and destLng1 Between ${parseFloat(destLng) -
+          DELTA} and  ${parseFloat(destLng) +
+          DELTA} or destLng1 = 0 and active = 1 and numOfSeats >= ${groupSize} and destLat3 = 0 and destLng3 = 0;`
+      );
     let closestDriver = {};
     let leastTime = Number.POSITIVE_INFINITY;
+    let existingDriver = false;
+    console.log('list of potential drivers:');
     await forEach(drivers, async driver => {
+      console.log(driver);
       const result = await axios.get(
         'https://maps.googleapis.com/maps/api/distancematrix/json',
         {
@@ -359,44 +391,139 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
           },
         }
       );
-      const duration = result.data.rows[0].elements[0].duration.value;
-      if (duration < leastTime) {
-        leastTime = duration;
-        closestDriver = driver;
+      try {
+        const METERSINMILE = 1610;
+        const SECSIN30MIN = 60 * 30;
+        const time = result.data.rows[0].elements[0].duration.value;
+        const distance = result.data.rows[0].elements[0].distance.value;
+        existingDriver = true;
+        console.log(
+          `distance to ${
+            driver.username
+          } is ${distance} meters and time is ${time} seconds`
+        );
+        if (
+          (time < leastTime && distance <= METERSINMILE * 3) ||
+          (time <= leastTime &&
+            time <= SECSIN30MIN &&
+            driver.destLat1 === 0 &&
+            driver.destLng1 === 0)
+        ) {
+          console.log(`Closest driver is now ${driver.username}`);
+          leastTime = time;
+          closestDriver = driver;
+        }
+      } catch (err) {
+        console.log(chalk.red(`Discarding bad driver with error:${err}`));
       }
     });
 
     if (Object.keys(closestDriver).length === 0) {
+      if (existingDriver === true)
+        return res.status(HttpStatus.NOT_FOUND).send('No closeby driver');
       return res.status(HttpStatus.NOT_FOUND).send('Could not find a driver');
     }
 
     const newPassenger = Object.assign(new Passenger(), {
       username: req.session.username,
       groupSize,
+      driver: null,
     });
 
-    // try {
-    //   await connection.getRepository(Passenger).save(newPassenger);
-    // } catch (err) {
-    //   return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
-    // }
+    try {
+      await connection.getRepository(Passenger).save(newPassenger);
+    } catch (err) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+    }
 
-    // if (closestDriver.passengers) closestDriver.passengers.push(newPassenger);
-    // else closestDriver.passengers = [newPassenger];
+    if (closestDriver.passengers) closestDriver.passengers.push(newPassenger);
+    else closestDriver.passengers = [newPassenger];
 
-    // // update driver's available seats
-    // closestDriver.numOfSeats -= groupSize;
+    // update driver's available seats
+    closestDriver.numOfSeats -= groupSize;
 
-    // try {
-    //   await connection.getRepository(Driver).save(closestDriver);
-    // } catch (err) {
-    //   return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
-    // }
+    // set their destination
+    closestDriver.destLat1 = destLat;
+    closestDriver.destLng1 = destLng;
 
-    // // add user's driver to their session
-    // req.session.driver = closestDriver;
+    // either dest2 or 3 is available. Set the users location to the available one
+    if (closestDriver.destLat2 === 0) {
+      closestDriver.destLat2 = lat;
+      closestDriver.destLng2 = lng;
+    } else {
+      closestDriver.destLat3 = lat;
+      closestDriver.destLng3 = lng;
+    }
+
+    try {
+      await connection.getRepository(Driver).save(closestDriver);
+    } catch (err) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+    }
+
+    // add user's driver to their session
+    req.session.driver = closestDriver;
 
     return res.status(HttpStatus.OK).json(closestDriver);
+  });
+
+  app.post(routes.ARRIVED, async (req, res, next) => {
+    const { username } = req.session;
+
+    let info;
+    try {
+      info = await connection.getRepository(Passenger).findOne({
+        select: ['username', 'groupSize', 'driver'],
+        relations: ['driver'],
+        where: {
+          username,
+        },
+      });
+    } catch (err) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+    }
+
+    if (!info) {
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .send('Unable to find driver info');
+    }
+
+    const { groupSize, driver } = info;
+
+    console.log(groupSize);
+
+    if (driver) {
+      driver.numOfSeats += groupSize;
+
+      if (driver.destLat1 !== 0) {
+        driver.currentLatitude = driver.destLat1;
+        driver.currentLongitude = driver.destLng1;
+      }
+
+      driver.destLat1 = 0;
+      driver.destLng1 = 0;
+
+      driver.destLat2 = 0;
+      driver.destLng2 = 0;
+
+      driver.destLat3 = 0;
+      driver.destLng3 = 0;
+    }
+
+    try {
+      await connection.getRepository(Driver).save(driver);
+    } catch (err) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+    }
+
+    try {
+      await connection.getRepository(Passenger).remove(info);
+    } catch (err) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+    }
+
+    return res.status(HttpStatus.OK).send('Processed arrival');
   });
 
   app.post(routes.ADDCREDITCARD, async (req, res, next) => {
@@ -417,7 +544,7 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
     }
 
     if (!user) {
-      res.statusCode(HttpStatus.NOT_FOUND).send('Could not find user');
+      return res.statusCode(HttpStatus.NOT_FOUND).send('Could not find user');
     }
 
     const newCard = Object.assign(new CreditCard(), {

@@ -8,13 +8,16 @@
 
   // users
   "USER": "/api/users",
+  "MY_DRIVER": "/api/myDriver",
 
   //drivers
   "DRIVER": "/drivers/:username",
   "DRIVERS": "/drivers",
+  "ALL_ACTIVE_DRIVERS": "/driversAll",
 
   //location api
   "CLOSEST_DRIVER": "/api/nearestDriver",
+  "ARRIVED": "/api/arrival",
 
   //credit card api
   "ADDCREDITCARD": "/api/creditCard"

@@ -45,6 +45,7 @@ class AlertDialog extends React.Component<Props> {
     const { onClose } = this.props;
     this.setState({ open: false, closing: true });
     onClose();
+    this.setState({ closing: false });
   };
 
   render() {

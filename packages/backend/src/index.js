@@ -32,6 +32,7 @@ process.on('unhandledRejection', err => {
     apiKey,
     secret,
   });
+
   // wait until the app starts
   await promisify(app.listen).bind(app)(port);
   console.log(`App started on port ${port}`);
