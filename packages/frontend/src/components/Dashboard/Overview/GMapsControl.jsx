@@ -83,18 +83,6 @@ const GMapsControl = compose(
         hasDriverDirections: false,
         onArrivalToDestinationDialogClosed: async routeCost => {
           console.log('payment stuff happens here, ', routeCost);
-
-          try {
-            await axios.post(backendRoutes.ARRIVED, {
-              cost: routeCost,
-              location: this.props.to,
-            });
-            console.log('success');
-            // TODO: reset frontend to prepare for other trip. Leave ratings?
-          } catch (e) {
-            // something went wrong.
-            console.error(e);
-          }
           window.location.reload();
         },
         onDriverArrivedDialogClosed: async () => {
@@ -134,7 +122,6 @@ const GMapsControl = compose(
           } catch (e) {
             console.error(e);
           }
-          this.doCleartoUserInterval();
         },
         setLocationInterval: interval => {
           this.setState({
@@ -218,9 +205,19 @@ const GMapsControl = compose(
                     currentDestination = 1;
                     // use dest1
                   }
-                  if (currentDestination > lastNum && lastNum !== 0) {
-                    // we should get a discount
-                    this.setState({ discount: 10 });
+                  if (currentDestination === 3 && lastNum === 0) {
+                    this.setState({
+                      discount: 10,
+                      discountReason:
+                        'because we picked up a second passenger on our way to our destination.',
+                    });
+                  }
+                  if (lastNum === 2 && currentDestination === 3) {
+                    this.setState({
+                      discount: 5,
+                      discountReason:
+                        'because we picked up a second passenger while on our way to pick you up.',
+                    });
                   }
                 }
                 console.log(currentDestination);
@@ -300,10 +297,22 @@ const GMapsControl = compose(
                         destNumToRemove: destNum,
                         atUserDialogShow: true,
                       });
+                      this.doCleartoUserInterval();
                     }
                     if (destNum === 1) {
                       // final destination
                       this.setState({ atDestinationDialogShow: true });
+                      this.doCleartoUserInterval();
+                      try {
+                        axios.post(backendRoutes.ARRIVED, {
+                          location: this.props.to,
+                        });
+                        console.log('success');
+                        // TODO: reset frontend to prepare for other trip. Leave ratings?
+                      } catch (e) {
+                        // something went wrong.
+                        console.error(e);
+                      }
                     }
                   }
                 }, timePerInterval);
@@ -331,16 +340,22 @@ const GMapsControl = compose(
       <AlertDialog
         open={props.atDestinationDialogShow}
         title="Arrived"
-        text={`You have arrived at your destination! Your credit card was charged $${estimateCost(
-          props.distance.value
-        ).toFixed(2) - (props.discount ? props.discount : 0)}${
+        text={`You have arrived at your destination! Your credit card was charged $${(
+          estimateCost(props.distance.value) -
+          (props.discount ? props.discount : 0)
+        ).toFixed(2)}. ${
           props.discount
-            ? 'You received a discount because we picked up a second passenger'
+            ? `You received a discount of $${props.discount} ${
+                props.discountReason
+              }`
             : ''
         }`}
         onClose={() => {
           props.onArrivalToDestinationDialogClosed(
-            estimateCost(props.distance.value.toFixed(2))
+            estimateCost(
+              props.distance.value -
+                (props.discount ? props.discount : 0).toFixed(2)
+            )
           );
         }}
       />

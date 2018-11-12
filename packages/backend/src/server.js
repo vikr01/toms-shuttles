@@ -380,13 +380,19 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
         const time = result.data.rows[0].elements[0].duration.value;
         const distance = result.data.rows[0].elements[0].distance.value;
         existingDriver = true;
+        console.log(
+          `distance to ${
+            driver.username
+          } is ${distance} meters and time is ${time} seconds`
+        );
         if (
-          (time < leastTime && distance <= METERSINMILE * 2) ||
+          (time < leastTime && distance <= METERSINMILE * 3) ||
           (time <= leastTime &&
             time <= SECSIN30MIN &&
             driver.destLat1 === 0 &&
             driver.destLng1 === 0)
         ) {
+          console.log(`Closest driver is now ${driver.username}`);
           leastTime = time;
           closestDriver = driver;
         }
@@ -441,7 +447,6 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
     // add user's driver to their session
     req.session.driver = closestDriver;
 
-
     return res.status(HttpStatus.OK).json(closestDriver);
   });
 
@@ -459,6 +464,12 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
       });
     } catch (err) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
+    }
+
+    if (!info) {
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .send('Unable to find driver info');
     }
 
     const { groupSize, driver } = info;
