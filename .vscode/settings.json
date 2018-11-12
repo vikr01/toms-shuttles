@@ -11,12 +11,13 @@
 
     ".stylelintrc": "json",
 
-    ".env": "ignore",
-    ".env.example": "ignore",
+    ".env": "dotenv",
+    ".env.example": "dotenv",
     ".eslintignore": "ignore",
     ".flowconfig": "ignore",
     ".npmrc": "ignore",
     ".slugignore": "ignore",
+    "testenv": "dotenv",
     ".yarnrc": "ignore"
   },
 

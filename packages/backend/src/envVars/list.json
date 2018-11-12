@@ -1,0 +1,11 @@
+{
+  "required": [
+    "NODE_ENV",
+    "HASH_ALGO",
+    "HASH_KEY",
+    "DIGESTION_TYPE",
+    "SESSION_SECRET",
+    "API_KEY"
+  ],
+  "optional": []
+}
