@@ -26,7 +26,6 @@ export default class RequestForm extends Component<Props> {
       haveUserPosition,
       disableRequestButtons,
     } = this.props;
-    console.log('have user position? ', haveUserPosition);
     return (
       <div className="requestFormToggleLocation">
         <ToggleButtonGroup value={value} exclusive onChange={this.handleChange}>

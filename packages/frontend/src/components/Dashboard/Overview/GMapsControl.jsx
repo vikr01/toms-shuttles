@@ -13,6 +13,7 @@ import {
 import axios from 'axios';
 import AlertDialog from './AlertDialog';
 import CostEstimater, { estimateCost } from './CostEstimater';
+import SimpleSnackbar from './SimpleSnackbar';
 
 const GMapsControl = compose(
   withProps({
@@ -38,10 +39,12 @@ const GMapsControl = compose(
         clearInterval(this.state.toLocationCheckInterval);
       }
       // console.log('route: ', this.props.route);
-      if (this.props.route && !this.state.hasDriverDirections) {
+      if (
+        this.props.route &&
+        (!this.state.hasDriverDirections || this.newPath())
+      ) {
         console.log('we should get directions to driver');
         // console.log('making route request!', data);
-
         const { data } = this.props;
         const DirectionsService = new google.maps.DirectionsService();
         DirectionsService.route(
@@ -58,6 +61,10 @@ const GMapsControl = compose(
                 userLocation: data.from,
                 route: true,
                 boundsDriver: result.routes[0].bounds,
+                currentToLat: data.to.lat,
+                currentToLng: data.to.ng,
+                currentFromLat: data.from.lat,
+                currentFromLng: data.from.lng,
               });
               console.log(result);
               this.props.routeSet(
@@ -70,6 +77,14 @@ const GMapsControl = compose(
           }
         );
       }
+    },
+    newPath() {
+      return (
+        this.state.currentToLat !== this.props.data.to.lat ||
+        this.state.currentToLng !== this.props.data.to.lng ||
+        this.state.currentFromLat !== this.props.data.from.lat ||
+        this.state.currentFromLng !== this.props.data.from.lng
+      );
     },
     getDirectionPos(c) {
       return this.state.directions[parseInt(c, 10)];
@@ -90,7 +105,6 @@ const GMapsControl = compose(
         try {
           const res = await axios.get(backendRoutes.ALL_ACTIVE_DRIVERS);
           this.setState({ allDrivers: res.data });
-          console.log(res.data);
         } catch (err) {
           console.error(err);
         }
@@ -106,6 +120,10 @@ const GMapsControl = compose(
         hasDriverDirections: false,
         startedAllDriverInterval: false,
         allActiveDriversInterval: null,
+        currentToLat: 0,
+        currentToLng: 0,
+        currentFromLat: 0,
+        currentFromLng: 0,
         onArrivalToDestinationDialogClosed: async routeCost => {
           console.log('payment stuff happens here, ', routeCost);
           window.location.reload();
@@ -121,8 +139,9 @@ const GMapsControl = compose(
           // update driver location on backend
           try {
             console.log('removing dest: ', destNumToRemove);
+            let res;
             if (destNumToRemove === 3)
-              await axios.put(backendRoutes.DRIVERS, {
+              res = await axios.put(backendRoutes.DRIVERS, {
                 username: assignedDriver.username,
                 currentLatitude: data.from.lat,
                 currentLongitude: data.from.lng,
@@ -130,14 +149,14 @@ const GMapsControl = compose(
                 destLng3: 0,
               });
             else
-              await axios.put(backendRoutes.DRIVERS, {
+              res = await axios.put(backendRoutes.DRIVERS, {
                 username: assignedDriver.username,
                 currentLatitude: data.from.lat,
                 currentLongitude: data.from.lng,
                 destLat2: 0,
                 destLng2: 0,
               });
-            console.log('we set the drivers new data');
+            console.log('we set the drivers new data ', res);
             const set = () => {
               this.setState({
                 atUser: false,
@@ -163,22 +182,18 @@ const GMapsControl = compose(
           const checkInterval = setInterval(async () => {
             let response;
             const { assignedDriver } = this.props;
-            const { driverLocation } = this.state;
+            const { driverLocation, driving } = this.state;
             if (assignedDriver)
               try {
                 // update driver location
                 // driverLocation
-                if (driverLocation)
+                if (driverLocation && driving)
                   try {
                     await axios.put(backendRoutes.DRIVERS, {
                       username: assignedDriver.username,
                       currentLatitude: driverLocation.lat,
                       currentLongitude: driverLocation.lng,
                     });
-                    console.log('we set the drivers new data');
-                    // this.setState({
-                    //  atUser: false,
-                    // });
                   } catch (e) {
                     console.error(e);
                     this.setState({ status: 'Issue connecting to server' });
@@ -191,13 +206,10 @@ const GMapsControl = compose(
                     assignedDriver.username
                   )
                 );
-                console.log('assignedDriver: ', assignedDriver);
                 if (assignedDriver) {
                   const lastNum = currentDestination;
-                  console.log('lets find a path');
                   if (response.data.destLat3 !== 0) {
                     // use dest3
-
                     if (currentDestination !== 3) {
                       this.state.makePathRequestAndAnimate(
                         response.data,
@@ -208,7 +220,6 @@ const GMapsControl = compose(
                     }
                     currentDestination = 3;
                   } else if (response.data.destLat2 !== 0) {
-                    console.log('path 2 is good');
                     if (currentDestination !== 2) {
                       this.state.makePathRequestAndAnimate(
                         response.data,
@@ -231,11 +242,17 @@ const GMapsControl = compose(
                     currentDestination = 1;
                     // use dest1
                   }
-                  if (currentDestination === 3 && lastNum === 0) {
+                  if (
+                    (lastNum === 1 && currentDestination === 2) ||
+                    (lastNum === 0 && currentDestination === 3)
+                  ) {
                     this.setState({
                       discount: 10,
                       discountReason:
                         'because we picked up a second passenger on our way to our destination.',
+                      snackbarMessage:
+                        'Rerouting to pick up more passengers. You will get a discount.',
+                      snackbarOpen: true,
                     });
                   }
                   if (lastNum === 2 && currentDestination === 3) {
@@ -243,11 +260,12 @@ const GMapsControl = compose(
                       discount: 5,
                       discountReason:
                         'because we picked up a second passenger while on our way to pick you up.',
+                      snackbarMessage:
+                        'Picking up someone else first. Thank you for your patience. You will get a discount.',
+                      snackbarOpen: true,
                     });
                   }
                 }
-                console.log(currentDestination);
-                console.log(response);
               } catch (error) {
                 console.error(error);
               }
@@ -294,6 +312,7 @@ const GMapsControl = compose(
                 const ticksPerInterval =
                   this.state.directions.length / (timeToDest / timePerInterval);
                 let c = 0;
+                this.setState({ driving: true });
 
                 const interval = setInterval(() => {
                   if (c < this.state.directions.length - 1) {
@@ -313,10 +332,11 @@ const GMapsControl = compose(
                     c += ticksPerInterval;
                   } else {
                     c = this.state.directions.length - 1;
-                    console.log('lat ', parseFloat(lat, 10));
-                    console.log('userlat: ', userLocation.lat);
+                    this.setState({ driving: false });
                     if (
-                      Math.abs(parseFloat(lat, 10) - userLocation.lat) < 0.001
+                      Math.abs(parseFloat(lat, 10) - userLocation.lat) <
+                        0.001 &&
+                      Math.abs(parseFloat(lng, 10) - userLocation.lng) < 0.001
                     ) {
                       console.log('showing at user dialog');
                       this.setState({
@@ -338,6 +358,7 @@ const GMapsControl = compose(
                       } catch (e) {
                         // something went wrong.
                         console.error(e);
+                        console.error(e.response);
                       }
                     }
                   }
@@ -362,6 +383,7 @@ const GMapsControl = compose(
       text="Your driver has arrived"
       onClose={props.onDriverArrivedDialogClosed}
     />
+    <SimpleSnackbar open={props.snackbarOpen} message={props.snackbarMessage} />
     {props.distance && (
       <AlertDialog
         open={props.atDestinationDialogShow}
@@ -437,6 +459,7 @@ const GMapsControl = compose(
       {props.allDrivers &&
         props.allDrivers.map(t => (
           <DrawCarMarker
+            key={t.username}
             coords={{ lat: t.currentLatitude, lng: t.currentLongitude }}
           />
         ))}
