@@ -43,7 +43,6 @@ export default class LocationPicker extends Component<Props> {
     } = this.props;
     const { useLoc } = this.state;
     const { value, enteredLocation, destinationSet } = this.state;
-    console.log('useloc', useLoc);
     if (show) {
       if (show === 1) {
         return (
