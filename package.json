@@ -19,7 +19,8 @@
     "prepare": "lerna run prepare",
     "start": "yarn workspace tbd-backend-name start",
     "stop": "yarn workspace tbd-backend-name run stop",
-    "test": "cross-env NODE_ENV=test jest"
+    "test": "cross-env NODE_ENV=test jest",
+    "test-coverage": "yarn run test --coverage && codecov"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.5",
@@ -44,6 +45,7 @@
     "babel-plugin-minify-guarded-expressions": "^0.4.3",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.19",
+    "codecov": "^3.1.0",
     "cross-env": "^5.2.0",
     "dotenv": "^6.1.0",
     "eslint": "^5.8.0",
@@ -61,6 +63,7 @@
     "flow-bin": "^0.84.0",
     "flow-typed": "^2.5.1",
     "husky": "^1.1.2",
+    "istanbul-lib-source-maps": "^1.2.6",
     "jest": "^23.6.0",
     "lerna": "^3.4.3",
     "lint-staged": "^7.3.0",

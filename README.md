@@ -2,13 +2,15 @@
 
 [![Dependency Status](https://david-dm.org/vikr01/tbd-project-name/status.svg)](https://david-dm.org/vikr01/tbd-project-name)
 [![DevDependency Status](https://david-dm.org/vikr01/tbd-project-name/dev-status.svg)](https://david-dm.org/vikr01/tbd-project-name?type=dev)
+[![Master Coverage Status](https://img.shields.io/codecov/c/github/vikr01/tbd-project-name/master.svg)](https://codecov.io/gh/vikr01/tbd-project-name/branch/master)
+[![Dev Coverage Status](https://img.shields.io/codecov/c/github/vikr01/tbd-project-name/dev.svg)](https://codecov.io/gh/vikr01/tbd-project-name/branch/dev)
 
 ## Installation
 
 First, clone the repo via git:
 
 ```bash
-git clone --depth=1 https://github.com/vikr01/tbd-project-name.git your-project-name
+git clone https://github.com/vikr01/tbd-project-name.git your-project-name
 ```
 
 And then install dependencies with yarn:

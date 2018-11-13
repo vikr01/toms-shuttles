@@ -4,6 +4,9 @@ node_js:
   - node
   - 10
 
+git:
+  depth: 3
+
 cache:
   yarn: true
   directories:
@@ -18,4 +21,4 @@ install: yarn install --ignore-scripts --ignore-engines
 script:
   - yarn run lint
   - yarn run build
-  - yarn run test
+  - yarn run test-coverage
