@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -23,8 +22,8 @@ class SimpleSnackbar extends Component<SimpleSnackbarProps> {
   };
 
   componentDidUpdate(prevProps) {
-    const { open } = this.props;
-    if (open && !prevProps.open) {
+    const { open, message } = this.props;
+    if ((open && !prevProps.open) || message !== prevProps.message) {
       this.doOpen();
     }
   }

@@ -33,7 +33,10 @@ export default class AccountInfoView extends Component {
       username: response.data.username,
       creditInfo: response.data.creditCard,
       accountType: response.data.accountType,
-      seatNumber: response.data.seatNumber,
+      seatNumber: response.data.driverInfo
+        ? response.data.driverInfo.numOfSeats
+        : 0,
+      active: response.data.driverInfo ? response.data.driverInfo.active : 0,
       error: false,
       loaded: true,
     });
@@ -48,6 +51,7 @@ export default class AccountInfoView extends Component {
       creditInfo,
       accountType,
       seatNumber,
+      active,
     } = this.state;
     if (!loaded) {
       return (
@@ -85,16 +89,25 @@ export default class AccountInfoView extends Component {
               </Link>
             </Fragment>
           )}
-          {accountType === 'Driver' && (
-            <Fragment>
-              <Typography variant="h5" className="accountOverviewItem">
-                {`Seat count: ${seatNumber}`}
-              </Typography>
-              <Link to={routes.CARSEATS_SET} className="accountOverviewItem">
-                Change seat count
-              </Link>
-            </Fragment>
-          )}
+          {accountType === 'Driver' &&
+            active === 0 && (
+              <Fragment>
+                <Typography variant="h5" className="accountOverviewItem">
+                  {`Seat count: ${seatNumber}`}
+                </Typography>
+                <Link to={routes.CARSEATS_SET} className="accountOverviewItem">
+                  Change seat count
+                </Link>
+              </Fragment>
+            )}
+          {accountType === 'Driver' &&
+            active === 1 && (
+              <Fragment>
+                <Typography variant="h5" className="accountOverviewItem">
+                  Become inactive to change your seat count
+                </Typography>
+              </Fragment>
+            )}
         </div>
       </Fragment>
     );

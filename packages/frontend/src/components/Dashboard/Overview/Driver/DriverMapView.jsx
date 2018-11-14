@@ -5,60 +5,54 @@ import { Typography, Button } from '@material-ui/core';
 
 import { geolocated, geoPropTypes } from 'react-geolocated';
 import axios from 'axios';
-import GMapsControl from '../GMapsControl';
+import DriverGMapsControl from './DriverGMapsControl';
 import DisplayStatus from '../../../DisplayStatus';
 
 function LiveGMapDriverView({
   showMap,
-  data,
-  route,
-  routeSet,
-  duration,
-  distance,
-  requestRide,
-  assignedDriver,
-  driverArriving,
-  coords,
   isAvailable,
   onSetAvailable,
   status,
+  driverInfo,
+  availabilityFound,
 }: props) {
   if (showMap) {
+    console.log(driverInfo);
     return (
       <Fragment>
-        {!isAvailable && (
-          <Fragment>
-            <Typography variant="h5">
-              {
-                "🔴 You're currently not set to available. Click below when you're ready to pick up clients"
-              }
-            </Typography>
-            <Button variant="contained" onClick={() => onSetAvailable(true)}>
-              Make yourself available
-            </Button>
-          </Fragment>
-        )}
-        {isAvailable && (
-          <Fragment>
-            <Typography variant="h5">
-              {"✅ You're now available. Click below when you're ready to stop"}
-            </Typography>
-            <Button variant="contained" onClick={() => onSetAvailable(false)}>
-              Make yourself unavailable
-            </Button>
-          </Fragment>
+        {availabilityFound &&
+          !isAvailable && (
+            <Fragment>
+              <Typography variant="h5">
+                {
+                  "🔴 You're currently not set to available. Click below when you're ready to pick up clients"
+                }
+              </Typography>
+              <Button variant="contained" onClick={() => onSetAvailable(true)}>
+                Make yourself available
+              </Button>
+            </Fragment>
+          )}
+        {availabilityFound &&
+          isAvailable && (
+            <Fragment>
+              <Typography variant="h5">
+                {
+                  "✅ You're now available. Click below when you're ready to stop"
+                }
+              </Typography>
+              <Button variant="contained" onClick={() => onSetAvailable(false)}>
+                Make yourself unavailable
+              </Button>
+            </Fragment>
+          )}
+        {!availabilityFound && (
+          <Typography variant="h5">Loading your data...</Typography>
         )}
         <DisplayStatus status={status} />
         <div style={{ height: '10px' }} />
         <div style={{ height: '80vh', width: '100%' }}>
-          <GMapsControl
-            data={data}
-            route={route}
-            routeSet={routeSet}
-            assignedDriver={assignedDriver}
-            driverArriving={driverArriving}
-            coords={coords}
-          />
+          <DriverGMapsControl driverInfo={driverInfo} route={!!driverInfo} />
         </div>
       </Fragment>
     );
@@ -72,16 +66,8 @@ type Props = {
 };
 class DriverMapView extends React.Component<Props> {
   state = {
-    data: {
-      to: { lat: Number, long: Number },
-      from: { lat: Number, long: Number },
-      route: false,
-      driverArriving: false,
-      disableRequestButtons: false,
-    },
-    duration: null,
-    distance: null,
     isAvailable: false,
+    availabilityFound: false,
     status: '',
   };
 
@@ -91,6 +77,18 @@ class DriverMapView extends React.Component<Props> {
       return { coords: nextProps.coords };
     }
     return null;
+  }
+
+  async componentDidMount() {
+    let response;
+    try {
+      response = await axios.get(backendRoutes.USER);
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+    await this.onSetAvailable(response.data.driverInfo.active === 1);
+    this.setState({ availabilityFound: true });
   }
 
   async onSetAvailable(val) {
@@ -111,8 +109,20 @@ class DriverMapView extends React.Component<Props> {
       if (val) {
         // start polling backend for assigned users
         // save interval object in state to be stopped later
+        const interval = setInterval(async () => {
+          let response;
+          try {
+            response = await axios.get(backendRoutes.USER);
+          } catch (error) {
+            console.error(error);
+          }
+          this.setState({ driverInfo: response.data.driverInfo });
+        }, 100);
+        this.setState({ fetchInterval: interval });
       } else {
         // retrieve interval object from state and stop it
+        const { fetchInterval } = this.state;
+        clearInterval(fetchInterval);
       }
       this.setState({ isAvailable: val, status: '' });
     } catch (e) {
@@ -125,17 +135,7 @@ class DriverMapView extends React.Component<Props> {
 
   render() {
     const { showMap, isGeolocationEnabled } = this.props;
-    const {
-      data,
-      route,
-      duration,
-      distance,
-      driverArriving,
-      assignedDriver,
-      coords,
-      isAvailable,
-      status,
-    } = this.state;
+    const { isAvailable, status, driverInfo, availabilityFound } = this.state;
     return (
       <Fragment>
         {!isGeolocationEnabled && (
@@ -147,22 +147,11 @@ class DriverMapView extends React.Component<Props> {
         )}
         <LiveGMapDriverView
           showMap={showMap}
-          doRequestToAirport={this.doRequestToAirport}
-          doRequestFromAirport={this.doRequestFromAirport}
-          data={data}
-          route={route}
-          routeSet={(_duration, _distance) =>
-            this.routeSet(_duration, _distance)
-          }
-          duration={duration}
-          distance={distance}
-          requestRide={() => this.requestRide()}
-          driverArriving={driverArriving}
-          assignedDriver={assignedDriver}
-          coords={coords}
           onSetAvailable={e => this.onSetAvailable(e)}
           isAvailable={isAvailable}
           status={status}
+          driverInfo={driverInfo}
+          availabilityFound={availabilityFound}
         />
       </Fragment>
     );

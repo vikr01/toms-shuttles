@@ -7,7 +7,7 @@ import { geolocated, geoPropTypes } from 'react-geolocated';
 import axios from 'axios';
 import RequestForm from './RequestForm';
 import GMapsControl from './GMapsControl';
-import CostEstimater, { estimateCost } from './CostEstimater';
+import CostEstimater from './CostEstimater';
 import AlertDialog from './AlertDialog';
 
 function LiveGMapView({

@@ -11,11 +11,10 @@ import {
   Marker,
 } from 'react-google-maps';
 import axios from 'axios';
-import AlertDialog from './AlertDialog';
-import { estimateCost } from './CostEstimater';
-import SimpleSnackbar from './SimpleSnackbar';
+import AlertDialog from '../AlertDialog';
+import SimpleSnackbar from '../SimpleSnackbar';
 
-const GMapsControl = compose(
+const DriverGMapsControl = compose(
   withProps({
     googleMapURL:
       'https://maps.googleapis.com/maps/api/js?key=AIzaSyDdFTrNJ3AHz6_978tDmRvRYXbdBHVRLWI&v=3.exp&libraries=geometry,drawing,places',
@@ -31,52 +30,14 @@ const GMapsControl = compose(
         clearInterval(this.state.allActiveDriversInterval);
         this.clearAllDrivers();
       }
-      if (this.state.route) {
-        this.state.onDirectionChange();
-      }
       if (this.state.atDestination) {
         clearInterval(this.state.toLocationInterval);
         clearInterval(this.state.toLocationCheckInterval);
       }
       // console.log('route: ', this.props.route);
-      if (
-        this.props.route &&
-        (!this.state.hasDriverDirections || this.newPath())
-      ) {
-        console.log('we should get directions to driver');
-        // console.log('making route request!', data);
-        const { data } = this.props;
-        const DirectionsService = new google.maps.DirectionsService();
-        DirectionsService.route(
-          {
-            origin: new google.maps.LatLng(data.from.lat, data.from.lng),
-            destination: new google.maps.LatLng(data.to.lat, data.to.lng),
-            travelMode: google.maps.TravelMode.DRIVING,
-          },
-          async (result, status) => {
-            if (status === google.maps.DirectionsStatus.OK) {
-              this.setState({
-                directions: result.routes[0].overview_path,
-                hasDriverDirections: true,
-                userLocation: data.from,
-                route: true,
-                boundsDriver: result.routes[0].bounds,
-                currentToLat: data.to.lat,
-                currentToLng: data.to.ng,
-                currentFromLat: data.from.lat,
-                currentFromLng: data.from.lng,
-              });
-              console.log(result);
-              this.props.routeSet(
-                result.routes[0].legs[0].duration,
-                result.routes[0].legs[0].distance
-              );
-            } else {
-              console.error(status);
-            }
-          }
-        );
-      }
+    },
+    componentDidMount() {
+      this.state.onDirectionChange();
     },
     newPath() {
       return (
@@ -134,38 +95,6 @@ const GMapsControl = compose(
             userInCar: true,
             atUserDialogShow: false,
           });
-          const { destNumToRemove } = this.state;
-          const { data, assignedDriver } = this.props;
-          // update driver location on backend
-          try {
-            console.log('removing dest: ', destNumToRemove);
-            let res;
-            if (destNumToRemove === 3)
-              res = await axios.put(backendRoutes.DRIVERS, {
-                username: assignedDriver.username,
-                currentLatitude: data.from.lat,
-                currentLongitude: data.from.lng,
-                destLat3: 0,
-                destLng3: 0,
-              });
-            else
-              res = await axios.put(backendRoutes.DRIVERS, {
-                username: assignedDriver.username,
-                currentLatitude: data.from.lat,
-                currentLongitude: data.from.lng,
-                destLat2: 0,
-                destLng2: 0,
-              });
-            console.log('we set the drivers new data ', res);
-            const set = () => {
-              this.setState({
-                atUser: false,
-              });
-            };
-            set();
-          } catch (e) {
-            console.error(e);
-          }
         },
         setLocationInterval: interval => {
           this.setState({
@@ -174,101 +103,70 @@ const GMapsControl = compose(
           });
         },
         onDirectionChange: () => {
-          const { data } = this.props;
-          console.log('making route request!', data);
           this.setState({ route: false });
           let currentDestination = 0;
           this.clearLocationInterval();
           const checkInterval = setInterval(async () => {
-            let response;
-            const { assignedDriver } = this.props;
-            const { driverLocation, driving } = this.state;
-            if (assignedDriver)
-              try {
-                // update driver location
-                // driverLocation
-                if (driverLocation && driving)
-                  try {
-                    await axios.put(backendRoutes.DRIVERS, {
-                      username: assignedDriver.username,
-                      currentLatitude: driverLocation.lat,
-                      currentLongitude: driverLocation.lng,
-                    });
-                  } catch (e) {
-                    console.error(e);
-                    this.setState({ status: 'Issue connecting to server' });
-                  }
-
-                // check if username exists
-                response = await axios.get(
-                  backendRoutes.DRIVER.replace(
-                    ':username',
-                    assignedDriver.username
-                  )
-                );
-                if (assignedDriver) {
-                  const lastNum = currentDestination;
-                  if (response.data.destLat3 !== 0) {
-                    // use dest3
-                    if (currentDestination !== 3) {
-                      this.state.makePathRequestAndAnimate(
-                        response.data,
-                        3,
-                        response.data.destLat3,
-                        response.data.destLng3
-                      );
-                    }
-                    currentDestination = 3;
-                  } else if (response.data.destLat2 !== 0) {
-                    if (currentDestination !== 2) {
-                      this.state.makePathRequestAndAnimate(
-                        response.data,
-                        2,
-                        response.data.destLat2,
-                        response.data.destLng2
-                      );
-                    }
-                    currentDestination = 2;
-                    // use dest2
-                  } else if (response.data.destLat1 !== 0) {
-                    if (currentDestination !== 1) {
-                      this.state.makePathRequestAndAnimate(
-                        response.data,
-                        1,
-                        response.data.destLat1,
-                        response.data.destLng1
-                      );
-                    }
-                    currentDestination = 1;
-                    // use dest1
-                  }
-                  if (
-                    (lastNum === 1 && currentDestination === 2) ||
-                    (lastNum === 0 && currentDestination === 3)
-                  ) {
-                    this.setState({
-                      discount: 10,
-                      discountReason:
-                        'because we picked up a second passenger on our way to our destination.',
-                      snackbarMessage:
-                        'Rerouting to pick up more passengers. You will get a discount.',
-                      snackbarOpen: true,
-                    });
-                  }
-                  if (lastNum === 2 && currentDestination === 3) {
-                    this.setState({
-                      discount: 5,
-                      discountReason:
-                        'because we picked up a second passenger while on our way to pick you up.',
-                      snackbarMessage:
-                        'Picking up someone else first. Thank you for your patience. You will get a discount.',
-                      snackbarOpen: true,
-                    });
-                  }
+            const { driverInfo } = this.props;
+            if (driverInfo) {
+              const lastNum = currentDestination;
+              if (driverInfo.destLat3 !== 0) {
+                // use dest3
+                if (currentDestination !== 3) {
+                  this.state.makePathRequestAndAnimate(
+                    driverInfo,
+                    3,
+                    driverInfo.destLat3,
+                    driverInfo.destLng3
+                  );
                 }
-              } catch (error) {
-                console.error(error);
+                currentDestination = 3;
+              } else if (driverInfo.destLat2 !== 0) {
+                if (currentDestination !== 2) {
+                  this.state.makePathRequestAndAnimate(
+                    driverInfo,
+                    2,
+                    driverInfo.destLat2,
+                    driverInfo.destLng2
+                  );
+                }
+                currentDestination = 2;
+                // use dest2
+              } else if (driverInfo.destLat1 !== 0) {
+                if (currentDestination !== 1) {
+                  this.state.makePathRequestAndAnimate(
+                    driverInfo,
+                    1,
+                    driverInfo.destLat1,
+                    driverInfo.destLng1
+                  );
+                }
+                currentDestination = 1;
+                // use dest1
               }
+              if (
+                (lastNum === 1 && currentDestination === 2) ||
+                (lastNum === 0 && currentDestination === 3)
+              ) {
+                this.setState({
+                  snackbarMessage: 'Rerouting to pick up more passengers.',
+                  snackbarOpen: true,
+                });
+              }
+              if (lastNum === 2 && currentDestination === 3) {
+                this.setState({
+                  snackbarMessage: 'Another passenger needs to be picked up',
+                  snackbarOpen: true,
+                });
+              }
+              if (lastNum === 0 && currentDestination !== 0) {
+                this.setState({
+                  snackbarOpen: true,
+                  snackbarMessage:
+                    'You have a new passenger. Navigating to their location.',
+                });
+              }
+            }
           }, 1000);
 
           this.setState({ toLocationCheckInterval: checkInterval });
@@ -280,7 +178,6 @@ const GMapsControl = compose(
           lat: number,
           lng: number
         ) => {
-          const { userLocation } = this.state;
           console.log('makePathRequestAndAnimate ', destNum);
           this.doCleartoUserInterval();
           const DirectionsService = new google.maps.DirectionsService();
@@ -302,7 +199,6 @@ const GMapsControl = compose(
                     lat: assignedDriver.currentLatitude,
                     lng: assignedDriver.currentLongitude,
                   },
-                  // userLocation: data.from,
                   boundsDriver: result.routes[0].bounds,
                 });
                 const { duration } = result.routes[0].legs[0];
@@ -333,33 +229,19 @@ const GMapsControl = compose(
                   } else {
                     c = this.state.directions.length - 1;
                     this.setState({ driving: false });
-                    if (
-                      Math.abs(parseFloat(lat, 10) - userLocation.lat) <
-                        0.001 &&
-                      Math.abs(parseFloat(lng, 10) - userLocation.lng) < 0.001
-                    ) {
-                      console.log('showing at user dialog');
-                      this.setState({
-                        destNumToRemove: destNum,
-                        atUserDialogShow: true,
-                      });
-                      this.doCleartoUserInterval();
-                    }
+
                     if (destNum === 1) {
                       // final destination
                       this.setState({ atDestinationDialogShow: true });
                       this.doCleartoUserInterval();
-                      try {
-                        axios.post(backendRoutes.ARRIVED, {
-                          location: this.props.to,
-                        });
-                        console.log('success');
-                        // TODO: reset frontend to prepare for other trip. Leave ratings?
-                      } catch (e) {
-                        // something went wrong.
-                        console.error(e);
-                        console.error(e.response);
-                      }
+                      console.log('we arrived');
+                    } else {
+                      // display snackbar
+                      this.setState({
+                        snackbarOpen: true,
+                        snackbarMessage:
+                          'You arrived at clients location. Wait for them to accept',
+                      });
                     }
                   }
                 }, timePerInterval);
@@ -377,37 +259,15 @@ const GMapsControl = compose(
   })
 )(props => (
   <Fragment>
-    <AlertDialog
-      open={props.atUserDialogShow}
-      title="Driver arrived"
-      text="Your driver has arrived"
-      onClose={props.onDriverArrivedDialogClosed}
-    />
     <SimpleSnackbar open={props.snackbarOpen} message={props.snackbarMessage} />
-    {props.distance && (
-      <AlertDialog
-        open={props.atDestinationDialogShow}
-        title="Arrived"
-        text={`You have arrived at your destination! Your credit card was charged $${(
-          estimateCost(props.distance.value) -
-          (props.discount ? props.discount : 0)
-        ).toFixed(2)}. ${
-          props.discount
-            ? `You received a discount of $${props.discount} ${
-                props.discountReason
-              }`
-            : ''
-        }`}
-        onClose={() => {
-          props.onArrivalToDestinationDialogClosed(
-            estimateCost(
-              props.distance.value -
-                (props.discount ? props.discount : 0).toFixed(2)
-            )
-          );
-        }}
-      />
-    )}
+    <AlertDialog
+      open={props.atDestinationDialogShow}
+      title="Arrived"
+      text="You have arrived at the destination!"
+      onClose={() => {
+        props.onArrivalToDestinationDialogClosed();
+      }}
+    />
     <GoogleMap
       ref={map =>
         map && props.boundsDriver && map.fitBounds(props.boundsDriver)
@@ -430,8 +290,6 @@ const GMapsControl = compose(
             }}
           />
 
-          <DrawMarker coords={props.data.from} />
-          <DrawMarker coords={props.data.to} />
           {props.driverLocation && (
             <Marker
               position={
@@ -456,27 +314,31 @@ const GMapsControl = compose(
           )}
         </Fragment>
       )}
-      {props.allDrivers &&
-        props.allDrivers.map(t => (
+
+      {props.driverInfo &&
+        !props.directions && (
           <DrawCarMarker
-            key={t.username}
-            coords={{ lat: t.currentLatitude, lng: t.currentLongitude }}
+            key={props.driverInfo.username}
+            coords={{
+              lat: props.driverInfo.currentLatitude,
+              lng: props.driverInfo.currentLongitude,
+            }}
+            color="red"
           />
-        ))}
+        )}
     </GoogleMap>
   </Fragment>
 ));
 type DrawMarkerProps = {
   coords: object,
 };
-const DrawMarker = ({ coords }: DrawMarkerProps) => {
-  if (!coords) return null;
-  return (
-    <Marker position={new window.google.maps.LatLng(coords.lat, coords.lng)} />
-  );
+
+type DrawCarMarkerProps = {
+  coords: object,
+  color: string,
 };
 
-const DrawCarMarker = ({ coords }: DrawMarkerProps) => {
+const DrawCarMarker = ({ coords, color }: DrawCarMarkerProps) => {
   if (!coords) return null;
   return (
     <Marker
@@ -485,7 +347,7 @@ const DrawCarMarker = ({ coords }: DrawMarkerProps) => {
       icon={{
         path:
           'M29.395,0H17.636c-3.117,0-5.643,3.467-5.643,6.584v34.804c0,3.116,2.526,5.644,5.643,5.644h11.759   c3.116,0,5.644-2.527,5.644-5.644V6.584C35.037,3.467,32.511,0,29.395,0z M34.05,14.188v11.665l-2.729,0.351v-4.806L34.05,14.188z    M32.618,10.773c-1.016,3.9-2.219,8.51-2.219,8.51H16.631l-2.222-8.51C14.41,10.773,23.293,7.755,32.618,10.773z M15.741,21.713   v4.492l-2.73-0.349V14.502L15.741,21.713z M13.011,37.938V27.579l2.73,0.343v8.196L13.011,37.938z M14.568,40.882l2.218-3.336   h13.771l2.219,3.336H14.568z M31.321,35.805v-7.872l2.729-0.355v10.048L31.321,35.805zz',
-        fillColor: 'blue',
+        fillColor: color,
         anchor: { x: 25, y: 26 },
         strokeColor: 'black',
         strokeWeight: 1,
@@ -516,4 +378,4 @@ const DrawUserPosition = ({ coords }: DrawMarkerProps) => {
   );
 };
 
-export default GMapsControl;
+export default DriverGMapsControl;
