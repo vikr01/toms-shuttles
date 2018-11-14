@@ -20,5 +20,6 @@ install: yarn install --ignore-scripts --ignore-engines
 
 script:
   - yarn run lint
+  - yarn run flow
   - yarn run build
   - yarn run test-coverage
