@@ -17,7 +17,9 @@ const signinStatusEnums = {
   default: 6,
 };
 
-function signinStatusToString(e: signinStatusEnums): string {
+type signinStatusEnumType = ?(0 | 1 | 2 | 3 | 4 | 5 | 6);
+
+function signinStatusToString(e: signinStatusEnumType): ?string {
   switch (e) {
     case signinStatusEnums.ok:
       return 'Logging in...';
@@ -41,7 +43,9 @@ const signupStatusEnums = {
   default: 7,
 };
 
-function signupStatusToString(e: signupStatusEnums): string {
+type signupStatusEnumType = ?(0 | 1 | 2 | 3 | 4 | 5 | 6 | 7);
+
+function signupStatusToString(e: signupStatusEnumType): ?string {
   switch (e) {
     case signupStatusEnums.ok:
       return 'Success, redirecting to login page...';
@@ -62,7 +66,7 @@ function signupStatusToString(e: signupStatusEnums): string {
   }
 }
 
-function httpToSignupStatus(code: HttpStatus): signupStatusEnums {
+function httpToSignupStatus(code: HttpStatus): signupStatusEnumType {
   switch (code) {
     case HttpStatus.OK:
       return signupStatusEnums.ok;
@@ -77,13 +81,20 @@ function httpToSignupStatus(code: HttpStatus): signupStatusEnums {
   }
 }
 
-export default class SignInController extends Component {
+type Props = {};
+
+type State = {
+  signinStatus: ?signinStatusEnumType,
+  signupStatus: ?signupStatusEnumType,
+};
+
+export default class SignInController extends Component<Props, State> {
   state = {
     signinStatus: signinStatusEnums.default,
     signupStatus: signupStatusEnums.default,
   };
 
-  doSubmit = async (username, password) => {
+  doSubmit = async (username: string, password: string) => {
     let response;
     try {
       response = await axios.post(backendRoutes.AUTH, {
@@ -100,11 +111,11 @@ export default class SignInController extends Component {
   };
 
   sendSignupRequest = async (
-    username,
-    firstName,
-    lastName,
-    password,
-    accountType
+    username: string,
+    firstName: string,
+    lastName: string,
+    password: string,
+    accountType: string
   ) => {
     console.log('sending request');
     let response;
@@ -123,7 +134,14 @@ export default class SignInController extends Component {
     this.setState({ signupStatus: httpToSignupStatus(response.status) });
   };
 
-  doSignup = (username, firstName, lastName, pass1, pass2, accountType) => {
+  doSignup = (
+    username: string,
+    firstName: string,
+    lastName: string,
+    pass1: string,
+    pass2: string,
+    accountType: string
+  ) => {
     if (pass1.localeCompare(pass2) !== 0) {
       this.setState({ signupStatus: signupStatusEnums.password_mismatch });
     } else {
