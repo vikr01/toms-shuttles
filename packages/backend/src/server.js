@@ -109,6 +109,12 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
         rating: 0,
         totalReviews: 0,
         active: 0,
+        destLat1: 0,
+        destLng1: 0,
+        destLat2: 0,
+        destLng2: 0,
+        destLat3: 0,
+        destLng3: 0,
         passengers: null,
       });
 
