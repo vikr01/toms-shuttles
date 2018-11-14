@@ -11,6 +11,7 @@
     "build": "lerna run build",
     "clean": "lerna run clean",
     "dev": "lerna run dev",
+    "flow": "flow",
     "heroku-postbuild": "yarn run build",
     "postinstall": "lerna run postinstall",
     "lint": "eslint .",
