@@ -22,6 +22,8 @@ import AccountInfoView from './AccountInfo';
 import OverviewView from './Overview';
 import routes from '../../routes';
 
+declare var backendRoutes: any;
+
 const drawerWidth = 240;
 
 const styles = theme => ({

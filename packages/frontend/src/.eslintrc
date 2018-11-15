@@ -1,5 +1,16 @@
 {
   "globals": {
     "backendRoutes": true
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "./components/Dashboard/Overview/GMapsControl.jsx",
+        "./components/Dashboard/Overview/Driver/DriverGMapsControl.jsx"
+      ],
+      "globals": {
+        "google": true
+      }
+    }
+  ]
 }

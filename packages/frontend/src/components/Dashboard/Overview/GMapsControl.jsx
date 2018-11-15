@@ -1,4 +1,3 @@
-/* global google */
 // @flow
 import React, { Fragment } from 'react';
 import { compose, withProps, lifecycle } from 'recompose';
@@ -14,6 +13,9 @@ import axios from 'axios';
 import AlertDialog from './AlertDialog';
 import { estimateCost } from './CostEstimater';
 import SimpleSnackbar from './SimpleSnackbar';
+
+declare var google: any;
+declare var backendRoutes: any;
 
 const GMapsControl = compose(
   withProps({

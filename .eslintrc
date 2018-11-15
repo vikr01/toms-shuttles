@@ -9,7 +9,12 @@
     }
   },
   "plugins": ["promise"],
-  "extends": ["plugin:promise/recommended", "airbnb", "prettier"],
+  "extends": [
+    "plugin:promise/recommended",
+    "airbnb",
+    "prettier",
+    "prettier/flowtype"
+  ],
   "rules": {
     "comma-dangle": 0,
     "indent": [2, 2, {"SwitchCase": 1}],

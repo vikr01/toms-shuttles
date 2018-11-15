@@ -7,6 +7,8 @@ import Prompt from './Prompt';
 import CreateAccount from '../CreateAccount';
 import routes from '../../routes';
 
+declare var backendRoutes: any;
+
 const signinStatusEnums = {
   ok: 0,
   connection_error: 1,

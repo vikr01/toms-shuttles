@@ -1,4 +1,3 @@
-/* global google */
 // @flow
 import React, { Fragment } from 'react';
 import { compose, withProps, lifecycle } from 'recompose';
@@ -13,6 +12,9 @@ import {
 import axios from 'axios';
 import AlertDialog from '../AlertDialog';
 import SimpleSnackbar from '../SimpleSnackbar';
+
+declare var backendRoutes: any;
+declare var google: any;
 
 const DriverGMapsControl = compose(
   withProps({
@@ -315,17 +317,16 @@ const DriverGMapsControl = compose(
         </Fragment>
       )}
 
-      {props.driverInfo &&
-        !props.directions && (
-          <DrawCarMarker
-            key={props.driverInfo.username}
-            coords={{
-              lat: props.driverInfo.currentLatitude,
-              lng: props.driverInfo.currentLongitude,
-            }}
-            color="red"
-          />
-        )}
+      {props.driverInfo && !props.directions ? (
+        <DrawCarMarker
+          key={props.driverInfo.username}
+          coords={{
+            lat: props.driverInfo.currentLatitude,
+            lng: props.driverInfo.currentLongitude,
+          }}
+          color="red"
+        />
+      ) : null}
     </GoogleMap>
   </Fragment>
 ));

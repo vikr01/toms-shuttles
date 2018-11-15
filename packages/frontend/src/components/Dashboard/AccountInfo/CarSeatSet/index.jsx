@@ -7,6 +7,8 @@ import ValueForm from '../ValueForm';
 import DisplayStatus from '../../../DisplayStatus';
 import routes from '../../../../routes';
 
+declare var backendRoutes: any;
+
 function countOk(count: number) {
   return count > 0 && count <= 10;
 }

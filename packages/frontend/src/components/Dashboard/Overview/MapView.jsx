@@ -8,6 +8,8 @@ import GMapsControl from './GMapsControl';
 import CostEstimater from './CostEstimater';
 import AlertDialog from './AlertDialog';
 
+declare var backendRoutes: any;
+
 type CoordinatesLong = {
   latitude: number,
   longitude: number,

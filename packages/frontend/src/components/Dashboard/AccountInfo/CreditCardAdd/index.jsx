@@ -7,6 +7,8 @@ import ValueForm from '../ValueForm';
 import routes from '../../../../routes';
 import AlertDialog from '../../Overview/AlertDialog';
 
+declare var backendRoutes: any;
+
 type Card = string;
 
 function cardOk(card: Card) {
