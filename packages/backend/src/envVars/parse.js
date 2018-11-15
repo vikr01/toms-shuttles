@@ -1,14 +1,17 @@
 // @flow
 import createHashFn from '../createHashFn';
 
-export const port: number = process.env.PORT || 2000;
-
-export const apiKey: string = process.env.API_KEY;
-
-export const secret: string = process.env.SESSION_SECRET;
+export const {
+  PORT: port = 2000,
+  API_KEY: apiKey,
+  SESSION_SECRET: secret,
+  HASH_ALGO: hashAlgo,
+  HASH_KEY: hashKey,
+  DIGESTION_TYPE: digestionType,
+} = (process.env: any);
 
 export const hashFn: string => string = createHashFn({
-  hashAlgo: process.env.HASH_ALGO,
-  hashKey: process.env.HASH_KEY,
-  digestionType: process.env.DIGESTION_TYPE,
+  hashAlgo,
+  hashKey,
+  digestionType,
 });

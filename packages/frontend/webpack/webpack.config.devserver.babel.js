@@ -20,7 +20,7 @@ const backendUrl = `http://localhost:${backendPort}/`;
 console.log(chalk.green(`The backend should be running on ${backendUrl}`));
 console.log(chalk.green(`The frontend will be run on ${frontendUrl}`));
 
-export default function(env, argv) {
+export default function(env: string, argv: Object) {
   const open = argv.auto ? JSON.parse(argv.auto) : true;
 
   return merge.smartStrategy({

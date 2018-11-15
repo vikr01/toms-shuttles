@@ -17,6 +17,7 @@ import { User } from './entity/User';
 import { Driver } from './entity/Driver';
 import { CreditCard } from './entity/CreditCard';
 import { Passenger } from './entity/Passenger';
+import type { HashFn } from './createHashFn';
 
 type params = {
   connection: {
@@ -24,7 +25,7 @@ type params = {
   },
   secret: string,
   apiKey: string,
-  hashFn: string => string,
+  hashFn: HashFn,
 };
 
 // this is where the app lifts

@@ -1,13 +1,19 @@
 // @flow
 import crypto from 'crypto';
 
-type params = {
-  hashAlgo: string,
-  hashKey: string,
-  digestionType: string,
+export type HashAlgo = string;
+export type HashKey = string;
+export type Digestion = 'hex' | 'latin1' | 'base64';
+
+export type HashParams = {
+  hashAlgo: HashAlgo,
+  hashKey: HashKey,
+  digestionType: Digestion,
 };
 
-export default ({ hashAlgo, hashKey, digestionType }: params) => (
+export type HashFn = string => string;
+
+export default ({ hashAlgo, hashKey, digestionType }: HashParams): HashFn => (
   value: string
 ): string =>
   crypto
