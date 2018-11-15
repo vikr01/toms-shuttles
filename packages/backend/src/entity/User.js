@@ -7,14 +7,13 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { EntityBase } from '../entityBase';
 import { CreditCard } from './CreditCard';
 import { Driver } from './Driver';
 
 export type AccountType = 'Client' | 'Driver';
 
 @Entity()
-export class User extends EntityBase {
+export class User {
   @PrimaryGeneratedColumn()
   id: ?number = undefined;
 
