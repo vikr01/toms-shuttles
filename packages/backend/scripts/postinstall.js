@@ -1,15 +1,16 @@
+// @flow
 import { exists } from 'fs';
 import { ncp } from 'ncp';
 import path from 'path';
 import { promisify } from 'util';
 
-const pathToEnvExample = path.join(__dirname, '../.env.example');
-const pathToEnv = path.join(pathToEnvExample, '../.env');
+const pathToDotEnvExample: string = path.join(__dirname, '../.env.example');
+const pathToDotEnv: string = path.join(pathToDotEnvExample, '../.env');
 
 (async () => {
-  const pathExists = await promisify(exists)(pathToEnvExample);
+  const pathExists: boolean = await promisify(exists)(pathToDotEnv);
   if (pathExists) {
-    await promisify(ncp)(pathToEnvExample, pathToEnv, {
+    await promisify(ncp)(pathToDotEnvExample, pathToDotEnv, {
       clobber: false,
     });
   }

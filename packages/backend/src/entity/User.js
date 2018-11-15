@@ -11,6 +11,8 @@ import { EntityBase } from '../entityBase';
 import { CreditCard } from './CreditCard';
 import { Driver } from './Driver';
 
+export type AccountType = 'Client' | 'Driver';
+
 @Entity()
 export class User extends EntityBase {
   @PrimaryGeneratedColumn()
@@ -29,7 +31,7 @@ export class User extends EntityBase {
   password: string = '';
 
   @Column('varchar')
-  accountType: string = '';
+  accountType: ?AccountType = 'Client';
 
   @OneToOne(type => CreditCard)
   @JoinColumn()

@@ -1,9 +1,10 @@
+// @flow
 import { User } from '../entity/User';
 import { Driver } from '../entity/Driver';
 import { Passenger } from '../entity/Passenger';
 import { CreditCard } from '../entity/CreditCard';
 
-const synchronize = process.env.NODE_ENV === 'development';
+const synchronize: boolean = process.env.NODE_ENV === 'development';
 
 export const base = {
   synchronize,
