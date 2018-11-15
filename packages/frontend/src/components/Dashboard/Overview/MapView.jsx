@@ -1,29 +1,50 @@
 // @flow
 import React, { Component, Fragment } from 'react';
-
 import { Typography, Button } from '@material-ui/core';
-
-import { geolocated, geoPropTypes } from 'react-geolocated';
+import { geolocated } from 'react-geolocated';
 import axios from 'axios';
 import RequestForm from './RequestForm';
 import GMapsControl from './GMapsControl';
 import CostEstimater from './CostEstimater';
 import AlertDialog from './AlertDialog';
 
+type CoordinatesLong = {
+  latitude: number,
+  longitude: number,
+};
+
+type Coordinates = {
+  lat: number,
+  lng: number,
+};
+
+type Data = {
+  to: Coordinates,
+  from: Coordinates,
+  route?: boolean,
+  assignedDriver?: ?string,
+  driverArriving?: boolean,
+  disableRequestButtons?: boolean,
+};
+
 type Props = {
   showMap: boolean,
   doRequestToAirport: Function,
   doRequestFromAirport: Function,
-  data: string,
-  route: string,
-  routeSet: boolean,
-  duration: number,
-  distance: number,
-  requestRide: boolean,
-  assignedDriver: string,
-  driverArriving: true,
-  coords: Object,
-  disableRequestButtons: boolean,
+  data: Data,
+  route: ?boolean,
+  routeSet: Function,
+  duration: ?{
+    text: string,
+  },
+  distance: ?{
+    value: number,
+  },
+  requestRide: Function,
+  assignedDriver: ?{ username: string },
+  driverArriving: ?boolean,
+  coords: ?Object,
+  disableRequestButtons: ?boolean,
 };
 
 function LiveGMapView({
@@ -41,6 +62,8 @@ function LiveGMapView({
   coords,
   disableRequestButtons,
 }: Props) {
+  if (!assignedDriver || !duration || !distance)
+    throw new Error('Incorrect prop set.');
   if (showMap) {
     return (
       <Fragment>
@@ -48,7 +71,7 @@ function LiveGMapView({
           sendRequestToAirport={doRequestToAirport}
           sendRequestFromAirport={doRequestFromAirport}
           haveUserPosition={coords !== undefined}
-          disableRequestButtons={disableRequestButtons}
+          disableRequestButtons={disableRequestButtons || false}
         />
         {duration &&
           distance && (
@@ -108,43 +131,6 @@ function RequestButton({ showMap, startRequest }: RequestButtonProps) {
     </Button>
   );
 }
-
-type CoordinatesLong = {
-  latitude: number,
-  longitude: number,
-};
-
-type Coordinates = {
-  lat: number,
-  lng: number,
-};
-
-type MapViewProps = {
-  showMap: boolean,
-  startRequest: Function,
-  coords: CoordinatesLong,
-  isGeolocationEnabled: boolean,
-};
-
-type MapViewState = {
-  data: {
-    to: Coordinates,
-    from: Coordinates,
-    route?: boolean,
-    assignedDriver?: ?string,
-    driverArriving?: boolean,
-    disableRequestButtons?: boolean,
-  },
-  duration: ?number,
-  distance: ?number,
-  status: string,
-  route?: boolean,
-  assignedDriver?: ?string,
-  driverArriving?: ?boolean,
-  disableRequestButtons?: ?boolean,
-  coords?: Coordinates,
-};
-
 function airportToCoords(airport): Coordinates {
   if (airport === 'SFO') {
     return { lat: 37.6213, lng: -122.381 };
@@ -157,6 +143,25 @@ function airportToCoords(airport): Coordinates {
   }
   return { lat: 0, lng: 0 };
 }
+
+type MapViewProps = {
+  showMap: boolean,
+  startRequest: Function,
+  coords: CoordinatesLong,
+  isGeolocationEnabled: boolean,
+};
+
+type MapViewState = {
+  data: Data,
+  duration: ?{ text: string },
+  distance: ?{ value: number },
+  status: string,
+  route?: boolean,
+  assignedDriver?: ?{ username: string },
+  driverArriving?: ?boolean,
+  disableRequestButtons?: ?boolean,
+  coords?: Coordinates,
+};
 
 class MapView extends Component<MapViewProps, MapViewState> {
   props: MapViewProps;
@@ -266,12 +271,10 @@ class MapView extends Component<MapViewProps, MapViewState> {
           doRequestFromAirport={this.doRequestFromAirport}
           data={data}
           route={route}
-          routeSet={(_duration, _distance) =>
-            this.routeSet(_duration, _distance)
-          }
+          routeSet={this.routeSet}
           duration={duration}
           distance={distance}
-          requestRide={() => this.requestRide()}
+          requestRide={this.requestRide}
           driverArriving={driverArriving}
           assignedDriver={assignedDriver}
           coords={coords}
@@ -281,8 +284,6 @@ class MapView extends Component<MapViewProps, MapViewState> {
     );
   }
 }
-
-MapView.propTypes = { ...MapView.propTypes, ...geoPropTypes };
 
 export default geolocated({
   positionOptions: {
