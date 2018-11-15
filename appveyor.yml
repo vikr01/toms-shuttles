@@ -35,6 +35,6 @@ install:
 
 test_script:
   - yarn run lint
-  - yarn run flow
+  # - yarn run flow
   - yarn run build
   - yarn run test-coverage
