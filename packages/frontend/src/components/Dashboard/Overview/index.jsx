@@ -5,11 +5,20 @@ import MapView from './MapView';
 import DriverMapView from './Driver/DriverMapView';
 
 type OverviewViewProps = {
-  accountType: string,
+  accountType: ?('Client' | 'Driver'),
 };
 
-class OverviewView extends React.Component<OverviewViewProps> {
-  state = { showMap: true };
+type OverviewViewState = {
+  showMap: boolean,
+};
+
+class OverviewView extends React.Component<
+  OverviewViewProps,
+  OverviewViewState
+> {
+  props: OverviewViewProps;
+
+  state: OverviewViewState = { showMap: true };
 
   doRequest() {
     this.setState({ showMap: true });
@@ -33,9 +42,9 @@ class OverviewView extends React.Component<OverviewViewProps> {
 }
 
 type DisplayDashboardContentProps = {
-  accountType: string,
+  accountType: ?('Client' | 'Driver'),
   showMap: boolean,
-  doRequest: func,
+  doRequest: Function,
 };
 
 const DisplayDashboardContent = ({

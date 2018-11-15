@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -9,25 +9,32 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 type Props = {
   open?: boolean,
-  onClose?: func,
-  onOpen?: func,
+  onClose?: Function,
+  onOpen?: Function,
   text: string,
   title: string,
 };
 
-class AlertDialog extends React.Component<Props> {
+type State = {
+  open: boolean,
+  closing: boolean,
+};
+
+export default class AlertDialog extends Component<Props, State> {
+  props: Props;
+
   static defaultProps = {
     open: false,
     onClose: () => {},
     onOpen: () => {},
   };
 
-  state = {
+  state: State = {
     open: false,
     closing: false,
   };
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     const { open } = nextProps;
     if (open && !prevState.open && !prevState.closing) {
       return { open: true };
@@ -38,12 +45,14 @@ class AlertDialog extends React.Component<Props> {
   handleClickOpen = () => {
     const { onOpen } = this.props;
     this.setState({ open: true, closing: false });
+    // $$FlowFixMe$$
     onOpen();
   };
 
   handleClose = () => {
     const { onClose } = this.props;
     this.setState({ open: false, closing: true });
+    // $$FlowFixMe$$
     onClose();
     this.setState({ closing: false });
   };
@@ -75,5 +84,3 @@ class AlertDialog extends React.Component<Props> {
     );
   }
 }
-
-export default AlertDialog;

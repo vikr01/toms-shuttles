@@ -329,12 +329,13 @@ const DriverGMapsControl = compose(
     </GoogleMap>
   </Fragment>
 ));
+
 type DrawMarkerProps = {
-  coords: object,
+  coords: Object,
 };
 
 type DrawCarMarkerProps = {
-  coords: object,
+  coords: Object,
   color: string,
 };
 

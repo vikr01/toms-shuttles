@@ -5,31 +5,41 @@ import { RadioGroup, Radio, Button, Typography } from '@material-ui/core';
 import MyStandaloneSearchBox from './MyStandaloneSearchBox';
 
 type Props = {
-  show: int,
-  sendRequestToAirport: func,
-  sendRequestFromAirport: func,
+  show: number,
+  sendRequestToAirport: Function,
+  sendRequestFromAirport: Function,
   haveUserPosition: boolean,
   disableRequestButtons: boolean,
 };
 
-export default class LocationPicker extends Component<Props> {
-  state = {
+type State = {
+  value: string,
+  enteredLocation: {
+    lat?: number,
+    lng?: number,
+  },
+  destinationSet: boolean,
+  useLoc: boolean,
+};
+
+export default class LocationPicker extends Component<Props, State> {
+  state: State = {
     value: '',
-    enteredLocation: null,
+    enteredLocation: {},
     destinationSet: false,
     useLoc: false,
   };
 
-  handleChange = event => {
+  handleChange = (event: any) => {
     this.setState({ value: event.target.value });
   };
 
-  handleLocationEnteredChange = (lat, lng) => {
+  handleLocationEnteredChange = (lat: number, lng: number) => {
     console.log(lat, lng);
     this.setState({ enteredLocation: { lat, lng }, destinationSet: true });
   };
 
-  setUseLoc = value => {
+  setUseLoc = (value: boolean) => {
     this.setState({ useLoc: value });
   };
 
@@ -160,13 +170,21 @@ export default class LocationPicker extends Component<Props> {
   }
 }
 
+type DecideLocationProps = {
+  useLoc: boolean,
+  haveUserPosition: boolean,
+  setUseLoc: Function,
+  handleLocationEnteredChange: Function,
+  disableRequestButtons: boolean,
+};
+
 const DecideLocation = ({
   useLoc,
   haveUserPosition,
   setUseLoc,
   handleLocationEnteredChange,
   disableRequestButtons,
-}: props) => (
+}: DecideLocationProps) => (
   <Fragment>
     {haveUserPosition && (
       <Fragment>

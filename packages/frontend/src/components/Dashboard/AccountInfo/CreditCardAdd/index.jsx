@@ -7,7 +7,9 @@ import ValueForm from '../ValueForm';
 import routes from '../../../../routes';
 import AlertDialog from '../../Overview/AlertDialog';
 
-function cardOk(card: string) {
+type Card = string;
+
+function cardOk(card: Card) {
   const len = card.length;
   if (card.startsWith('3'))
     // American Express
@@ -18,14 +20,24 @@ function cardOk(card: string) {
   return false;
 }
 
-export default class CreditCardAdd extends Component<Props> {
-  state = {
+type Props = {};
+
+type State = {
+  redirect: boolean,
+  status: string,
+  showOkDialog: boolean,
+};
+
+export default class CreditCardAdd extends Component<Props, State> {
+  props: Props;
+
+  state: State = {
     redirect: false,
     status: '',
     showOkDialog: false,
   };
 
-  sendToBackend = async card => {
+  sendToBackend = async (card: Card) => {
     console.log('sending card to backend', card);
     try {
       await axios.post(backendRoutes.ADDCREDITCARD, { card });
@@ -38,7 +50,7 @@ export default class CreditCardAdd extends Component<Props> {
     }
   };
 
-  onSubmit = event => {
+  onSubmit = (event: any) => {
     event.preventDefault();
     const { elements: elem } = event.target;
     const { value: card } = elem.card;

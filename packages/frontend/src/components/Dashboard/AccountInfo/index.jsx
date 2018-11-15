@@ -5,13 +5,29 @@ import { Typography, Paper } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import routes from '../../../routes';
 
-export default class AccountInfoView extends Component {
-  state = {
+type Props = {};
+
+type State = {
+  name: string,
+  username: string,
+  creditInfo: string,
+  error: boolean,
+  loaded: boolean,
+  accountType?: 'Client' | 'Driver',
+  seatNumber: number,
+  active?: number,
+};
+
+export default class AccountInfoView extends Component<Props, State> {
+  props: Props;
+
+  state: State = {
     name: '',
     username: '',
     creditInfo: '',
     error: false,
     loaded: false,
+    seatNumber: 0,
   };
 
   async componentDidMount() {
@@ -19,7 +35,7 @@ export default class AccountInfoView extends Component {
   }
 
   async populateState() {
-    let response;
+    let response: any;
     try {
       response = await axios.get(backendRoutes.USER);
     } catch (error) {

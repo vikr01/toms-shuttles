@@ -5,18 +5,22 @@ import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
 import LocationPicker from './LocationPicker';
 
 type Props = {
-  sendRequestToAirport: func,
-  sendRequestFromAirport: func,
+  sendRequestToAirport: Function,
+  sendRequestFromAirport: Function,
   haveUserPosition: boolean,
   disableRequestButtons: boolean,
 };
 
-export default class RequestForm extends Component<Props> {
-  state = {
+type State = {
+  value: number,
+};
+
+export default class RequestForm extends Component<Props, State> {
+  state: State = {
     value: 0,
   };
 
-  handleChange = (e, val) => this.setState({ value: val });
+  handleChange = (e: any, val: number) => this.setState({ value: val });
 
   render() {
     const { value } = this.state;

@@ -7,17 +7,24 @@ import ValueForm from '../ValueForm';
 import DisplayStatus from '../../../DisplayStatus';
 import routes from '../../../../routes';
 
-function countOk(count: int) {
+function countOk(count: number) {
   return count > 0 && count <= 10;
 }
 
-export default class CarSeatSet extends Component<Props> {
-  state = {
+type Props = {};
+
+type State = {
+  redirect: boolean,
+  status: string,
+};
+
+export default class CarSeatSet extends Component<Props, State> {
+  state: State = {
     redirect: false,
     status: '',
   };
 
-  sendToBackend = async count => {
+  sendToBackend = async (count: number) => {
     console.log('sending count to backend', count);
     try {
       await axios.put(backendRoutes.DRIVERS, { numOfSeats: count });
@@ -31,7 +38,7 @@ export default class CarSeatSet extends Component<Props> {
     }
   };
 
-  onSubmit = event => {
+  onSubmit = (event: any) => {
     event.preventDefault();
     const { elements: elem } = event.target;
     const { value: count } = elem.count;

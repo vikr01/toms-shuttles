@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 
 import { Typography, Button } from '@material-ui/core';
 
@@ -9,6 +9,22 @@ import RequestForm from './RequestForm';
 import GMapsControl from './GMapsControl';
 import CostEstimater from './CostEstimater';
 import AlertDialog from './AlertDialog';
+
+type Props = {
+  showMap: boolean,
+  doRequestToAirport: Function,
+  doRequestFromAirport: Function,
+  data: string,
+  route: string,
+  routeSet: boolean,
+  duration: number,
+  distance: number,
+  requestRide: boolean,
+  assignedDriver: string,
+  driverArriving: true,
+  coords: Object,
+  disableRequestButtons: boolean,
+};
 
 function LiveGMapView({
   showMap,
@@ -24,7 +40,7 @@ function LiveGMapView({
   driverArriving,
   coords,
   disableRequestButtons,
-}: props) {
+}: Props) {
   if (showMap) {
     return (
       <Fragment>
@@ -79,7 +95,7 @@ function LiveGMapView({
 
 type RequestButtonProps = {
   showMap: boolean,
-  startRequest: func,
+  startRequest: Function,
 };
 
 function RequestButton({ showMap, startRequest }: RequestButtonProps) {
@@ -93,7 +109,43 @@ function RequestButton({ showMap, startRequest }: RequestButtonProps) {
   );
 }
 
-function airportToCoords(airport) {
+type CoordinatesLong = {
+  latitude: number,
+  longitude: number,
+};
+
+type Coordinates = {
+  lat: number,
+  lng: number,
+};
+
+type MapViewProps = {
+  showMap: boolean,
+  startRequest: Function,
+  coords: CoordinatesLong,
+  isGeolocationEnabled: boolean,
+};
+
+type MapViewState = {
+  data: {
+    to: Coordinates,
+    from: Coordinates,
+    route?: boolean,
+    assignedDriver?: ?string,
+    driverArriving?: boolean,
+    disableRequestButtons?: boolean,
+  },
+  duration: ?number,
+  distance: ?number,
+  status: string,
+  route?: boolean,
+  assignedDriver?: ?string,
+  driverArriving?: ?boolean,
+  disableRequestButtons?: ?boolean,
+  coords?: Coordinates,
+};
+
+function airportToCoords(airport): Coordinates {
   if (airport === 'SFO') {
     return { lat: 37.6213, lng: -122.381 };
   }
@@ -103,18 +155,16 @@ function airportToCoords(airport) {
   if (airport === 'SJC') {
     return { lat: 37.364, lng: -121.931 };
   }
-  return null;
+  return { lat: 0, lng: 0 };
 }
 
-type Props = {
-  showMap: boolean,
-  startRequest: func,
-};
-class MapView extends React.Component<Props> {
-  state = {
+class MapView extends Component<MapViewProps, MapViewState> {
+  props: MapViewProps;
+
+  state: MapViewState = {
     data: {
-      to: { lat: Number, long: Number },
-      from: { lat: Number, long: Number },
+      to: { lat: 0, lng: 0 },
+      from: { lat: 0, lng: 0 },
       route: false,
       assignedDriver: null,
       driverArriving: false,
@@ -142,7 +192,7 @@ class MapView extends React.Component<Props> {
     const fromCoords =
       lat === null
         ? { lat: coords.latitude, lng: coords.longitude }
-        : { lat, lng };
+        : { lat: 0, lng: lng || 0 };
     const toCoords = airportToCoords(airport);
     this.setState({ data: { to: toCoords, from: fromCoords }, route: true });
   };
@@ -162,7 +212,7 @@ class MapView extends React.Component<Props> {
     const { data } = this.state;
     console.log('requesting ride now');
     console.log(data);
-    let response;
+    let response: any;
     try {
       response = await axios.get(
         `${backendRoutes.CLOSEST_DRIVER}?lat=${data.from.lat}&lng=${

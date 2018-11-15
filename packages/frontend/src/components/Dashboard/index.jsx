@@ -114,10 +114,18 @@ type Props = {
   classes: Object,
 };
 
-class Dashboard extends Component<Props> {
+type State = {
+  open: boolean,
+  redirectToLogin: boolean,
+  checkedForLogin: boolean,
+  accountType: ?('Client' | 'Driver'),
+  page: string,
+};
+
+class Dashboard extends Component<Props, State> {
   props: Props;
 
-  state = {
+  state: State = {
     open: true,
     redirectToLogin: false,
     checkedForLogin: false,
@@ -236,7 +244,7 @@ class Dashboard extends Component<Props> {
 
 type MainContentProps = {
   page: string,
-  accountType: string,
+  accountType: ?('Client' | 'Driver'),
 };
 
 const ShowMainContent = ({ page, accountType }: MainContentProps) => {
