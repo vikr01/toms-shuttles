@@ -4,7 +4,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { EntityBase } from '../entityBase';
 
 @Entity()
-export class CreditCard /* extends EntityBase */ {
+export class CreditCard extends EntityBase {
   @PrimaryGeneratedColumn()
   id = undefined;
 

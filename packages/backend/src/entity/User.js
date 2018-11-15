@@ -12,7 +12,7 @@ import { CreditCard } from './CreditCard';
 import { Driver } from './Driver';
 
 @Entity()
-export class User /* extends EntityBase */ {
+export class User extends EntityBase {
   @PrimaryGeneratedColumn()
   id = undefined;
 

@@ -5,7 +5,7 @@ import { EntityBase } from '../entityBase';
 import { Driver } from './Driver';
 
 @Entity()
-export class Passenger /* extends EntityBase */ {
+export class Passenger extends EntityBase {
   @PrimaryColumn('varchar')
   username = '';
 
