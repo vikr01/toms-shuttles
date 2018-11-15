@@ -8,7 +8,7 @@ import connectionOptions from './dbConfig';
 import server from './server';
 import { apiKey, hashFn, port, secret } from './envVars/parse';
 
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err: Error) => {
   throw err;
 });
 

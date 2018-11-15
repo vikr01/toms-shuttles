@@ -7,13 +7,13 @@ import { Driver } from './Driver';
 @Entity()
 export class Passenger extends EntityBase {
   @PrimaryColumn('varchar')
-  username = '';
+  username: string = '';
 
   @Column('int')
-  groupSize = 1;
+  groupSize: number = 1;
 
   @ManyToOne(type => Driver, driver => driver.passengers)
-  driver = Driver;
+  driver: ?Driver = null;
 }
 
 export default Passenger;

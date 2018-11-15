@@ -114,7 +114,7 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
 
     const signature = hashFn(password);
 
-    const newUser = Object.assign(new User(), {
+    const newUser = new User({
       password: signature,
       username,
       firstName,
@@ -125,7 +125,7 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
     });
 
     if (accountType === 'Driver') {
-      const newDriver = Object.assign(new Driver(), {
+      const newDriver = new Driver({
         username,
         currentLatitude: 0,
         currentLongitude: 0,
@@ -266,7 +266,7 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
   app.post(routes.DRIVERS, async (req, res, next) => {
     const driverBody = req.body;
 
-    const newDriver = Object.assign(new User(), driverBody);
+    const newDriver = new User(driverBody);
 
     await connection.getRepository(Driver).save(newDriver);
 
@@ -455,7 +455,7 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
       return res.status(HttpStatus.NOT_FOUND).send('Could not find a driver');
     }
 
-    const newPassenger = Object.assign(new Passenger(), {
+    const newPassenger = new Passenger({
       username: req.session.username,
       groupSize,
       driver: null,
@@ -578,7 +578,7 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
       return res.statusCode(HttpStatus.NOT_FOUND).send('Could not find user');
     }
 
-    const newCard = Object.assign(new CreditCard(), {
+    const newCard = new CreditCard({
       cardNum: card,
     });
 

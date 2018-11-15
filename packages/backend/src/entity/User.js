@@ -14,30 +14,30 @@ import { Driver } from './Driver';
 @Entity()
 export class User extends EntityBase {
   @PrimaryGeneratedColumn()
-  id = undefined;
+  id: ?number = undefined;
 
   @Column('varchar')
-  firstName = '';
+  firstName: string = '';
 
   @Column('varchar')
-  lastName = '';
+  lastName: string = '';
 
   @Column('varchar')
-  username = '';
+  username: string = '';
 
   @Column('varchar')
-  password = '';
+  password: string = '';
 
   @Column('varchar')
-  accountType = '';
+  accountType: string = '';
 
   @OneToOne(type => CreditCard)
   @JoinColumn()
-  creditCard = CreditCard;
+  creditCard: ?CreditCard = null;
 
   @OneToOne(type => Driver)
   @JoinColumn()
-  driverInfo = Driver;
+  driverInfo: ?Driver = null;
 }
 
 export default User;

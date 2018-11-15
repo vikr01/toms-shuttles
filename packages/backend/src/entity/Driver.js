@@ -7,46 +7,46 @@ import { Passenger } from './Passenger';
 @Entity()
 export class Driver extends EntityBase {
   @PrimaryColumn('varchar')
-  username = '';
+  username: string = '';
 
   @Column('float')
-  currentLatitude = 0;
+  currentLatitude: number = 0;
 
   @Column('float')
-  currentLongitude = 0;
+  currentLongitude: number = 0;
 
   @Column('int')
-  numOfSeats = 0;
+  numOfSeats: number = 0;
 
   @Column('float')
-  rating = 0;
+  rating: number = 0;
 
   @Column('int')
-  totalReviews = 0;
+  totalReviews: number = 0;
 
   @Column('tinyint')
-  active = 0;
+  active: number = 0;
 
   @Column('float')
-  destLat1 = undefined;
+  destLat1: ?number = undefined;
 
   @Column('float')
-  destLng1 = undefined;
+  destLng1: ?number = undefined;
 
   @Column('float')
-  destLat2 = undefined;
+  destLat2: ?number = undefined;
 
   @Column('float')
-  destLng2 = undefined;
+  destLng2: ?number = undefined;
 
   @Column('float')
-  destLat3 = undefined;
+  destLat3: ?number = undefined;
 
   @Column('float')
-  destLng3 = undefined;
+  destLng3: ?number = undefined;
 
   @OneToMany(type => Passenger, passenger => passenger.driver)
-  passengers: Passenger[];
+  passengers: ?(Passenger[]) = null;
 }
 
 export default Driver;

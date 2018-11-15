@@ -6,10 +6,10 @@ import { EntityBase } from '../entityBase';
 @Entity()
 export class CreditCard extends EntityBase {
   @PrimaryGeneratedColumn()
-  id = undefined;
+  id: ?number = undefined;
 
   @Column('varchar')
-  cardNum = undefined;
+  cardNum: ?string = undefined;
 }
 
 export default CreditCard;
