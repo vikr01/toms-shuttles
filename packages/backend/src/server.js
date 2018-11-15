@@ -9,7 +9,6 @@ import assets from 'tbd-frontend-name';
 import chalk from 'chalk';
 import path from 'path';
 import HttpStatus from 'http-status-codes';
-import { forEach } from 'p-iteration';
 import { MoreThan } from 'typeorm';
 import frontendRoutes from 'tbd-frontend-name/src/routes';
 import routes from '../routes';
@@ -384,45 +383,47 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
     let leastTime = Number.POSITIVE_INFINITY;
     let existingDriver = false;
     console.log('list of potential drivers:');
-    await forEach(drivers, async driver => {
-      console.log(driver);
-      const result = await axios.get(
-        'https://maps.googleapis.com/maps/api/distancematrix/json',
-        {
-          params: {
-            units: 'imperial',
-            origins: `${driver.currentLatitude},${driver.currentLongitude}`,
-            destinations: `${lat},${lng}`,
-            key: apiKey,
-          },
-        }
-      );
-      try {
-        const METERSINMILE = 1610;
-        const SECSIN30MIN = 60 * 30;
-        const time = result.data.rows[0].elements[0].duration.value;
-        const distance = result.data.rows[0].elements[0].distance.value;
-        existingDriver = true;
-        console.log(
-          `distance to ${
-            driver.username
-          } is ${distance} meters and time is ${time} seconds`
+    await Promise.all(
+      drivers.map(async driver => {
+        console.log(driver);
+        const result = await axios.get(
+          'https://maps.googleapis.com/maps/api/distancematrix/json',
+          {
+            params: {
+              units: 'imperial',
+              origins: `${driver.currentLatitude},${driver.currentLongitude}`,
+              destinations: `${lat},${lng}`,
+              key: apiKey,
+            },
+          }
         );
-        if (
-          (time < leastTime && distance <= METERSINMILE * 3) ||
-          (time <= leastTime &&
-            time <= SECSIN30MIN &&
-            driver.destLat1 === 0 &&
-            driver.destLng1 === 0)
-        ) {
-          console.log(`Closest driver is now ${driver.username}`);
-          leastTime = time;
-          closestDriver = driver;
+        try {
+          const METERSINMILE = 1610;
+          const SECSIN30MIN = 60 * 30;
+          const time = result.data.rows[0].elements[0].duration.value;
+          const distance = result.data.rows[0].elements[0].distance.value;
+          existingDriver = true;
+          console.log(
+            `distance to ${
+              driver.username
+            } is ${distance} meters and time is ${time} seconds`
+          );
+          if (
+            (time < leastTime && distance <= METERSINMILE * 3) ||
+            (time <= leastTime &&
+              time <= SECSIN30MIN &&
+              driver.destLat1 === 0 &&
+              driver.destLng1 === 0)
+          ) {
+            console.log(`Closest driver is now ${driver.username}`);
+            leastTime = time;
+            closestDriver = driver;
+          }
+        } catch (err) {
+          console.log(chalk.red(`Discarding bad driver with error:${err}`));
         }
-      } catch (err) {
-        console.log(chalk.red(`Discarding bad driver with error:${err}`));
-      }
-    });
+      })
+    );
 
     if (Object.keys(closestDriver).length === 0) {
       if (existingDriver === true)

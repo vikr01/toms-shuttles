@@ -29,7 +29,6 @@
     "is-heroku": "^2.0.0",
     "mysql": "^2.16.0",
     "ncp": "^2.0.0",
-    "p-iteration": "^1.1.7",
     "pretty-error": "^2.1.1",
     "strip-json-comments": "^2.0.1",
     "typeorm": "^0.2.8"
