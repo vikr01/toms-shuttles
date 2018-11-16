@@ -11,6 +11,7 @@ import path from 'path';
 import HttpStatus from 'http-status-codes';
 import { MoreThan } from 'typeorm';
 import frontendRoutes from 'tbd-frontend-name/src/routes';
+import { Session } from 'inspector';
 import routes from '../routes';
 import { User } from './entity/User';
 import { Driver } from './entity/Driver';
@@ -34,13 +35,20 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
   // app.use(app.router);
 
   // session initialization
-  app.use(
-    session({
-      resave: false,
-      saveUninitialized: false,
-      secret,
-    })
-  );
+  const sess = {
+    resave: false,
+    saveUninitialized: false,
+    secret,
+    cookie: {
+      maxAge: 600,
+    },
+  };
+
+  if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+    sess.cookie.secure = true;
+  }
+  app.use(session(sess));
 
   // middleware for session messages
   app.use((req, res, next) => {
@@ -57,6 +65,21 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
 
   app.get(routes.LOGIN, (req, res) => {
     res.redirect(path.join('/#/', frontendRoutes.LOGIN));
+  });
+
+  app.get(routes.LOGOUT, (req, res) => {
+    try {
+      req.session.destroy(error => {
+        if (error) {
+          console.log(chalk.red('Problem doing logout'));
+          res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(error);
+        }
+        res.status(HttpStatus.OK).send();
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(HttpStatus.IM_A_TEAPOT).send(err);
+    }
   });
 
   // on urls that need authentication, pass in this function i.e app.get('/', checkAuth, (req,res,next).....)

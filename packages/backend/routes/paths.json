@@ -1,24 +1,25 @@
 {
   "LOGIN": "/login",
+  "LOGOUT": "/logout", //GET
 
   // authenticate
-  "AUTH": "/api/authenticate",
-  "SIGNUP": "/api/signup",
-  "LOGGED_IN": "/api/loggedIn",
+  "AUTH": "/api/authenticate", //POST
+  "SIGNUP": "/api/signup", //POST
+  "LOGGED_IN": "/api/logged-in", //GET
 
   // users
-  "USER": "/api/users",
-  "MY_DRIVER": "/api/myDriver",
+  "USER": "/api/users", //GET
+  "MY_DRIVER": "/api/my-driver",
 
   //drivers
-  "DRIVER": "/drivers/:username",
-  "DRIVERS": "/drivers",
-  "ALL_ACTIVE_DRIVERS": "/driversAll",
+  "DRIVER": "/drivers/:username", //GET
+  "DRIVERS": "/drivers", //POST, PUT
+  "ALL_ACTIVE_DRIVERS": "/drivers-all", //GET
 
   //location api
-  "CLOSEST_DRIVER": "/api/nearestDriver",
-  "ARRIVED": "/api/arrival",
+  "CLOSEST_DRIVER": "/api/nearest-driver", //GET
+  "ARRIVED": "/api/arrival", //GET
 
   //credit card api
-  "ADDCREDITCARD": "/api/creditCard"
+  "ADDCREDITCARD": "/api/credit-card" //POST
 }
