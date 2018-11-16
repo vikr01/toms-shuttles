@@ -11,6 +11,6 @@ export default ({ hashAlgo, hashKey, digestionType }: params) => (
   value: string
 ): string =>
   crypto
-    .createHash(hashAlgo, hashKey)
+    .createHmac(hashAlgo, hashKey)
     .update(value)
     .digest(digestionType);
