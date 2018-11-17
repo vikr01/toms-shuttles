@@ -26,6 +26,16 @@ type params = {
   hashFn: HashFn,
 };
 
+type SessionType = {
+  resave: boolean,
+  saveUninitialized: boolean,
+  secret: string,
+  cookie: {
+    maxAge: number,
+    secure?: boolean,
+  },
+};
+
 // this is where the app lifts
 export default ({ connection, secret, apiKey, hashFn }: params) => {
   const app = express();
@@ -34,7 +44,7 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
   // app.use(app.router);
 
   // session initialization
-  const sess = {
+  const sess: SessionType = {
     resave: false,
     saveUninitialized: false,
     secret,
