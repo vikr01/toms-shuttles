@@ -37,15 +37,8 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
     resave: false,
     saveUninitialized: false,
     secret,
-    cookie: {
-      maxAge: 600,
-    },
   };
 
-  if (process.env.NODE_ENV === 'production') {
-    app.set('trust proxy', 1);
-    sess.cookie.secure = true;
-  }
   app.use(session(sess));
 
   // middleware for session messages
