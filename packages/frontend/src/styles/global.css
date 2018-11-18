@@ -1,6 +1,6 @@
 .textCenter {
-  width: 'auto';
-  display: 'block';
+  display: block;
+  margin: auto;
   text-align: center;
 }
 .layout {

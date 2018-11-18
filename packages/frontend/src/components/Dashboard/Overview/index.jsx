@@ -1,6 +1,8 @@
 // @flow
 import React, { Fragment } from 'react';
 import { Paper } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+
 import MapView from './MapView';
 import DriverMapView from './Driver/DriverMapView';
 
@@ -26,6 +28,14 @@ class OverviewView extends React.Component<OverviewViewProps> {
             accountType={accountType}
             doRequest={this.doRequest}
           />
+          <a
+            href="https://github.com/vikr01/tbd-project-name"
+            rel="noopener noreferrer"
+            target="_blank"
+            className="textCenter"
+          >
+            View source on Github
+          </a>
         </Paper>
       </Fragment>
     );
