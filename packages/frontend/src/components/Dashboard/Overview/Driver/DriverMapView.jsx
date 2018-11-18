@@ -20,33 +20,29 @@ function LiveGMapDriverView({
     console.log(driverInfo);
     return (
       <Fragment>
-        {availabilityFound &&
-          !isAvailable && (
-            <Fragment>
-              <Typography variant="h5">
-                {
-                  "🔴 You're currently not set to available. Click below when you're ready to pick up clients"
-                }
-              </Typography>
-              <Button variant="contained" onClick={() => onSetAvailable(true)}>
-                Make yourself available
-              </Button>
-            </Fragment>
-          )}
-        {availabilityFound &&
-          isAvailable && (
-            <Fragment>
-              <Typography variant="h5">
-                {
-                  "✅ You're now available. Click below when you're ready to stop"
-                }
-              </Typography>
-              <Button variant="contained" onClick={() => onSetAvailable(false)}>
-                Make yourself unavailable
-              </Button>
-            </Fragment>
-          )}
-        {!availabilityFound && (
+        {availabilityFound && !isAvailable ? (
+          <Fragment>
+            <Typography variant="h5">
+              {
+                "🔴 You're currently not set to available. Click below when you're ready to pick up clients"
+              }
+            </Typography>
+            <Button variant="contained" onClick={() => onSetAvailable(true)}>
+              Make yourself available
+            </Button>
+          </Fragment>
+        ) : null}
+        {availabilityFound && isAvailable ? (
+          <Fragment>
+            <Typography variant="h5">
+              {"✅ You're now available. Click below when you're ready to stop"}
+            </Typography>
+            <Button variant="contained" onClick={() => onSetAvailable(false)}>
+              Make yourself unavailable
+            </Button>
+          </Fragment>
+        ) : null}
+        {availabilityFound ? null : (
           <Typography variant="h5">Loading your data...</Typography>
         )}
         <DisplayStatus status={status} />
@@ -138,7 +134,7 @@ class DriverMapView extends React.Component<Props> {
     const { isAvailable, status, driverInfo, availabilityFound } = this.state;
     return (
       <Fragment>
-        {!isGeolocationEnabled && (
+        {isGeolocationEnabled ? null : (
           <Typography variant="title" color="seconary">
             {
               '❗️You need to enable location services to use the service as a driver\n❗️'

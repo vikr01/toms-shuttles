@@ -1,11 +1,9 @@
 // @flow
-
 import { Entity, PrimaryColumn, Column, OneToMany } from 'typeorm';
-import { EntityBase } from '../entityBase';
 import { Passenger } from './Passenger';
 
 @Entity()
-export class Driver /* extends EntityBase */ {
+export class Driver {
   @PrimaryColumn('varchar')
   username = '';
 

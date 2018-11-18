@@ -9,9 +9,7 @@ import assets from 'tbd-frontend-name';
 import chalk from 'chalk';
 import path from 'path';
 import HttpStatus from 'http-status-codes';
-import { MoreThan } from 'typeorm';
 import frontendRoutes from 'tbd-frontend-name/src/routes';
-import { Session } from 'inspector';
 import routes from '../routes';
 import { User } from './entity/User';
 import { Driver } from './entity/Driver';
@@ -334,7 +332,7 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
     }
 
     Object.entries(req.body).forEach(([key, value]) => {
-      if (driver.hasOwnProperty(key)) {
+      if (driver[key] !== undefined) {
         driver[key] = value;
       } else {
         console.warn(

@@ -1,5 +1,4 @@
 // @flow
-
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,12 +6,11 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { EntityBase } from '../entityBase';
 import { CreditCard } from './CreditCard';
 import { Driver } from './Driver';
 
 @Entity()
-export class User /* extends EntityBase */ {
+export class User {
   @PrimaryGeneratedColumn()
   id = undefined;
 

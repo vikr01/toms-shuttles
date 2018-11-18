@@ -34,32 +34,29 @@ function LiveGMapView({
           haveUserPosition={coords !== undefined}
           disableRequestButtons={disableRequestButtons}
         />
-        {duration &&
-          distance && (
-            <Fragment>
-              <Typography variant="h4">
-                {`Estimated duration: ${duration.text}`}
-              </Typography>
-              <CostEstimater meters={distance.value} />
-              <Button
-                variant="contained"
-                onClick={requestRide}
-                disabled={disableRequestButtons}
-              >
-                Make request
-              </Button>
-              <div stype={{ height: '10px' }} />
+        {duration && distance ? (
+          <Fragment>
+            <Typography variant="h4">
+              {`Estimated duration: ${duration.text}`}
+            </Typography>
+            <CostEstimater meters={distance.value} />
+            <Button
+              variant="contained"
+              onClick={requestRide}
+              disabled={disableRequestButtons}
+            >
+              Make request
+            </Button>
+            <div stype={{ height: '10px' }} />
 
-              {assignedDriver && (
-                <Typography variant="h4">
-                  {`You have been assigned to driver ${
-                    assignedDriver.username
-                  }`}
-                </Typography>
-              )}
-              <br />
-            </Fragment>
-          )}
+            {!assignedDriver ? null : (
+              <Typography variant="h4">
+                {`You have been assigned to driver ${assignedDriver.username}`}
+              </Typography>
+            )}
+            <br />
+          </Fragment>
+        ) : null}
         <div style={{ height: '80vh', width: '100%' }}>
           <GMapsControl
             data={data}
@@ -110,6 +107,7 @@ type Props = {
   showMap: boolean,
   startRequest: func,
 };
+
 class MapView extends React.Component<Props> {
   state = {
     data: {

@@ -13,7 +13,7 @@
     "dev": "lerna run dev",
     "heroku-postbuild": "yarn run build",
     "postinstall": "lerna run postinstall",
-    "lint": "eslint .",
+    "lint": "eslint . --ext js,jsx",
     "lint-fix": "yarn run lint --fix",
     "postlint-fix": "prettier --ignore-path .eslintignore --write './**/*.{js,jsx,json,md,css,scss}'",
     "prepare": "lerna run prepare",

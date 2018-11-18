@@ -33,14 +33,28 @@ export default class LocationPicker extends Component<Props> {
     this.setState({ useLoc: value });
   };
 
+  onSendRequestToAirport = () => {
+    const { haveUserPosition, sendRequestToAirport } = this.props;
+
+    const { enteredLocation, useLoc, value } = this.state;
+
+    if (haveUserPosition && useLoc) {
+      return sendRequestToAirport(value);
+    }
+
+    const { lat, lng } = enteredLocation;
+
+    return sendRequestToAirport(value, lat, lng);
+  };
+
   render() {
     const {
-      show,
-      sendRequestToAirport,
-      sendRequestFromAirport,
-      haveUserPosition,
       disableRequestButtons,
+      haveUserPosition,
+      show,
+      sendRequestFromAirport,
     } = this.props;
+
     const { useLoc } = this.state;
     const { value, enteredLocation, destinationSet } = this.state;
     if (show) {
@@ -89,15 +103,7 @@ export default class LocationPicker extends Component<Props> {
                 (!useLoc && enteredLocation === null) ||
                 disableRequestButtons
               }
-              onClick={() =>
-                haveUserPosition && useLoc
-                  ? sendRequestToAirport(value)
-                  : sendRequestToAirport(
-                      value,
-                      enteredLocation.lat,
-                      enteredLocation.lng
-                    )
-              }
+              onClick={this.onSendRequestToAirport}
             >
               Show route
             </Button>
@@ -168,9 +174,9 @@ const DecideLocation = ({
   disableRequestButtons,
 }: props) => (
   <Fragment>
-    {haveUserPosition && (
+    {!haveUserPosition ? null : (
       <Fragment>
-        {useLoc && (
+        {!useLoc ? null : (
           <Fragment>
             <Button
               variant="contained"
@@ -182,7 +188,7 @@ const DecideLocation = ({
             <Typography variant="h5">Currently using your location</Typography>
           </Fragment>
         )}
-        {!useLoc && (
+        {useLoc ? null : (
           <Button
             variant="contained"
             onClick={() => setUseLoc(true)}
@@ -192,7 +198,7 @@ const DecideLocation = ({
           </Button>
         )}
         <div style={{ height: '8px' }} />
-        {!useLoc && (
+        {useLoc ? null : (
           <MyStandaloneSearchBox
             onSet={(lat, lng) => handleLocationEnteredChange(lat, lng)}
             placeholder="current location"
@@ -200,7 +206,7 @@ const DecideLocation = ({
         )}
       </Fragment>
     )}
-    {!haveUserPosition && (
+    {haveUserPosition ? null : (
       <Fragment>
         <Typography variant="h5">
           Enter your current location (Your browser is unable to find your

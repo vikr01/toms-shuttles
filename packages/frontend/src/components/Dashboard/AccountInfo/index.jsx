@@ -5,6 +5,61 @@ import { Typography, Paper } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import routes from '../../../routes';
 
+type ClientAccountProps = {
+  creditInfo: string,
+};
+
+const ClientAccount = ({ creditInfo }: ClientAccountProps) => (
+  <Fragment>
+    <Typography variant="h5" className="accountOverviewItem">
+      {`Card number: ${creditInfo}`}
+    </Typography>
+    <Link to={routes.CREDITCARD_ADD} className="accountOverviewItem">
+      Enter Credit card info
+    </Link>
+  </Fragment>
+);
+
+type DriverAccountProps = {
+  active: ?number,
+  seatNumber: ?number,
+};
+
+const DriverAccount = ({ active, seatNumber }: DriverAccountProps) => {
+  if (active === 0) {
+    return (
+      <Fragment>
+        <Typography variant="h5" className="accountOverviewItem">
+          {`Seat count: ${seatNumber}`}
+        </Typography>
+        <Link to={routes.CARSEATS_SET} className="accountOverviewItem">
+          Change seat count
+        </Link>
+      </Fragment>
+    );
+  }
+  if (active === 1) {
+    return (
+      <Fragment>
+        <Typography variant="h5" className="accountOverviewItem">
+          Become inactive to change your seat count
+        </Typography>
+      </Fragment>
+    );
+  }
+  return null;
+};
+
+const AccountType = ({ accountType, ...otherProps }) => {
+  if (accountType === 'Client') {
+    return <ClientAccount {...otherProps} />;
+  }
+  if (accountType === 'Driver') {
+    return <DriverAccount {...otherProps} />;
+  }
+  return null;
+};
+
 export default class AccountInfoView extends Component {
   state = {
     name: '',
@@ -79,35 +134,7 @@ export default class AccountInfoView extends Component {
           <Typography variant="h5" className="accountOverviewItem">
             {`Username: ${username}`}
           </Typography>
-          {accountType === 'Client' && (
-            <Fragment>
-              <Typography variant="h5" className="accountOverviewItem">
-                {`Card number: ${creditInfo}`}
-              </Typography>
-              <Link to={routes.CREDITCARD_ADD} className="accountOverviewItem">
-                Enter Credit card info
-              </Link>
-            </Fragment>
-          )}
-          {accountType === 'Driver' &&
-            active === 0 && (
-              <Fragment>
-                <Typography variant="h5" className="accountOverviewItem">
-                  {`Seat count: ${seatNumber}`}
-                </Typography>
-                <Link to={routes.CARSEATS_SET} className="accountOverviewItem">
-                  Change seat count
-                </Link>
-              </Fragment>
-            )}
-          {accountType === 'Driver' &&
-            active === 1 && (
-              <Fragment>
-                <Typography variant="h5" className="accountOverviewItem">
-                  Become inactive to change your seat count
-                </Typography>
-              </Fragment>
-            )}
+          <AccountType {...{ accountType, active, creditInfo, seatNumber }} />
         </div>
       </Fragment>
     );

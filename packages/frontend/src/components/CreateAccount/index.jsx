@@ -29,7 +29,7 @@ type State = {
 export default class CreateAccount extends Component<Props, State> {
   props: Props;
 
-  state = {
+  state: State = {
     accountType: '', // cannot be null as value of a Select cannot be null
   };
 
