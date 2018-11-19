@@ -1,0 +1,61 @@
+{
+  "React Class Component": {
+    "prefix": "reactstart",
+    "body": [
+      "// @flow",
+      "import React, {Component} from 'react';",
+      "",
+      "type Props = {};",
+      "",
+      "type State = {};",
+      "",
+      "export default class ${TM_FILENAME_BASE/([a-z]*)(_|-)+([a-z]*)/${1:/capitalize}${3:/capitalize}/g} extends Component<Props, State> {",
+      "\tprops: Props;",
+      "",
+      "\tstate: State = {};",
+      "",
+      "\tstatic displayName = '${TM_FILENAME_BASE/([a-z]*)(_|-)+([a-z]*)/${1:/capitalize}${3:/capitalize}/g}';",
+      "",
+      "\tstatic defaultProps = {};",
+      "",
+      "\trender() {",
+      "\t\treturn <div>{null}</div>;",
+      "\t}",
+      "}",
+      ""
+    ]
+  },
+
+  "React Function Component": {
+    "prefix": "freactstart",
+    "body": [
+      "//@flow",
+      "import React from 'react';",
+      "",
+      "type Props = {};",
+      "",
+      "const ${TM_FILENAME_BASE/([a-z]*)(_|-)+([a-z]*)/${1:/capitalize}${3:/capitalize}/g} = (props: Props) => <div>{null}</div>;",
+      "",
+      "${TM_FILENAME_BASE/([a-z]*)(_|-)+([a-z]*)/${1:/capitalize}${3:/capitalize}/g}.displayName = '${TM_FILENAME_BASE/([a-z]*)(_|-)+([a-z]*)/${1:/capitalize}${3:/capitalize}/g}';",
+      "",
+      "${TM_FILENAME_BASE/([a-z]*)(_|-)+([a-z]*)/${1:/capitalize}${3:/capitalize}/g}.defaultProps = {};",
+      "",
+      "export default ${TM_FILENAME_BASE/([a-z]*)(_|-)+([a-z]*)/${1:/capitalize}${3:/capitalize}/g};",
+      ""
+    ]
+  },
+
+  "Camel Case Filename": {
+    "prefix": "camel",
+    "body": [
+      "${TM_FILENAME_BASE/([a-z]*)(_|-)+([a-z]*)/${1}${3:/capitalize}/g}"
+    ]
+  },
+
+  "Pascal Case Filename": {
+    "prefix": "pascal",
+    "body": [
+      "${TM_FILENAME_BASE/([a-z]*)(_|-)+([a-z]*)/${1:/capitalize}${3:/capitalize}/g}"
+    ]
+  }
+}

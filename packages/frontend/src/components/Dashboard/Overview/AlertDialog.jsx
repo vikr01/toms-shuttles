@@ -8,7 +8,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 type Props = {
-  open?: boolean,
   onClose?: func,
   onOpen?: func,
   text: string,
@@ -16,15 +15,14 @@ type Props = {
 };
 
 class AlertDialog extends React.Component<Props> {
-  static defaultProps = {
-    open: false,
-    onClose: () => {},
-    onOpen: () => {},
-  };
-
   state = {
     open: false,
     closing: false,
+  };
+
+  static defaultProps = {
+    onClose: () => {},
+    onOpen: () => {},
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -45,6 +43,7 @@ class AlertDialog extends React.Component<Props> {
     const { onClose } = this.props;
     this.setState({ open: false, closing: true });
     onClose();
+    this.setState({ closing: false });
   };
 
   render() {

@@ -1,13 +1,13 @@
 // @flow
 import React, { Fragment } from 'react';
-
 import { Typography, Button } from '@material-ui/core';
-
 import { geolocated, geoPropTypes } from 'react-geolocated';
 import axios from 'axios';
+import backendRoutes from 'toms-shuttles-backend/routes';
 import RequestForm from './RequestForm';
 import GMapsControl from './GMapsControl';
 import CostEstimater from './CostEstimater';
+import AlertDialog from './AlertDialog';
 
 function LiveGMapView({
   showMap,
@@ -22,6 +22,7 @@ function LiveGMapView({
   assignedDriver,
   driverArriving,
   coords,
+  disableRequestButtons,
 }: props) {
   if (showMap) {
     return (
@@ -30,29 +31,32 @@ function LiveGMapView({
           sendRequestToAirport={doRequestToAirport}
           sendRequestFromAirport={doRequestFromAirport}
           haveUserPosition={coords !== undefined}
+          disableRequestButtons={disableRequestButtons}
         />
-        {duration &&
-          distance && (
-            <Fragment>
-              <Typography variant="h4">
-                {`Estimated duration: ${duration.text}`}
-              </Typography>
-              <CostEstimater meters={distance.value} />
-              <Button variant="contained" onClick={requestRide}>
-                Make request
-              </Button>
-              {assignedDriver && (
-                <Typography variant="h4">
-                  {`You have been assigned to driver ${
-                    assignedDriver.username
-                  }`}
-                </Typography>
-              )}
-              <br />
-            </Fragment>
-          )}
+        {duration && distance ? (
+          <Fragment>
+            <Typography variant="h4">
+              {`Estimated duration: ${duration.text}`}
+            </Typography>
+            <CostEstimater meters={distance.value} />
+            <Button
+              variant="contained"
+              onClick={requestRide}
+              disabled={disableRequestButtons}
+            >
+              Make request
+            </Button>
+            <div stype={{ height: '10px' }} />
 
-        <div style={{ height: '100vh', width: '100%' }}>
+            {!assignedDriver ? null : (
+              <Typography variant="h4">
+                {`You have been assigned to driver ${assignedDriver.username}`}
+              </Typography>
+            )}
+            <br />
+          </Fragment>
+        ) : null}
+        <div style={{ height: '80vh', width: '100%' }}>
           <GMapsControl
             data={data}
             route={route}
@@ -60,6 +64,7 @@ function LiveGMapView({
             assignedDriver={assignedDriver}
             driverArriving={driverArriving}
             coords={coords}
+            distance={distance}
           />
         </div>
       </Fragment>
@@ -86,13 +91,13 @@ function RequestButton({ showMap, startRequest }: RequestButtonProps) {
 
 function airportToCoords(airport) {
   if (airport === 'SFO') {
-    return { lat: 37.6213129, lng: -122.3811441 };
+    return { lat: 37.6213, lng: -122.381 };
   }
   if (airport === 'OAK') {
-    return { lat: 37.7125689, lng: -122.2219315 };
+    return { lat: 37.7126, lng: -122.222 };
   }
   if (airport === 'SJC') {
-    return { lat: 37.3639472, lng: -121.9311262 };
+    return { lat: 37.364, lng: -121.931 };
   }
   return null;
 }
@@ -101,6 +106,7 @@ type Props = {
   showMap: boolean,
   startRequest: func,
 };
+
 class MapView extends React.Component<Props> {
   state = {
     data: {
@@ -109,9 +115,11 @@ class MapView extends React.Component<Props> {
       route: false,
       assignedDriver: null,
       driverArriving: false,
+      disableRequestButtons: false,
     },
     duration: null,
     distance: null,
+    status: '',
   };
 
   static getDerivedStateFromProps(nextProps, state) {
@@ -123,13 +131,13 @@ class MapView extends React.Component<Props> {
   }
 
   doRequestToAirport = (airport, lat = null, lng = null) => {
-    const { coords, isGeolocationEnabled, isGeolocationAvailable } = this.props;
+    const { coords, isGeolocationEnabled } = this.props;
     console.log('we are doing stuf', airport);
     console.log(coords);
     console.log('isGeolocationEnabled', isGeolocationEnabled);
 
     const fromCoords =
-      coords !== null
+      lat === null
         ? { lat: coords.latitude, lng: coords.longitude }
         : { lat, lng };
     const toCoords = airportToCoords(airport);
@@ -156,12 +164,25 @@ class MapView extends React.Component<Props> {
       response = await axios.get(
         `${backendRoutes.CLOSEST_DRIVER}?lat=${data.from.lat}&lng=${
           data.from.lng
-        }`
+        }&destLat=${data.to.lat}&destLng=${data.to.lng}&groupSize=1`
       );
+
+      console.log(response);
+      this.setState({
+        assignedDriver: response.data,
+        driverArriving: true,
+        disableRequestButtons: true,
+      });
     } catch (error) {
+      console.log(error.response.data);
+      this.setState({ status: error.response.data });
       console.error(error);
+      // handle error
     }
-    this.setState({ assignedDriver: response.data, driverArriving: true });
+  };
+
+  onAlertClose = () => {
+    this.setState({ status: '' });
   };
 
   render() {
@@ -174,12 +195,17 @@ class MapView extends React.Component<Props> {
       driverArriving,
       assignedDriver,
       coords,
+      disableRequestButtons,
+      status,
     } = this.state;
     return (
       <Fragment>
-        <Typography variant="h4" className="dashboardComponent2">
-          Map
-        </Typography>
+        <AlertDialog
+          text={status}
+          title="Issue"
+          onClose={this.onAlertClose}
+          open={status !== ''}
+        />
         <RequestButton showMap={showMap} startRequest={startRequest} />
         <LiveGMapView
           showMap={showMap}
@@ -196,6 +222,7 @@ class MapView extends React.Component<Props> {
           driverArriving={driverArriving}
           assignedDriver={assignedDriver}
           coords={coords}
+          disableRequestButtons={disableRequestButtons}
         />
       </Fragment>
     );

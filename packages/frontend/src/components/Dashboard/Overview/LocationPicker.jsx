@@ -9,6 +9,7 @@ type Props = {
   sendRequestToAirport: func,
   sendRequestFromAirport: func,
   haveUserPosition: boolean,
+  disableRequestButtons: boolean,
 };
 
 export default class LocationPicker extends Component<Props> {
@@ -16,6 +17,7 @@ export default class LocationPicker extends Component<Props> {
     value: '',
     enteredLocation: null,
     destinationSet: false,
+    useLoc: false,
   };
 
   handleChange = event => {
@@ -27,13 +29,33 @@ export default class LocationPicker extends Component<Props> {
     this.setState({ enteredLocation: { lat, lng }, destinationSet: true });
   };
 
+  setUseLoc = value => {
+    this.setState({ useLoc: value });
+  };
+
+  onSendRequestToAirport = () => {
+    const { haveUserPosition, sendRequestToAirport } = this.props;
+
+    const { enteredLocation, useLoc, value } = this.state;
+
+    if (haveUserPosition && useLoc) {
+      return sendRequestToAirport(value);
+    }
+
+    const { lat, lng } = enteredLocation;
+
+    return sendRequestToAirport(value, lat, lng);
+  };
+
   render() {
     const {
-      show,
-      sendRequestToAirport,
-      sendRequestFromAirport,
+      disableRequestButtons,
       haveUserPosition,
+      show,
+      sendRequestFromAirport,
     } = this.props;
+
+    const { useLoc } = this.state;
     const { value, enteredLocation, destinationSet } = this.state;
     if (show) {
       if (show === 1) {
@@ -43,36 +65,45 @@ export default class LocationPicker extends Component<Props> {
             <Typography variant="h5">
               Select airport you wish to go to
             </Typography>
-            <RadioGroup value={value} onChange={this.handleChange}>
-              <FormControlLabel value="SFO" control={<Radio />} label="SFO" />
-              <FormControlLabel value="OAK" control={<Radio />} label="OAK" />
-              <FormControlLabel value="SJC" control={<Radio />} label="SJC" />
+            <RadioGroup
+              value={value}
+              onChange={this.handleChange}
+              disabled={disableRequestButtons}
+            >
+              <FormControlLabel
+                value="SFO"
+                control={<Radio />}
+                label="SFO"
+                disabled={disableRequestButtons}
+              />
+              <FormControlLabel
+                value="OAK"
+                control={<Radio />}
+                label="OAK"
+                disabled={disableRequestButtons}
+              />
+              <FormControlLabel
+                value="SJC"
+                control={<Radio />}
+                label="SJC"
+                disabled={disableRequestButtons}
+              />
             </RadioGroup>
-            {!haveUserPosition && (
-              <Fragment>
-                <Typography variant="h5">
-                  Enter your current location
-                </Typography>
-                <MyStandaloneSearchBox
-                  onSet={(lat, lng) =>
-                    this.handleLocationEnteredChange(lat, lng)
-                  }
-                  placeholder="current location"
-                />
-              </Fragment>
-            )}
+            <DecideLocation
+              useLoc={useLoc}
+              haveUserPosition={haveUserPosition}
+              setUseLoc={this.setUseLoc}
+              handleLocationEnteredChange={this.handleLocationEnteredChange}
+              disableRequestButtons={disableRequestButtons}
+            />
             <Button
               variant="contained"
-              disabled={value === ''}
-              onClick={() =>
-                haveUserPosition
-                  ? sendRequestToAirport(value)
-                  : sendRequestToAirport(
-                      value,
-                      enteredLocation.lat,
-                      enteredLocation.lng
-                    )
+              disabled={
+                value === '' ||
+                (!useLoc && enteredLocation === null) ||
+                disableRequestButtons
               }
+              onClick={this.onSendRequestToAirport}
             >
               Show route
             </Button>
@@ -87,9 +118,24 @@ export default class LocationPicker extends Component<Props> {
               Select airport you are located at
             </Typography>
             <RadioGroup value={value} onChange={this.handleChange}>
-              <FormControlLabel value="SFO" control={<Radio />} label="SFO" />
-              <FormControlLabel value="OAK" control={<Radio />} label="OAK" />
-              <FormControlLabel value="SJC" control={<Radio />} label="SJC" />
+              <FormControlLabel
+                value="SFO"
+                control={<Radio />}
+                label="SFO"
+                disabled={disableRequestButtons}
+              />
+              <FormControlLabel
+                value="OAK"
+                control={<Radio />}
+                label="OAK"
+                disabled={disableRequestButtons}
+              />
+              <FormControlLabel
+                value="SJC"
+                control={<Radio />}
+                label="SJC"
+                disabled={disableRequestButtons}
+              />
             </RadioGroup>
             <Typography variant="h5">Enter your destination</Typography>
             <MyStandaloneSearchBox
@@ -98,7 +144,9 @@ export default class LocationPicker extends Component<Props> {
             />
             <Button
               variant="contained"
-              disabled={value === '' || !destinationSet}
+              disabled={
+                value === '' || !destinationSet || disableRequestButtons
+              }
               onClick={() =>
                 sendRequestFromAirport(
                   value,
@@ -117,3 +165,58 @@ export default class LocationPicker extends Component<Props> {
     return null;
   }
 }
+
+const DecideLocation = ({
+  useLoc,
+  haveUserPosition,
+  setUseLoc,
+  handleLocationEnteredChange,
+  disableRequestButtons,
+}: props) => (
+  <Fragment>
+    {!haveUserPosition ? null : (
+      <Fragment>
+        {!useLoc ? null : (
+          <Fragment>
+            <Button
+              variant="contained"
+              onClick={() => setUseLoc(false)}
+              disabled={disableRequestButtons}
+            >
+              Enter location
+            </Button>
+            <Typography variant="h5">Currently using your location</Typography>
+          </Fragment>
+        )}
+        {useLoc ? null : (
+          <Button
+            variant="contained"
+            onClick={() => setUseLoc(true)}
+            disabled={disableRequestButtons}
+          >
+            Use my location
+          </Button>
+        )}
+        <div style={{ height: '8px' }} />
+        {useLoc ? null : (
+          <MyStandaloneSearchBox
+            onSet={(lat, lng) => handleLocationEnteredChange(lat, lng)}
+            placeholder="current location"
+          />
+        )}
+      </Fragment>
+    )}
+    {haveUserPosition ? null : (
+      <Fragment>
+        <Typography variant="h5">
+          Enter your current location (Your browser is unable to find your
+          location)
+        </Typography>
+        <MyStandaloneSearchBox
+          onSet={(lat, lng) => handleLocationEnteredChange(lat, lng)}
+          placeholder="current location"
+        />
+      </Fragment>
+    )}
+  </Fragment>
+);

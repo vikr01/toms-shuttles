@@ -1,0 +1,160 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Overall component should match exact snapshot 1`] = `
+<div>
+  Loading...
+</div>
+`;
+
+exports[`Overall component should match exact snapshot 2`] = `
+<div
+  style={
+    Object {
+      "backgroundImage": "url([object Object])",
+      "backgroundPosition": "center center",
+      "backgroundRepeat": "no-repeat",
+      "backgroundSize": "cover",
+      "height": "800px",
+      "width": "100%",
+    }
+  }
+>
+  <div
+    style={
+      Object {
+        "height": "50px",
+      }
+    }
+  />
+  <div
+    className="MuiPaper-root-1 MuiPaper-elevation2-5 MuiPaper-rounded-2 paper"
+  >
+    <img
+      alt="logo"
+      className="logo"
+      src={Object {}}
+    />
+    <h5
+      className="MuiTypography-root-28 MuiTypography-h5-44 MuiTypography-alignCenter-51"
+    >
+      Sign in
+    </h5>
+    <form
+      className="form"
+      onSubmit={[Function]}
+    >
+      <div
+        className="MuiFormControl-root-63 MuiFormControl-marginNormal-64 MuiFormControl-fullWidth-66"
+      >
+        <label
+          className="MuiFormLabel-root-78 MuiFormLabel-required-83 MuiInputLabel-required-71 MuiInputLabel-root-67 MuiInputLabel-formControl-72 MuiInputLabel-animated-75"
+          data-shrink={false}
+          htmlFor="username"
+        >
+          Username
+          <span
+            className="MuiFormLabel-asterisk-84"
+          >
+             *
+          </span>
+        </label>
+        <div
+          className="MuiInputBase-root-98 MuiInput-root-85 MuiInput-underline-89 MuiInputBase-formControl-99 MuiInput-formControl-86"
+          onClick={[Function]}
+        >
+          <input
+            aria-invalid={false}
+            autoComplete="username"
+            autoFocus={true}
+            className="MuiInputBase-input-108 MuiInput-input-93"
+            disabled={false}
+            id="username"
+            name="username"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={true}
+            type="text"
+          />
+        </div>
+      </div>
+      <div
+        className="MuiFormControl-root-63 MuiFormControl-marginNormal-64 MuiFormControl-fullWidth-66"
+      >
+        <label
+          className="MuiFormLabel-root-78 MuiFormLabel-required-83 MuiInputLabel-required-71 MuiInputLabel-root-67 MuiInputLabel-formControl-72 MuiInputLabel-animated-75"
+          data-shrink={false}
+          htmlFor="password"
+        >
+          Password
+          <span
+            className="MuiFormLabel-asterisk-84"
+          >
+             *
+          </span>
+        </label>
+        <div
+          className="MuiInputBase-root-98 MuiInput-root-85 MuiInput-underline-89 MuiInputBase-formControl-99 MuiInput-formControl-86"
+          onClick={[Function]}
+        >
+          <input
+            aria-invalid={false}
+            autoComplete="current-password"
+            className="MuiInputBase-input-108 MuiInput-input-93 MuiInputBase-inputType-111 MuiInput-inputType-96"
+            disabled={false}
+            id="password"
+            name="password"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={true}
+            type="password"
+          />
+        </div>
+      </div>
+      <button
+        className="MuiButtonBase-root-141 MuiButton-root-115 MuiButton-contained-126 MuiButton-containedPrimary-127 MuiButton-raised-129 MuiButton-raisedPrimary-130 MuiButton-fullWidth-140 submit"
+        disabled={false}
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex="0"
+        type="submit"
+      >
+        <span
+          className="MuiButton-label-116"
+        >
+          Sign in
+        </span>
+        <span
+          className="MuiTouchRipple-root-144"
+        />
+      </button>
+      <a
+        className="signup"
+        href="#/signup"
+        onClick={[Function]}
+      >
+        Create Account
+      </a>
+      <br />
+      <br />
+      <a
+        className="textCenter"
+        href="https://github.com/vikr01/toms-shuttles"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        View source on Github
+      </a>
+    </form>
+  </div>
+</div>
+`;

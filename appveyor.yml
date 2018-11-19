@@ -21,12 +21,12 @@ version: '{build}'
 
 shallow_clone: true
 
-clone_depth: 1
+clone_depth: 3
 
 install:
   - ps: Install-Product node $env:nodejs_version x64
   - ps: | # Install latest yarn version
-      (New-Object Net.WebClient).DownloadFile("https://nightly.yarnpkg.com/latest.msi", "$env:temp\yarn.msi")
+      (New-Object Net.WebClient).DownloadFile("https://yarnpkg.com/latest.msi", "$env:temp\yarn.msi")
       cmd /c start /wait msiexec.exe /i $env:temp\yarn.msi /quiet /qn /norestart
   - node --version
   - yarn --version
@@ -37,4 +37,4 @@ test_script:
   - yarn run lint
   # - yarn run flow
   - yarn run build
-  - yarn test
+  - yarn run test-coverage

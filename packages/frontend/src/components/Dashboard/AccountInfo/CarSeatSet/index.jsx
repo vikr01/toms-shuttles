@@ -3,6 +3,7 @@ import React, { Component, Fragment } from 'react';
 import { Button, CssBaseline, Paper, Typography } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import backendRoutes from 'toms-shuttles-backend/routes';
 import ValueForm from '../ValueForm';
 import DisplayStatus from '../../../DisplayStatus';
 import routes from '../../../../routes';
@@ -26,6 +27,7 @@ export default class CarSeatSet extends Component<Props> {
         status: 'we got your seat count saved!',
       });
     } catch (e) {
+      console.error(e);
       this.setState({ status: 'Issue connecting to server' });
     }
   };

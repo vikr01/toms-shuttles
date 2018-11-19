@@ -1,11 +1,9 @@
 // @flow
-
 import { Entity, PrimaryColumn, Column, OneToMany } from 'typeorm';
-import { EntityBase } from '../entityBase';
 import { Passenger } from './Passenger';
 
 @Entity()
-export class Driver /* extends EntityBase */ {
+export class Driver {
   @PrimaryColumn('varchar')
   username = '';
 
@@ -27,7 +25,25 @@ export class Driver /* extends EntityBase */ {
   @Column('tinyint')
   active = 0;
 
-  @OneToMany(type => Passenger)
+  @Column('float')
+  destLat1 = undefined;
+
+  @Column('float')
+  destLng1 = undefined;
+
+  @Column('float')
+  destLat2 = undefined;
+
+  @Column('float')
+  destLng2 = undefined;
+
+  @Column('float')
+  destLat3 = undefined;
+
+  @Column('float')
+  destLng3 = undefined;
+
+  @OneToMany(type => Passenger, passenger => passenger.driver)
   passengers: Passenger[];
 }
 
