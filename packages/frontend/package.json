@@ -19,7 +19,6 @@
     "@material-ui/lab": "^3.0.0-alpha.21",
     "axios": "^0.18.0",
     "babel-loader": "^8.0.4",
-    "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^1.0.1",
     "delay": "^4.1.0",
     "eslint-loader": "^2.1.1",

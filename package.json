@@ -63,7 +63,6 @@
     "flow-bin": "^0.84.0",
     "flow-typed": "^2.5.1",
     "husky": "^1.1.2",
-    "istanbul-lib-source-maps": "^1.2.6",
     "jest": "^23.6.0",
     "lerna": "^3.4.3",
     "lint-staged": "^7.3.0",
