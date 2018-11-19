@@ -2,10 +2,10 @@ import '../helpers/loadTestEnv';
 import { createConnection } from 'typeorm';
 import request from 'supertest';
 import HttpStatus from 'http-status-codes';
+import server from 'tbd-backend-name/src/server';
+import routes from 'tbd-backend-name/routes';
+import { apiKey, hashFn } from 'tbd-backend-name/src/envVars/parse';
 import connectionOptions from '../helpers/dbConfig';
-import server from '../../src/server';
-import routes from '../../routes';
-import { apiKey, hashFn } from '../../src/envVars/parse';
 
 const secret = 'temp-session-secret';
 

@@ -1,6 +1,5 @@
 {
   "globals": {
-    "backendRoutes": true,
     "google": true
   }
 }

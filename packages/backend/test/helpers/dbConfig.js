@@ -1,4 +1,4 @@
-import { base as dbConfigBase } from '../../src/dbConfig';
+import { base as dbConfigBase } from 'tbd-backend-name/src/dbConfig';
 
 export default {
   ...dbConfigBase,

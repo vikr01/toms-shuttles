@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dashboard snapshot matches 1`] = `
+<p
+  className="MuiTypography-root-15 MuiTypography-body1-24"
+>
+  Logging in...
+</p>
+`;

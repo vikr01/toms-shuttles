@@ -1,4 +1,7 @@
 {
   "plugins": ["jest"],
-  "extends": ["plugin:jest/recommended"]
+  "extends": ["plugin:jest/recommended"],
+  "rules": {
+    "import/no-extraneous-dependencies": 0
+  }
 }

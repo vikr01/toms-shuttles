@@ -21,7 +21,6 @@
   ],
   "rules": {
     "comma-dangle": 0,
-    "import/dynamic-import-chunkname": "error",
     "import/no-commonjs": "error",
     "import/no-extraneous-dependencies": 0,
     "indent": [2, 2, {"SwitchCase": 1}],
@@ -33,7 +32,10 @@
       "single",
       {"avoidEscape": true, "allowTemplateLiterals": true}
     ],
-    "react/jsx-filename-extension": ["error", {"extensions": [".jsx"]}],
+    "react/jsx-filename-extension": [
+      "error",
+      {"extensions": [".jsx", ".spec.js"]}
+    ],
     "react/sort-comp": [
       "error",
       {
@@ -48,5 +50,13 @@
         ]
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["src/**/*.{js,jsx}"],
+      "rules": {
+        "import/dynamic-import-chunkname": "error"
+      }
+    }
+  ]
 }

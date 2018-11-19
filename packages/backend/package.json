@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "sql.js": "^0.5.0",
-    "supertest": "^3.3.0"
+    "supertest": "^3.3.0",
+    "tbd-backend-name": "*"
   }
 }
