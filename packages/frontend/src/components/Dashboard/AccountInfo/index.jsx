@@ -3,7 +3,7 @@ import React, { Fragment, Component } from 'react';
 import axios from 'axios';
 import { Typography, Paper } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import backendRoutes from 'tbd-backend-name/routes';
+import backendRoutes from 'toms-shuttles-backend/routes';
 import routes from '../../../routes';
 
 type ClientAccountProps = {

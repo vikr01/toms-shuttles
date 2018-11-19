@@ -1,8 +1,13 @@
 {
-  "name": "tbd-frontend-name",
+  "private": true,
+  "name": "toms-shuttles-frontend",
   "license": "MIT",
   "author": "Vikram Rangaraj <vik120@icloud.com> (https://github.com/vikr01)",
-  "repository": "https://github.com/vikr01/tbd-project-name/tree/master/packages/frontend",
+  "contributors": [
+    "Suraj Setty <surajsetty97@gmail.com> (https://github.com/surajsetty97)",
+    "Thomas Pedersen <thoepedersen@gmail.com> (https://github.com/toep)"
+  ],
+  "repository": "https://github.com/vikr01/toms-shuttles/tree/master/packages/frontend",
   "version": "0.2.0",
   "main": "lib/index.js",
   "scripts": {
@@ -37,9 +42,9 @@
     "rimraf": "^2.6.2",
     "style-loader": "^0.23.1",
     "supertest": "^3.3.0",
-    "tbd-backend-name": "*",
-    "tbd-frontend-name": "*",
     "title-case": "^2.1.1",
+    "toms-shuttles-backend": "*",
+    "toms-shuttles-frontend": "*",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "url-loader": "^1.1.2",
     "webpack": "^4.24.0",
@@ -50,5 +55,5 @@
     "webpack-merge": "^4.1.4",
     "write-file-webpack-plugin": "^4.4.1"
   },
-  "productName": "TBD FRONTEND NAME"
+  "productName": "Toms Shuttle Service"
 }

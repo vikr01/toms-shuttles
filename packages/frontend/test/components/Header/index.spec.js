@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import Header from 'tbd-frontend-name/src/components/Header';
+import Header from 'toms-shuttles-frontend/src/components/Header';
 
 describe('Header', () => {
   test('has nothing for now', () => {

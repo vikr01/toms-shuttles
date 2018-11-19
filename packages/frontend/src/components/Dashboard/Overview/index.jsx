@@ -29,7 +29,7 @@ class OverviewView extends React.Component<OverviewViewProps> {
             doRequest={this.doRequest}
           />
           <a
-            href="https://github.com/vikr01/tbd-project-name"
+            href="https://github.com/vikr01/toms-shuttles"
             rel="noopener noreferrer"
             target="_blank"
             className="textCenter"

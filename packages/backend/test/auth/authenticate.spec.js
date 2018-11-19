@@ -2,9 +2,9 @@ import '../helpers/loadTestEnv';
 import { createConnection } from 'typeorm';
 import request from 'supertest';
 import HttpStatus from 'http-status-codes';
-import server from 'tbd-backend-name/src/server';
-import routes from 'tbd-backend-name/routes';
-import { apiKey, hashFn } from 'tbd-backend-name/src/envVars/parse';
+import server from 'toms-shuttles-backend/src/server';
+import routes from 'toms-shuttles-backend/routes';
+import { apiKey, hashFn } from 'toms-shuttles-backend/src/envVars/parse';
 import connectionOptions from '../helpers/dbConfig';
 
 const secret = 'temp-session-secret';

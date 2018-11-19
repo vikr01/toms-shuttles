@@ -1,7 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import delay from 'delay';
-import CreateLoadable from 'tbd-frontend-name/src/components/CreateLoadable';
+import CreateLoadable from 'toms-shuttles-frontend/src/components/CreateLoadable';
 
 describe('CreateLoadable', () => {
   test('works with a simple component', async () => {

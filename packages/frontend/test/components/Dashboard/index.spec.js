@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import Dashboard from 'tbd-frontend-name/src/components/Dashboard';
+import Dashboard from 'toms-shuttles-frontend/src/components/Dashboard';
 
 describe('Dashboard', () => {
   test('snapshot matches', () => {

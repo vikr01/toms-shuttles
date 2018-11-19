@@ -1,7 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import delay from 'delay';
-import Main from 'tbd-frontend-name/src/components';
+import Main from 'toms-shuttles-frontend/src/components';
 
 describe('Overall component', () => {
   test('should match exact snapshot', async () => {

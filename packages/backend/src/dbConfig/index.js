@@ -3,7 +3,7 @@ import { Driver } from '../entity/Driver';
 import { Passenger } from '../entity/Passenger';
 import { CreditCard } from '../entity/CreditCard';
 
-const synchronize = process.env.NODE_ENV === 'development';
+const synchronize = ['true', true].includes(process.env.SYNCHRONIZE) || false;
 
 export const base = {
   synchronize,
@@ -13,8 +13,8 @@ export const base = {
 
 export default {
   ...base,
-  type: 'mysql',
-  port: 3306,
+  type: process.env.DB_DRIVER,
+  port: process.env.DB_PORT,
   host: process.env.DB_HOST,
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,

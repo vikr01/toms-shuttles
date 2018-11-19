@@ -5,7 +5,8 @@
     "HASH_KEY",
     "DIGESTION_TYPE",
     "SESSION_SECRET",
-    "API_KEY"
+    "API_KEY",
+    "DB_DRIVER"
   ],
-  "optional": []
+  "optional": ["SYNCHRONIZE"]
 }

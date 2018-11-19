@@ -148,7 +148,7 @@ exports[`Overall component should match exact snapshot 2`] = `
       <br />
       <a
         className="textCenter"
-        href="https://github.com/vikr01/tbd-project-name"
+        href="https://github.com/vikr01/toms-shuttles"
         rel="noopener noreferrer"
         target="_blank"
       >

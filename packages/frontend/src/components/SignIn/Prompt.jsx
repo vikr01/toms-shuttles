@@ -54,7 +54,7 @@ const SignIn = ({ handleSubmit, status }: Props): Node => (
           <br />
           <br />
           <a
-            href="https://github.com/vikr01/tbd-project-name"
+            href="https://github.com/vikr01/toms-shuttles"
             rel="noopener noreferrer"
             target="_blank"
             className="textCenter"
