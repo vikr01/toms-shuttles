@@ -8,7 +8,7 @@
     "Thomas Pedersen <thoepedersen@gmail.com> (https://github.com/toep)"
   ],
   "repository": "https://github.com/vikr01/toms-shuttles/tree/master/packages/frontend",
-  "version": "0.2.0",
+  "version": "1.0.0-alpha.0",
   "main": "lib/index.js",
   "scripts": {
     "prebuild": "yarn run clean",
@@ -43,8 +43,8 @@
     "style-loader": "^0.23.1",
     "supertest": "^3.3.0",
     "title-case": "^2.1.1",
-    "toms-shuttles-backend": "*",
-    "toms-shuttles-frontend": "*",
+    "toms-shuttles-backend": "1.0.0-alpha.0",
+    "toms-shuttles-frontend": "1.0.0-alpha.0",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "url-loader": "^1.1.2",
     "webpack": "^4.24.0",
