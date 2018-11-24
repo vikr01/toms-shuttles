@@ -29,10 +29,6 @@ type SessionType = {
   resave: boolean,
   saveUninitialized: boolean,
   secret: string,
-  cookie: {
-    maxAge: number,
-    secure?: boolean,
-  },
 };
 
 // this is where the app lifts

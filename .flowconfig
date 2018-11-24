@@ -1,5 +1,7 @@
 [ignore]
 <PROJECT_ROOT>/packages/*/dist
+# Ignore frontend for now
+<PROJECT_ROOT>/packages/frontend/src/components
 
 [include]
 <PROJECT_ROOT>/packages/**/*
