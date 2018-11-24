@@ -1,22 +1,13 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
+
 import { Typography, Button } from '@material-ui/core';
-import { geolocated } from 'react-geolocated';
+
+import { geolocated, geoPropTypes } from 'react-geolocated';
 import axios from 'axios';
-import type { Node } from 'react';
+import backendRoutes from 'toms-shuttles-backend/routes';
 import DriverGMapsControl from './DriverGMapsControl';
 import DisplayStatus from '../../../DisplayStatus';
-
-declare var backendRoutes: any;
-
-type Props = {
-  showMap: boolean,
-  isAvailable: boolean,
-  onSetAvailable: Function,
-  status: string,
-  driverInfo: ?('Client' | 'Driver'),
-  availabilityFound: boolean,
-};
 
 function LiveGMapDriverView({
   showMap,
@@ -25,7 +16,7 @@ function LiveGMapDriverView({
   status,
   driverInfo,
   availabilityFound,
-}: Props): Node {
+}: props) {
   if (showMap) {
     console.log(driverInfo);
     return (
@@ -52,7 +43,7 @@ function LiveGMapDriverView({
             </Button>
           </Fragment>
         ) : null}
-        {!availabilityFound && (
+        {availabilityFound ? null : (
           <Typography variant="h5">Loading your data...</Typography>
         )}
         <DisplayStatus status={status} />
@@ -66,31 +57,15 @@ function LiveGMapDriverView({
   return null;
 }
 
-type DriverMapViewProps = {
+type Props = {
   showMap: boolean,
-  isGeolocationEnabled: boolean,
+  startRequest: func,
 };
-
-type DriverMapViewState = {
-  isAvailable: boolean,
-  availabilityFound: boolean,
-  status: string,
-  coords: {
-    latitude?: string,
-    longitude?: string,
-  },
-  driverInfo?: 'Client' | 'Driver',
-  fetchInterval?: IntervalID,
-};
-
-class DriverMapView extends Component<DriverMapViewProps, DriverMapViewState> {
-  props: DriverMapViewProps;
-
-  state: DriverMapViewState = {
+class DriverMapView extends React.Component<Props> {
+  state = {
     isAvailable: false,
     availabilityFound: false,
     status: '',
-    coords: {},
   };
 
   static getDerivedStateFromProps(nextProps, state) {
@@ -137,7 +112,6 @@ class DriverMapView extends Component<DriverMapViewProps, DriverMapViewState> {
             response = await axios.get(backendRoutes.USER);
           } catch (error) {
             console.error(error);
-            throw error;
           }
           this.setState({ driverInfo: response.data.driverInfo });
         }, 100);
@@ -161,7 +135,7 @@ class DriverMapView extends Component<DriverMapViewProps, DriverMapViewState> {
     const { isAvailable, status, driverInfo, availabilityFound } = this.state;
     return (
       <Fragment>
-        {!isGeolocationEnabled && (
+        {isGeolocationEnabled ? null : (
           <Typography variant="title" color="seconary">
             {
               '❗️You need to enable location services to use the service as a driver\n❗️'
@@ -180,6 +154,8 @@ class DriverMapView extends Component<DriverMapViewProps, DriverMapViewState> {
     );
   }
 }
+
+DriverMapView.propTypes = { ...DriverMapView.propTypes, ...geoPropTypes };
 
 export default geolocated({
   positionOptions: {

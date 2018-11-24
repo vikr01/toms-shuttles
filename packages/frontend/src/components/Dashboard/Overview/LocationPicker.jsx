@@ -5,52 +5,56 @@ import { RadioGroup, Radio, Button, Typography } from '@material-ui/core';
 import MyStandaloneSearchBox from './MyStandaloneSearchBox';
 
 type Props = {
-  show: number,
-  sendRequestToAirport: Function,
-  sendRequestFromAirport: Function,
+  show: int,
+  sendRequestToAirport: func,
+  sendRequestFromAirport: func,
   haveUserPosition: boolean,
   disableRequestButtons: boolean,
 };
 
-type State = {
-  value: string,
-  enteredLocation: {
-    lat?: number,
-    lng?: number,
-  },
-  destinationSet: boolean,
-  useLoc: boolean,
-};
-
-export default class LocationPicker extends Component<Props, State> {
-  state: State = {
+export default class LocationPicker extends Component<Props> {
+  state = {
     value: '',
-    enteredLocation: {},
+    enteredLocation: null,
     destinationSet: false,
     useLoc: false,
   };
 
-  handleChange = (event: any) => {
+  handleChange = event => {
     this.setState({ value: event.target.value });
   };
 
-  handleLocationEnteredChange = (lat: number, lng: number) => {
+  handleLocationEnteredChange = (lat, lng) => {
     console.log(lat, lng);
     this.setState({ enteredLocation: { lat, lng }, destinationSet: true });
   };
 
-  setUseLoc = (value: boolean) => {
+  setUseLoc = value => {
     this.setState({ useLoc: value });
+  };
+
+  onSendRequestToAirport = () => {
+    const { haveUserPosition, sendRequestToAirport } = this.props;
+
+    const { enteredLocation, useLoc, value } = this.state;
+
+    if (haveUserPosition && useLoc) {
+      return sendRequestToAirport(value);
+    }
+
+    const { lat, lng } = enteredLocation;
+
+    return sendRequestToAirport(value, lat, lng);
   };
 
   render() {
     const {
-      show,
-      sendRequestToAirport,
-      sendRequestFromAirport,
-      haveUserPosition,
       disableRequestButtons,
+      haveUserPosition,
+      show,
+      sendRequestFromAirport,
     } = this.props;
+
     const { useLoc } = this.state;
     const { value, enteredLocation, destinationSet } = this.state;
     if (show) {
@@ -99,15 +103,7 @@ export default class LocationPicker extends Component<Props, State> {
                 (!useLoc && enteredLocation === null) ||
                 disableRequestButtons
               }
-              onClick={() =>
-                haveUserPosition && useLoc
-                  ? sendRequestToAirport(value)
-                  : sendRequestToAirport(
-                      value,
-                      enteredLocation.lat,
-                      enteredLocation.lng
-                    )
-              }
+              onClick={this.onSendRequestToAirport}
             >
               Show route
             </Button>
@@ -170,25 +166,17 @@ export default class LocationPicker extends Component<Props, State> {
   }
 }
 
-type DecideLocationProps = {
-  useLoc: boolean,
-  haveUserPosition: boolean,
-  setUseLoc: Function,
-  handleLocationEnteredChange: Function,
-  disableRequestButtons: boolean,
-};
-
 const DecideLocation = ({
   useLoc,
   haveUserPosition,
   setUseLoc,
   handleLocationEnteredChange,
   disableRequestButtons,
-}: DecideLocationProps) => (
+}: props) => (
   <Fragment>
-    {haveUserPosition && (
+    {!haveUserPosition ? null : (
       <Fragment>
-        {useLoc && (
+        {!useLoc ? null : (
           <Fragment>
             <Button
               variant="contained"
@@ -200,7 +188,7 @@ const DecideLocation = ({
             <Typography variant="h5">Currently using your location</Typography>
           </Fragment>
         )}
-        {!useLoc && (
+        {useLoc ? null : (
           <Button
             variant="contained"
             onClick={() => setUseLoc(true)}
@@ -210,7 +198,7 @@ const DecideLocation = ({
           </Button>
         )}
         <div style={{ height: '8px' }} />
-        {!useLoc && (
+        {useLoc ? null : (
           <MyStandaloneSearchBox
             onSet={(lat, lng) => handleLocationEnteredChange(lat, lng)}
             placeholder="current location"
@@ -218,7 +206,7 @@ const DecideLocation = ({
         )}
       </Fragment>
     )}
-    {!haveUserPosition && (
+    {haveUserPosition ? null : (
       <Fragment>
         <Typography variant="h5">
           Enter your current location (Your browser is unable to find your

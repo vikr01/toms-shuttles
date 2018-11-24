@@ -1,14 +1,20 @@
 {
-  "name": "tbd-backend-name",
+  "private": true,
+  "name": "toms-shuttles-backend",
   "license": "MIT",
   "author": "Vikram Rangaraj <vik120@icloud.com> (https://github.com/vikr01)",
-  "repository": "https://github.com/vikr01/tbd-project-name/tree/master/packages/backend",
-  "version": "0.2.0",
+  "contributors": [
+    "Suraj Setty <surajsetty97@gmail.com> (https://github.com/surajsetty97)",
+    "Thomas Pedersen <thoepedersen@gmail.com> (https://github.com/toep)"
+  ],
+  "repository": "https://github.com/vikr01/toms-shuttles/tree/master/packages/backend",
+  "version": "1.0.0-alpha.0",
   "main": "dist/index.js",
   "scripts": {
     "prebuild": "yarn run clean",
     "build": "cross-env NODE_ENV=production babel src --out-dir dist --copy-files --source-maps",
     "clean": "rimraf dist",
+    "cross-env": "cross-env",
     "dev": "cross-env NODE_ENV=development node -r @babel/register src/index.js",
     "postinstall": "node -r @babel/register scripts/postinstall.js",
     "prestart": "yarn run stop",
@@ -34,10 +40,11 @@
     "typeorm": "^0.2.8"
   },
   "peerDependencies": {
-    "tbd-frontend-name": "*"
+    "toms-shuttles-frontend": "1.0.0-alpha.0"
   },
   "devDependencies": {
     "sql.js": "^0.5.0",
-    "supertest": "^3.3.0"
+    "supertest": "^3.3.0",
+    "toms-shuttles-backend": "1.0.0-alpha.0"
   }
 }

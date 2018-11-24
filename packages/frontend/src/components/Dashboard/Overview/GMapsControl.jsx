@@ -1,3 +1,4 @@
+/* global google */
 // @flow
 import React, { Fragment } from 'react';
 import { compose, withProps, lifecycle } from 'recompose';
@@ -10,12 +11,17 @@ import {
   Marker,
 } from 'react-google-maps';
 import axios from 'axios';
+import backendRoutes from 'toms-shuttles-backend/routes';
 import AlertDialog from './AlertDialog';
 import { estimateCost } from './CostEstimater';
 import SimpleSnackbar from './SimpleSnackbar';
 
-declare var google: any;
-declare var backendRoutes: any;
+const getDiscountText = ({ distance, discount, discountReason }) =>
+  `You have arrived at your destination! Your credit card was charged $${(
+    estimateCost(distance.value) - (discount || 0)
+  ).toFixed(2)}. ${
+    !discount ? '' : `You received a discount of $${discount} ${discountReason}`
+  }`;
 
 const GMapsControl = compose(
   withProps({
@@ -336,8 +342,9 @@ const GMapsControl = compose(
                     c = this.state.directions.length - 1;
                     this.setState({ driving: false });
                     if (
-                      Math.abs(parseFloat(lat) - userLocation.lat) < 0.001 &&
-                      Math.abs(parseFloat(lng) - userLocation.lng) < 0.001
+                      Math.abs(parseFloat(lat, 10) - userLocation.lat) <
+                        0.001 &&
+                      Math.abs(parseFloat(lng, 10) - userLocation.lng) < 0.001
                     ) {
                       console.log('showing at user dialog');
                       this.setState({
@@ -389,21 +396,12 @@ const GMapsControl = compose(
       <AlertDialog
         open={props.atDestinationDialogShow}
         title="Arrived"
-        text={`You have arrived at your destination! Your credit card was charged $${(
-          estimateCost(props.distance.value) -
-          (props.discount ? props.discount : 0)
-        ).toFixed(2)}. ${
-          props.discount
-            ? `You received a discount of $${props.discount} ${
-                props.discountReason
-              }`
-            : ''
-        }`}
+        text={getDiscountText(props)}
         onClose={() => {
           props.onArrivalToDestinationDialogClosed(
             estimateCost(
               props.distance.value -
-                Number((props.discount ? props.discount : 0).toFixed(2))
+                (props.discount ? props.discount : 0).toFixed(2)
             )
           );
         }}
@@ -467,8 +465,9 @@ const GMapsControl = compose(
     </GoogleMap>
   </Fragment>
 ));
+
 type DrawMarkerProps = {
-  coords: Object,
+  coords: object,
 };
 const DrawMarker = ({ coords }: DrawMarkerProps) => {
   if (!coords) return null;

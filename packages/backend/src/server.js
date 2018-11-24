@@ -5,11 +5,11 @@ import axios from 'axios';
 import express from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
-import assets from 'tbd-frontend-name';
+import assets from 'toms-shuttles-frontend';
+import frontendRoutes from 'toms-shuttles-frontend/src/routes';
 import chalk from 'chalk';
 import path from 'path';
 import HttpStatus from 'http-status-codes';
-import frontendRoutes from 'tbd-frontend-name/src/routes';
 import type { Connection } from 'typeorm';
 import routes from '../routes';
 import { User } from './entity/User';
@@ -47,15 +47,8 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
     resave: false,
     saveUninitialized: false,
     secret,
-    cookie: {
-      maxAge: 600,
-    },
   };
 
-  if (process.env.NODE_ENV === 'production') {
-    app.set('trust proxy', 1);
-    sess.cookie.secure = true;
-  }
   app.use(session(sess));
 
   // middleware for session messages
@@ -344,7 +337,7 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
     }
 
     Object.entries(req.body).forEach(([key, value]) => {
-      if (driver.hasOwnProperty(key)) {
+      if (driver[key] !== undefined) {
         driver[key] = value;
       } else {
         console.warn(

@@ -1,53 +1,13 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { Typography, Button } from '@material-ui/core';
-import { geolocated } from 'react-geolocated';
+import { geolocated, geoPropTypes } from 'react-geolocated';
 import axios from 'axios';
+import backendRoutes from 'toms-shuttles-backend/routes';
 import RequestForm from './RequestForm';
 import GMapsControl from './GMapsControl';
 import CostEstimater from './CostEstimater';
 import AlertDialog from './AlertDialog';
-
-declare var backendRoutes: any;
-
-type CoordinatesLong = {
-  latitude: number,
-  longitude: number,
-};
-
-type Coordinates = {
-  lat: number,
-  lng: number,
-};
-
-type Data = {
-  to: Coordinates,
-  from: Coordinates,
-  route?: boolean,
-  assignedDriver?: ?string,
-  driverArriving?: boolean,
-  disableRequestButtons?: boolean,
-};
-
-type Props = {
-  showMap: boolean,
-  doRequestToAirport: Function,
-  doRequestFromAirport: Function,
-  data: Data,
-  route: ?boolean,
-  routeSet: Function,
-  duration: ?{
-    text: string,
-  },
-  distance: ?{
-    value: number,
-  },
-  requestRide: Function,
-  assignedDriver: ?{ username: string },
-  driverArriving: ?boolean,
-  coords: ?Object,
-  disableRequestButtons: ?boolean,
-};
 
 function LiveGMapView({
   showMap,
@@ -63,9 +23,7 @@ function LiveGMapView({
   driverArriving,
   coords,
   disableRequestButtons,
-}: Props) {
-  if (!assignedDriver || !duration || !distance)
-    throw new Error('Incorrect prop set.');
+}: props) {
   if (showMap) {
     return (
       <Fragment>
@@ -73,34 +31,31 @@ function LiveGMapView({
           sendRequestToAirport={doRequestToAirport}
           sendRequestFromAirport={doRequestFromAirport}
           haveUserPosition={coords !== undefined}
-          disableRequestButtons={disableRequestButtons || false}
+          disableRequestButtons={disableRequestButtons}
         />
-        {duration &&
-          distance && (
-            <Fragment>
-              <Typography variant="h4">
-                {`Estimated duration: ${duration.text}`}
-              </Typography>
-              <CostEstimater meters={distance.value} />
-              <Button
-                variant="contained"
-                onClick={requestRide}
-                disabled={disableRequestButtons}
-              >
-                Make request
-              </Button>
-              <div stype={{ height: '10px' }} />
+        {duration && distance ? (
+          <Fragment>
+            <Typography variant="h4">
+              {`Estimated duration: ${duration.text}`}
+            </Typography>
+            <CostEstimater meters={distance.value} />
+            <Button
+              variant="contained"
+              onClick={requestRide}
+              disabled={disableRequestButtons}
+            >
+              Make request
+            </Button>
+            <div stype={{ height: '10px' }} />
 
-              {assignedDriver && (
-                <Typography variant="h4">
-                  {`You have been assigned to driver ${
-                    assignedDriver.username
-                  }`}
-                </Typography>
-              )}
-              <br />
-            </Fragment>
-          )}
+            {!assignedDriver ? null : (
+              <Typography variant="h4">
+                {`You have been assigned to driver ${assignedDriver.username}`}
+              </Typography>
+            )}
+            <br />
+          </Fragment>
+        ) : null}
         <div style={{ height: '80vh', width: '100%' }}>
           <GMapsControl
             data={data}
@@ -120,7 +75,7 @@ function LiveGMapView({
 
 type RequestButtonProps = {
   showMap: boolean,
-  startRequest: Function,
+  startRequest: func,
 };
 
 function RequestButton({ showMap, startRequest }: RequestButtonProps) {
@@ -133,7 +88,8 @@ function RequestButton({ showMap, startRequest }: RequestButtonProps) {
     </Button>
   );
 }
-function airportToCoords(airport): Coordinates {
+
+function airportToCoords(airport) {
   if (airport === 'SFO') {
     return { lat: 37.6213, lng: -122.381 };
   }
@@ -143,35 +99,19 @@ function airportToCoords(airport): Coordinates {
   if (airport === 'SJC') {
     return { lat: 37.364, lng: -121.931 };
   }
-  return { lat: 0, lng: 0 };
+  return null;
 }
 
-type MapViewProps = {
+type Props = {
   showMap: boolean,
-  startRequest: Function,
-  coords: CoordinatesLong,
-  isGeolocationEnabled: boolean,
+  startRequest: func,
 };
 
-type MapViewState = {
-  data: Data,
-  duration: ?{ text: string },
-  distance: ?{ value: number },
-  status: string,
-  route?: boolean,
-  assignedDriver?: ?{ username: string },
-  driverArriving?: ?boolean,
-  disableRequestButtons?: ?boolean,
-  coords?: Coordinates,
-};
-
-class MapView extends Component<MapViewProps, MapViewState> {
-  props: MapViewProps;
-
-  state: MapViewState = {
+class MapView extends React.Component<Props> {
+  state = {
     data: {
-      to: { lat: 0, lng: 0 },
-      from: { lat: 0, lng: 0 },
+      to: { lat: Number, long: Number },
+      from: { lat: Number, long: Number },
       route: false,
       assignedDriver: null,
       driverArriving: false,
@@ -199,7 +139,7 @@ class MapView extends Component<MapViewProps, MapViewState> {
     const fromCoords =
       lat === null
         ? { lat: coords.latitude, lng: coords.longitude }
-        : { lat: 0, lng: lng || 0 };
+        : { lat, lng };
     const toCoords = airportToCoords(airport);
     this.setState({ data: { to: toCoords, from: fromCoords }, route: true });
   };
@@ -219,7 +159,7 @@ class MapView extends Component<MapViewProps, MapViewState> {
     const { data } = this.state;
     console.log('requesting ride now');
     console.log(data);
-    let response: any;
+    let response;
     try {
       response = await axios.get(
         `${backendRoutes.CLOSEST_DRIVER}?lat=${data.from.lat}&lng=${
@@ -273,10 +213,12 @@ class MapView extends Component<MapViewProps, MapViewState> {
           doRequestFromAirport={this.doRequestFromAirport}
           data={data}
           route={route}
-          routeSet={this.routeSet}
+          routeSet={(_duration, _distance) =>
+            this.routeSet(_duration, _distance)
+          }
           duration={duration}
           distance={distance}
-          requestRide={this.requestRide}
+          requestRide={() => this.requestRide()}
           driverArriving={driverArriving}
           assignedDriver={assignedDriver}
           coords={coords}
@@ -286,6 +228,8 @@ class MapView extends Component<MapViewProps, MapViewState> {
     );
   }
 }
+
+MapView.propTypes = { ...MapView.propTypes, ...geoPropTypes };
 
 export default geolocated({
   positionOptions: {

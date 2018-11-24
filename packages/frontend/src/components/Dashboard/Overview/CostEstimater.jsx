@@ -7,7 +7,11 @@ const METERS_TO_MILES = 1609.344;
 const START_COST = 15;
 const FIRST_N_MILES_FREE = 2;
 
-export function estimateCost(meters: number): number {
+type Props = {
+  meters: Number,
+};
+
+export function estimateCost(meters): Number {
   return (
     START_COST +
     (COST_PER_MILE *
@@ -15,10 +19,6 @@ export function estimateCost(meters: number): number {
       METERS_TO_MILES
   );
 }
-
-type Props = {
-  meters: number,
-};
 
 const CostEstimater = ({ meters }: Props) => (
   <Typography variant="h5">

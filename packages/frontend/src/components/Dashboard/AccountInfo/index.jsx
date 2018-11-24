@@ -3,33 +3,71 @@ import React, { Fragment, Component } from 'react';
 import axios from 'axios';
 import { Typography, Paper } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import backendRoutes from 'toms-shuttles-backend/routes';
 import routes from '../../../routes';
 
-declare var backendRoutes: any;
-
-type Props = {};
-
-type State = {
-  name: string,
-  username: string,
+type ClientAccountProps = {
   creditInfo: string,
-  error: boolean,
-  loaded: boolean,
-  accountType?: 'Client' | 'Driver',
-  seatNumber: number,
-  active?: number,
 };
 
-export default class AccountInfoView extends Component<Props, State> {
-  props: Props;
+const ClientAccount = ({ creditInfo }: ClientAccountProps) => (
+  <Fragment>
+    <Typography variant="h5" className="accountOverviewItem">
+      {`Card number: ${creditInfo}`}
+    </Typography>
+    <Link to={routes.CREDITCARD_ADD} className="accountOverviewItem">
+      Enter Credit card info
+    </Link>
+  </Fragment>
+);
 
-  state: State = {
+type DriverAccountProps = {
+  active: ?number,
+  seatNumber: ?number,
+};
+
+const DriverAccount = ({ active, seatNumber }: DriverAccountProps) => {
+  if (active === 0) {
+    return (
+      <Fragment>
+        <Typography variant="h5" className="accountOverviewItem">
+          {`Seat count: ${seatNumber}`}
+        </Typography>
+        <Link to={routes.CARSEATS_SET} className="accountOverviewItem">
+          Change seat count
+        </Link>
+      </Fragment>
+    );
+  }
+  if (active === 1) {
+    return (
+      <Fragment>
+        <Typography variant="h5" className="accountOverviewItem">
+          Become inactive to change your seat count
+        </Typography>
+      </Fragment>
+    );
+  }
+  return null;
+};
+
+const AccountType = ({ accountType, ...otherProps }) => {
+  if (accountType === 'Client') {
+    return <ClientAccount {...otherProps} />;
+  }
+  if (accountType === 'Driver') {
+    return <DriverAccount {...otherProps} />;
+  }
+  return null;
+};
+
+export default class AccountInfoView extends Component {
+  state = {
     name: '',
     username: '',
     creditInfo: '',
     error: false,
     loaded: false,
-    seatNumber: 0,
   };
 
   async componentDidMount() {
@@ -37,7 +75,7 @@ export default class AccountInfoView extends Component<Props, State> {
   }
 
   async populateState() {
-    let response: any;
+    let response;
     try {
       response = await axios.get(backendRoutes.USER);
     } catch (error) {
@@ -97,35 +135,7 @@ export default class AccountInfoView extends Component<Props, State> {
           <Typography variant="h5" className="accountOverviewItem">
             {`Username: ${username}`}
           </Typography>
-          {accountType === 'Client' && (
-            <Fragment>
-              <Typography variant="h5" className="accountOverviewItem">
-                {`Card number: ${creditInfo}`}
-              </Typography>
-              <Link to={routes.CREDITCARD_ADD} className="accountOverviewItem">
-                Enter Credit card info
-              </Link>
-            </Fragment>
-          )}
-          {accountType === 'Driver' &&
-            active === 0 && (
-              <Fragment>
-                <Typography variant="h5" className="accountOverviewItem">
-                  {`Seat count: ${seatNumber}`}
-                </Typography>
-                <Link to={routes.CARSEATS_SET} className="accountOverviewItem">
-                  Change seat count
-                </Link>
-              </Fragment>
-            )}
-          {accountType === 'Driver' &&
-            active === 1 && (
-              <Fragment>
-                <Typography variant="h5" className="accountOverviewItem">
-                  Become inactive to change your seat count
-                </Typography>
-              </Fragment>
-            )}
+          <AccountType {...{ accountType, active, creditInfo, seatNumber }} />
         </div>
       </Fragment>
     );

@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreateLoadable handles errors 1`] = `
+<div>
+  Loading...
+</div>
+`;
+
+exports[`CreateLoadable handles errors 2`] = `
+<div>
+  Error!
+  <button
+    className="MuiButtonBase-root-27 MuiButton-root-1 MuiButton-text-3 MuiButton-flat-6"
+    disabled={false}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    tabIndex="0"
+    type="button"
+  >
+    <span
+      className="MuiButton-label-2"
+    >
+      Retry
+    </span>
+    <span
+      className="MuiTouchRipple-root-30"
+    />
+  </button>
+</div>
+`;
+
+exports[`CreateLoadable works with a simple component 1`] = `
+<div>
+  Loading...
+</div>
+`;
+
+exports[`CreateLoadable works with a simple component 2`] = `
+<div>
+  Foo
+</div>
+`;

@@ -1,9 +1,25 @@
-const JsonStripComments = require('strip-json-comments');
-const { readFileSync } = require('fs');
-const path = require('path');
+module.exports = {
+  LOGIN: '/login',
+  LOGOUT: '/logout', // GET
 
-const pathToPathsJson = path.join(__dirname, './paths.json');
+  // authenticate
+  AUTH: '/api/authenticate', // POST
+  SIGNUP: '/api/signup', // POST
+  LOGGED_IN: '/api/logged-in', // GET
 
-module.exports = JSON.parse(
-  JsonStripComments(String(readFileSync(pathToPathsJson)))
-);
+  // users
+  USER: '/api/users', // GET
+  MY_DRIVER: '/api/my-driver',
+
+  // drivers
+  DRIVER: '/drivers/:username', // GET
+  DRIVERS: '/drivers', // POST, PUT
+  ALL_ACTIVE_DRIVERS: '/drivers-all', // GET
+
+  // location api
+  CLOSEST_DRIVER: '/api/nearest-driver', // GET
+  ARRIVED: '/api/arrival', // GET
+
+  // credit card api
+  ADDCREDITCARD: '/api/credit-card', // POST
+};

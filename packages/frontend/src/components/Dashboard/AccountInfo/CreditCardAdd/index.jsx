@@ -3,15 +3,12 @@ import React, { Component, Fragment } from 'react';
 import { Button, CssBaseline, Paper, Typography } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import backendRoutes from 'toms-shuttles-backend/routes';
 import ValueForm from '../ValueForm';
 import routes from '../../../../routes';
 import AlertDialog from '../../Overview/AlertDialog';
 
-declare var backendRoutes: any;
-
-type Card = string;
-
-function cardOk(card: Card) {
+function cardOk(card: string) {
   const len = card.length;
   if (card.startsWith('3'))
     // American Express
@@ -22,24 +19,14 @@ function cardOk(card: Card) {
   return false;
 }
 
-type Props = {};
-
-type State = {
-  redirect: boolean,
-  status: string,
-  showOkDialog: boolean,
-};
-
-export default class CreditCardAdd extends Component<Props, State> {
-  props: Props;
-
-  state: State = {
+export default class CreditCardAdd extends Component<Props> {
+  state = {
     redirect: false,
     status: '',
     showOkDialog: false,
   };
 
-  sendToBackend = async (card: Card) => {
+  sendToBackend = async card => {
     console.log('sending card to backend', card);
     try {
       await axios.post(backendRoutes.ADDCREDITCARD, { card });
@@ -52,7 +39,7 @@ export default class CreditCardAdd extends Component<Props, State> {
     }
   };
 
-  onSubmit = (event: any) => {
+  onSubmit = event => {
     event.preventDefault();
     const { elements: elem } = event.target;
     const { value: card } = elem.card;

@@ -2,12 +2,11 @@
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
+import backendRoutes from 'toms-shuttles-backend/routes';
 import HttpStatus from 'http-status-codes';
 import Prompt from './Prompt';
 import CreateAccount from '../CreateAccount';
 import routes from '../../routes';
-
-declare var backendRoutes: any;
 
 const signinStatusEnums = {
   ok: 0,
@@ -19,9 +18,7 @@ const signinStatusEnums = {
   default: 6,
 };
 
-type signinStatusEnumType = ?(0 | 1 | 2 | 3 | 4 | 5 | 6);
-
-function signinStatusToString(e: signinStatusEnumType): ?string {
+function signinStatusToString(e: signinStatusEnums): string {
   switch (e) {
     case signinStatusEnums.ok:
       return 'Logging in...';
@@ -45,9 +42,7 @@ const signupStatusEnums = {
   default: 7,
 };
 
-type signupStatusEnumType = ?(0 | 1 | 2 | 3 | 4 | 5 | 6 | 7);
-
-function signupStatusToString(e: signupStatusEnumType): ?string {
+function signupStatusToString(e: signupStatusEnums): string {
   switch (e) {
     case signupStatusEnums.ok:
       return 'Success, redirecting to login page...';
@@ -68,7 +63,7 @@ function signupStatusToString(e: signupStatusEnumType): ?string {
   }
 }
 
-function httpToSignupStatus(code: HttpStatus): signupStatusEnumType {
+function httpToSignupStatus(code: HttpStatus): signupStatusEnums {
   switch (code) {
     case HttpStatus.OK:
       return signupStatusEnums.ok;
@@ -83,20 +78,13 @@ function httpToSignupStatus(code: HttpStatus): signupStatusEnumType {
   }
 }
 
-type Props = {};
-
-type State = {
-  signinStatus: ?signinStatusEnumType,
-  signupStatus: ?signupStatusEnumType,
-};
-
-export default class SignInController extends Component<Props, State> {
+export default class SignInController extends Component {
   state = {
     signinStatus: signinStatusEnums.default,
     signupStatus: signupStatusEnums.default,
   };
 
-  doSubmit = async (username: string, password: string) => {
+  doSubmit = async (username, password) => {
     let response;
     try {
       response = await axios.post(backendRoutes.AUTH, {
@@ -113,11 +101,11 @@ export default class SignInController extends Component<Props, State> {
   };
 
   sendSignupRequest = async (
-    username: string,
-    firstName: string,
-    lastName: string,
-    password: string,
-    accountType: string
+    username,
+    firstName,
+    lastName,
+    password,
+    accountType
   ) => {
     console.log('sending request');
     let response;
@@ -136,14 +124,7 @@ export default class SignInController extends Component<Props, State> {
     this.setState({ signupStatus: httpToSignupStatus(response.status) });
   };
 
-  doSignup = (
-    username: string,
-    firstName: string,
-    lastName: string,
-    pass1: string,
-    pass2: string,
-    accountType: string
-  ) => {
+  doSignup = (username, firstName, lastName, pass1, pass2, accountType) => {
     if (pass1.localeCompare(pass2) !== 0) {
       this.setState({ signupStatus: signupStatusEnums.password_mismatch });
     } else {

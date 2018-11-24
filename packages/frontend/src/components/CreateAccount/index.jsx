@@ -23,7 +23,7 @@ type Props = {
 
 type State = {
   accountType: string,
-  hideAccountTypeLabel?: boolean,
+  hideAccountTypeLabel: ?boolean,
 };
 
 export default class CreateAccount extends Component<Props, State> {
@@ -33,7 +33,7 @@ export default class CreateAccount extends Component<Props, State> {
     accountType: '', // cannot be null as value of a Select cannot be null
   };
 
-  onSubmit = (event: any) => {
+  onSubmit = event => {
     event.preventDefault();
     const { handleSignup } = this.props;
     const { accountType } = this.state;

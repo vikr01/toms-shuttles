@@ -3,30 +3,22 @@ import React, { Component, Fragment } from 'react';
 import { Button, CssBaseline, Paper, Typography } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import backendRoutes from 'toms-shuttles-backend/routes';
 import ValueForm from '../ValueForm';
 import DisplayStatus from '../../../DisplayStatus';
 import routes from '../../../../routes';
 
-declare var backendRoutes: any;
-
-function countOk(count: number) {
+function countOk(count: int) {
   return count > 0 && count <= 10;
 }
 
-type Props = {};
-
-type State = {
-  redirect: boolean,
-  status: string,
-};
-
-export default class CarSeatSet extends Component<Props, State> {
-  state: State = {
+export default class CarSeatSet extends Component<Props> {
+  state = {
     redirect: false,
     status: '',
   };
 
-  sendToBackend = async (count: number) => {
+  sendToBackend = async count => {
     console.log('sending count to backend', count);
     try {
       await axios.put(backendRoutes.DRIVERS, { numOfSeats: count });
@@ -40,7 +32,7 @@ export default class CarSeatSet extends Component<Props, State> {
     }
   };
 
-  onSubmit = (event: any) => {
+  onSubmit = event => {
     event.preventDefault();
     const { elements: elem } = event.target;
     const { value: count } = elem.count;

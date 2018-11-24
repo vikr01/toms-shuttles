@@ -1,24 +1,17 @@
 // @flow
 import React, { Fragment } from 'react';
 import { Paper } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+
 import MapView from './MapView';
 import DriverMapView from './Driver/DriverMapView';
 
 type OverviewViewProps = {
-  accountType: ?('Client' | 'Driver'),
+  accountType: string,
 };
 
-type OverviewViewState = {
-  showMap: boolean,
-};
-
-class OverviewView extends React.Component<
-  OverviewViewProps,
-  OverviewViewState
-> {
-  props: OverviewViewProps;
-
-  state: OverviewViewState = { showMap: true };
+class OverviewView extends React.Component<OverviewViewProps> {
+  state = { showMap: true };
 
   doRequest() {
     this.setState({ showMap: true });
@@ -35,6 +28,14 @@ class OverviewView extends React.Component<
             accountType={accountType}
             doRequest={this.doRequest}
           />
+          <a
+            href="https://github.com/vikr01/toms-shuttles"
+            rel="noopener noreferrer"
+            target="_blank"
+            className="textCenter"
+          >
+            View source on Github
+          </a>
         </Paper>
       </Fragment>
     );
@@ -42,9 +43,9 @@ class OverviewView extends React.Component<
 }
 
 type DisplayDashboardContentProps = {
-  accountType: ?('Client' | 'Driver'),
+  accountType: string,
   showMap: boolean,
-  doRequest: Function,
+  doRequest: func,
 };
 
 const DisplayDashboardContent = ({

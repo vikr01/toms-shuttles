@@ -7,7 +7,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import SvgIcon from '@material-ui/core/SvgIcon';
 
 type Props = {
-  onClick: Function,
+  onClick: func,
 };
 
 const ListItems = ({ onClick }: Props) => (

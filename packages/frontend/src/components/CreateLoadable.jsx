@@ -1,30 +1,43 @@
 // @flow
 import React from 'react';
 import Loadable from 'react-loadable';
-import type { Node, ComponentType } from 'react';
+import type { Node } from 'react';
+import { Button } from '@material-ui/core';
 
-export type EsModuleType = {
-  default: ComponentType<*>,
+type LoadingProps = {
+  error: boolean,
+  retry: Function,
+};
+
+const defaultLoading = ({ error, retry }: LoadingProps): Node => {
+  if (error) {
+    return (
+      <div>
+        Error!
+        <Button onClick={retry}>Retry</Button>
+      </div>
+    );
+  }
+  return <div>Loading...</div>;
 };
 
 type Props = {
-  loader: () => Promise<EsModuleType>,
-  children?: ComponentType<*>,
+  loader: Node,
+  children: ?Node,
 };
 
-const defaultLoading = (): Node => <div>Loading...</div>;
-
-const CreateLoadable = ({ loader, children }: Props): Node => {
+const CreateLoadable = ({
+  loader,
+  children: loading = defaultLoading,
+  ...otherProps
+}: Props): Node => {
   const LoadableComponent = Loadable({
     loader,
-    loading: children,
+    loading,
+    ...otherProps,
   });
 
   return <LoadableComponent />;
-};
-
-CreateLoadable.defaultProps = {
-  children: defaultLoading,
 };
 
 export default CreateLoadable;

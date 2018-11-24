@@ -16,15 +16,8 @@ type SimpleSnackbarProps = {
   open: boolean,
 };
 
-type SimpleSnackbarState = {
-  open: boolean,
-};
-
-class SimpleSnackbar extends Component<
-  SimpleSnackbarProps,
-  SimpleSnackbarState
-> {
-  state: SimpleSnackbarState = {
+class SimpleSnackbar extends Component<SimpleSnackbarProps> {
+  state = {
     open: false,
   };
 

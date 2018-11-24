@@ -9,8 +9,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
+import backendRoutes from 'toms-shuttles-backend/routes';
 import { Redirect } from 'react-router-dom';
-
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
@@ -21,8 +21,6 @@ import ListItems from './ListItems';
 import AccountInfoView from './AccountInfo';
 import OverviewView from './Overview';
 import routes from '../../routes';
-
-declare var backendRoutes: any;
 
 const drawerWidth = 240;
 
@@ -116,18 +114,10 @@ type Props = {
   classes: Object,
 };
 
-type State = {
-  open: boolean,
-  redirectToLogin: boolean,
-  checkedForLogin: boolean,
-  accountType: ?('Client' | 'Driver'),
-  page: string,
-};
-
-class Dashboard extends Component<Props, State> {
+class Dashboard extends Component<Props> {
   props: Props;
 
-  state: State = {
+  state = {
     open: true,
     redirectToLogin: false,
     checkedForLogin: false,
@@ -246,7 +236,7 @@ class Dashboard extends Component<Props, State> {
 
 type MainContentProps = {
   page: string,
-  accountType: ?('Client' | 'Driver'),
+  accountType: string,
 };
 
 const ShowMainContent = ({ page, accountType }: MainContentProps) => {

@@ -1,9 +1,14 @@
 {
-  "name": "tbd-frontend-name",
+  "private": true,
+  "name": "toms-shuttles-frontend",
   "license": "MIT",
   "author": "Vikram Rangaraj <vik120@icloud.com> (https://github.com/vikr01)",
-  "repository": "https://github.com/vikr01/tbd-project-name/tree/master/packages/frontend",
-  "version": "0.2.0",
+  "contributors": [
+    "Suraj Setty <surajsetty97@gmail.com> (https://github.com/surajsetty97)",
+    "Thomas Pedersen <thoepedersen@gmail.com> (https://github.com/toep)"
+  ],
+  "repository": "https://github.com/vikr01/toms-shuttles/tree/master/packages/frontend",
+  "version": "1.0.0-alpha.0",
   "main": "lib/index.js",
   "scripts": {
     "prebuild": "yarn run clean",
@@ -19,14 +24,15 @@
     "@material-ui/lab": "^3.0.0-alpha.21",
     "axios": "^0.18.0",
     "babel-loader": "^8.0.4",
-    "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^1.0.1",
+    "delay": "^4.1.0",
     "eslint-loader": "^2.1.1",
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
+    "identity-obj-proxy": "^3.0.0",
     "prop-types": "^15.6.2",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
     "react-geolocated": "^2.4.0",
     "react-google-maps": "^9.4.5",
     "react-hot-loader": "^4.3.12",
@@ -35,8 +41,10 @@
     "recompose": "^0.30.0",
     "rimraf": "^2.6.2",
     "style-loader": "^0.23.1",
-    "tbd-backend-name": "*",
+    "supertest": "^3.3.0",
     "title-case": "^2.1.1",
+    "toms-shuttles-backend": "1.0.0-alpha.0",
+    "toms-shuttles-frontend": "1.0.0-alpha.0",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "url-loader": "^1.1.2",
     "webpack": "^4.24.0",
@@ -47,5 +55,5 @@
     "webpack-merge": "^4.1.4",
     "write-file-webpack-plugin": "^4.4.1"
   },
-  "productName": "TBD FRONTEND NAME"
+  "productName": "Toms Shuttle Service"
 }

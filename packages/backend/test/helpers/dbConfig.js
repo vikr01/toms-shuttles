@@ -1,4 +1,4 @@
-import { base as dbConfigBase } from '../../src/dbConfig';
+import { base as dbConfigBase } from 'toms-shuttles-backend/src/dbConfig';
 
 export default {
   ...dbConfigBase,
