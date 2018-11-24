@@ -10,6 +10,7 @@ import chalk from 'chalk';
 import path from 'path';
 import HttpStatus from 'http-status-codes';
 import frontendRoutes from 'tbd-frontend-name/src/routes';
+import type { Connection } from 'typeorm';
 import routes from '../routes';
 import { User } from './entity/User';
 import { Driver } from './entity/Driver';
@@ -18,9 +19,7 @@ import { Passenger } from './entity/Passenger';
 import type { HashFn } from './createHashFn';
 
 type params = {
-  connection: {
-    getRepository: Function,
-  },
+  connection: Connection,
   secret: string,
   apiKey: string,
   hashFn: HashFn,
