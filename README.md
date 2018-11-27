@@ -7,11 +7,11 @@
 
 <div align="center">
   <a href="https://reactjs.org" rel="noopener" target="_blank">
-    <img alt="React" height="60" 
+    <img alt="React" height="60"
       src="https://raw.githubusercontent.com/yarnpkg/assets/master/yarn-kitten-circle.png"/>
   </a>
   <a href="https://reactjs.org" rel="noopener" target="_blank">
-    <img alt="React" height="60" 
+    <img alt="React" height="60"
       src="https://avatars.githubusercontent.com/u/6412038"/>
   </a>
   <a href="https://material-ui.com/" rel="noopener" target="_blank">
@@ -19,18 +19,18 @@
   </a>
   <a href="http://typeorm.io/" rel="noopener" target="_blank">
     <img alt="TypeORM" height="60" src="https://raw.githubusercontent.com/typeorm/typeorm.github.io/master/image/logo/logo.png"/>
-  </a> 
+  </a>
   <a href="https://expressjs.com" rel="noopener" target="_blank">
-    <img alt="Express" height="60" 
+    <img alt="Express" height="60"
       src="https://avatars.githubusercontent.com/u/5658226"/>
   </a>
   <a href="https://developers.google.com/maps/" rel="noopener" target="_blank">
-    <img alt="Google Maps API" height="60" 
+    <img alt="Google Maps API" height="60"
       src="https://avatars.githubusercontent.com/u/3717923"/>
   </a>
   <a href="https://webpack.js.org" rel="noopener" target="_blank">
     <img alt="Webpack"  height="60" src="https://raw.githubusercontent.com/webpack/media/master/logo/icon.png"/>
-  </a> 
+  </a>
   <a href="https://jestjs.io" rel="noopener" target="_blank">
     <img height="60" src="https://jestjs.io/img/jest.png" alt="Jest"/>
   </a>
@@ -40,7 +40,7 @@
 
 <div align="center">
 
-[![version](https://img.shields.io/badge/version-1.0.0--alpha.0-blue.svg)](https://github.com/vikr01/toms-shuttles/releases)
+[![version](https://img.shields.io/badge/version-1.0.0--alpha.1-blue.svg)](https://github.com/vikr01/toms-shuttles/releases)
 [![Deployed with Heroku](https://img.shields.io/badge/deployed%20with-heroku-purple.svg?logo=heroku)](https://sjshuttle.herokuapp.com)
 [![Deploy previews by Netlify](https://img.shields.io/badge/deploy%20previews%20by-netlify-teal.svg?logo=netlify)](https://toms-shuttles.netlify.com)
 
