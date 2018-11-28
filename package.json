@@ -8,7 +8,7 @@
     "Thomas Pedersen <thoepedersen@gmail.com> (https://github.com/toep)"
   ],
   "repository": "https://github.com/vikr01/toms-shuttles.git",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "workspaces": [
     "packages/*"
   ],
@@ -72,7 +72,7 @@
     "lerna": "^3.4.3",
     "lint-staged": "^7.3.0",
     "ncp": "^2.0.0",
-    "npm-run-all": "^4.1.3",
+    "npm-run-all": "^4.1.5",
     "prettier": "^1.15.2",
     "prettier-package-json": "^2.0.1",
     "react-test-renderer": "^16.5.2",
