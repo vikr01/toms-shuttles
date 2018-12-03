@@ -13,7 +13,9 @@ type ClientAccountProps = {
 const ClientAccount = ({ creditInfo }: ClientAccountProps) => (
   <Fragment>
     <Typography variant="h5" className="accountOverviewItem">
-      {`Card number: ${creditInfo}`}
+      {creditInfo
+        ? `Card number: ${creditInfo}`
+        : "You don't have a credit card on this account. Please enter it below"}
     </Typography>
     <Link to={routes.CREDITCARD_ADD} className="accountOverviewItem">
       Enter Credit card info
