@@ -23,7 +23,7 @@
   margin-top: 88px;
   margin-bottom: 24px;
   margin-left: auto;
-  width: 80vw;
+  width: 95vw;
   margin-right: auto;
   padding: 16px 24px 24px;
 }
@@ -82,4 +82,13 @@
   align-items: 'center';
   justify-content: 'flex-start';
   margin: 4px 0px;
+}
+.row {
+  display: table;
+  width: 100%; /*Optional*/
+  table-layout: fixed; /*Optional*/
+  border-spacing: 10px; /*Optional*/
+}
+.col {
+  display: table-cell;
 }

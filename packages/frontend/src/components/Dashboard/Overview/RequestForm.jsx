@@ -28,7 +28,12 @@ export default class RequestForm extends Component<Props> {
     } = this.props;
     return (
       <div className="requestFormToggleLocation">
-        <ToggleButtonGroup value={value} exclusive onChange={this.handleChange}>
+        <ToggleButtonGroup
+          style={{ width: 'fit-content' }}
+          value={value}
+          exclusive
+          onChange={this.handleChange}
+        >
           <ToggleButton value={1}>To Airport</ToggleButton>
           <ToggleButton value={2}>To Home</ToggleButton>
         </ToggleButtonGroup>

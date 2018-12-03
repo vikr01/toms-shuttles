@@ -63,10 +63,11 @@ export default class LocationPicker extends Component<Props> {
           <Fragment>
             <br />
             <Typography variant="h5">
-              Select airport you wish to go to
+              Select airport you wish to go to:
             </Typography>
             <RadioGroup
               value={value}
+              row
               onChange={this.handleChange}
               disabled={disableRequestButtons}
             >
@@ -89,6 +90,7 @@ export default class LocationPicker extends Component<Props> {
                 disabled={disableRequestButtons}
               />
             </RadioGroup>
+
             <DecideLocation
               useLoc={useLoc}
               haveUserPosition={haveUserPosition}
@@ -115,9 +117,9 @@ export default class LocationPicker extends Component<Props> {
           <Fragment>
             <br />
             <Typography variant="h5">
-              Select airport you are located at
+              Select airport you are located at:
             </Typography>
-            <RadioGroup value={value} onChange={this.handleChange}>
+            <RadioGroup row value={value} onChange={this.handleChange}>
               <FormControlLabel
                 value="SFO"
                 control={<Radio />}
@@ -185,7 +187,9 @@ const DecideLocation = ({
             >
               Enter location
             </Button>
-            <Typography variant="h5">Currently using your location</Typography>
+            <Typography variant="h5">
+              {'Using your current location 🔵'}
+            </Typography>
           </Fragment>
         )}
         {useLoc ? null : (
@@ -209,8 +213,8 @@ const DecideLocation = ({
     {haveUserPosition ? null : (
       <Fragment>
         <Typography variant="h5">
-          Enter your current location (Your browser is unable to find your
-          location)
+          Your browser is unable to find your location. Please enter your
+          location:
         </Typography>
         <MyStandaloneSearchBox
           onSet={(lat, lng) => handleLocationEnteredChange(lat, lng)}
