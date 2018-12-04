@@ -21,7 +21,7 @@ type ClientAccountProps = {
 
 const obf = (str: string) => {
   const len = str.length - 4;
-  return '*'.repeat(len) + str.substr(len);
+  return str ? '*'.repeat(len) + str.substr(len) : null;
 };
 
 const ClientAccount = ({ creditInfo }: ClientAccountProps) => (
