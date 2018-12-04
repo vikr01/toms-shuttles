@@ -93,7 +93,7 @@ export default class SignInController extends Component {
       });
     } catch (error) {
       console.error(error);
-      this.setState({ signinStatus: signinStatusEnums.connection_error }); // Let SignIn know the account was not successful in logging in
+      this.setState({ signinStatus: error.response }); // Let SignIn know the account was not successful in logging in
       return;
     }
     console.log(response);
