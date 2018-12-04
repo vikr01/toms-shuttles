@@ -58,7 +58,25 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
     res.redirect(path.join('/#/', frontendRoutes.LOGIN));
   });
 
-  app.get(routes.LOGOUT, (req, res) => {
+  app.get(routes.LOGOUT, async (req, res) => {
+    const { username } = req.session;
+
+    let user;
+    try {
+      user = await connection.getRepository(User).findOne({ username });
+    } catch (err) {
+      res.status(HttpStatus.IM_A_TEAPOT).send(err);
+    }
+    if (user) {
+      user.loggedIn = 0;
+      console.log(user);
+      try {
+        await connection.getRepository(User).save(user);
+      } catch (err) {
+        res.status(HttpStatus.IM_A_TEAPOT).send(err);
+      }
+    }
+
     try {
       req.session.destroy(error => {
         if (error) {
@@ -110,6 +128,7 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
       firstName,
       lastName,
       accountType,
+      loggedIn: 0,
       creditCard: null,
       driverInfo: null,
     });
@@ -176,9 +195,19 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
       .findOne({ username, password: signature });
     if (!user) {
       return res
-        .status(HttpStatus.NOT_FOUND)
+        .status(HttpStatus.BAD_REQUEST)
         .send('Invalid username and/or password provided.');
     }
+
+    if (user.loggedIn === 1) {
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .send('User is already logged in');
+    }
+
+    user.loggedIn = 1;
+
+    await connection.getRepository(User).save(user);
 
     // create a session for user on auth
     req.session.regenerate(err => {});

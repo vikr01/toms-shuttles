@@ -29,6 +29,9 @@ export class User {
   @Column('varchar')
   accountType = '';
 
+  @Column('tinyint')
+  loggedIn = 0;
+
   @OneToOne(type => CreditCard)
   @JoinColumn()
   creditCard = CreditCard;
