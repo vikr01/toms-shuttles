@@ -8,29 +8,6 @@ import Prompt from './Prompt';
 import CreateAccount from '../CreateAccount';
 import routes from '../../routes';
 
-const signinStatusEnums = {
-  ok: 0,
-  connection_error: 1,
-  invalid_credentials: 2,
-  server_error: 3,
-  error: 4,
-  unknown: 5,
-  default: 6,
-};
-
-function signinStatusToString(e: signinStatusEnums): string {
-  switch (e) {
-    case signinStatusEnums.ok:
-      return 'Logging in...';
-    case signinStatusEnums.connection_error:
-      return 'Unable to connect to server.';
-    case signinStatusEnums.invalid_credentials:
-      return 'Invaild username or password.';
-    default:
-      return null;
-  }
-}
-
 const signupStatusEnums = {
   ok: 0,
   connection_error: 1,
@@ -80,7 +57,7 @@ function httpToSignupStatus(code: HttpStatus): signupStatusEnums {
 
 export default class SignInController extends Component {
   state = {
-    signinStatus: signinStatusEnums.default,
+    signinStatus: '',
     signupStatus: signupStatusEnums.default,
   };
 
@@ -92,12 +69,12 @@ export default class SignInController extends Component {
         password,
       });
     } catch (error) {
-      console.error(error);
-      this.setState({ signinStatus: signinStatusEnums.connection_error }); // Let SignIn know the account was not successful in logging in
+      console.error(error.response.data);
+      this.setState({ signinStatus: error.response.data }); // Let SignIn know the account was not successful in logging in
       return;
     }
     console.log(response);
-    this.setState({ signinStatus: signinStatusEnums.ok });
+    this.setState({ signinStatus: 'OK' });
   };
 
   sendSignupRequest = async (
@@ -140,13 +117,13 @@ export default class SignInController extends Component {
           exact
           path={routes.HOME}
           render={props =>
-            signinStatus === signinStatusEnums.ok ? (
+            signinStatus === 'OK' ? (
               <Redirect push to={routes.DASHBOARD} />
             ) : (
               <Prompt
                 {...props}
                 handleSubmit={this.doSubmit}
-                status={signinStatusToString(signinStatus)}
+                status={signinStatus}
               />
             )
           }
