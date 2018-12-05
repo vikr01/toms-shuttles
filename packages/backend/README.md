@@ -77,6 +77,42 @@ SYNCHRONIZE=true
 yarn cross-env SYNCHRONIZE=true <command>
 ```
 
+For example, to run the dev server:
+
+```bash
+yarn cross-env SYNCHRONIZE=true yarn dev
+```
+
+### Hashing
+
+Passwords need to be hashed before being stored to the database. The project uses [the `createHmac` function](https://nodejs.org/api/crypto.html#crypto_crypto_createhmac_algorithm_key_options) provided by [the built-in `crypto` module](https://nodejs.org/api/crypto.html).
+
+You'll need the following:
+
+- An algorithm for hashing the passwords. Some examples are `'sha256'`, `'sha512'`, and `'md5'` but you can [find more with OpenSSL](https://en.wikipedia.org/wiki/OpenSSL#Algorithms).
+- A unique key for hashing. This can be whatever you want (i.e. `'foobar'`). **Warning**: This key should be kept secure to prevent user accounts from being broken into.
+- A [digestion type](https://nodejs.org/api/buffer.html#buffer_buffers_and_character_encodings). This gets the result of the hash in a certain chracter encoding. Some examples are `'utf8'`, `'base64'`, and `'binary'`. See [the API](https://nodejs.org/api/crypto.html#crypto_hash_digest_encoding) for more details.
+
+Once you have those, you'll need to set their corresponding environment variables:
+
+```bash
+# .env file
+HASH_ALGO=sha256 # the algorithm for hashing passwords
+HASH_KEY=foobar # the unique key for hashing
+DIGESTION_TYPE=utf8 # the digestion type
+```
+
+### Session Secret
+
+Like with any other web application, a session secret is needed. This can be any key you want it to be, but should be kept secure. (i.e. `'foobarsecret'`)
+
+You'll need to set the `SESSION_SECRET` environment variable as well:
+
+```bash
+# .env file
+SESSION_SECRET=foobarsecret
+```
+
 ### Google Maps API Usage
 
 [You'll need an API key for Google Maps](https://developers.google.com/maps/documentation/javascript/get-api-key). Set the API key as an environment variable `API_KEY`:
@@ -85,6 +121,27 @@ yarn cross-env SYNCHRONIZE=true <command>
 # .env file
 API_KEY=<my-api-key>
 ```
+
+## Environment Variables
+
+There are a number of **required** environment variables in this project. If you don't have one of them, the application is likely to crash.
+
+All of the environment variables you should have set are:
+
+- `'PORT'`
+- `'DB_DRIVER'`
+- `'DB_HOST'`
+- `'DB_USERNAME'`
+- `'DB_PASSWORD'`
+- `'DB_DATABASE'`
+- `'DB_TYPE'`
+- `'HASH_ALGO'`
+- `'HASH_KEY'`
+- `'DIGESTION_TYPE'`
+- `'SESSION_SECRET'`
+- `'API_KEY'`
+
+If you're missing any of these, please double check the instructions in [_Getting Started_](#getting-started).
 
 ## Run in Development Mode
 
