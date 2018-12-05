@@ -3,7 +3,7 @@ import { HotModuleReplacementPlugin } from 'webpack';
 import DashboardPlugin from 'webpack-dashboard/plugin';
 import merge from 'webpack-merge';
 import WriteFilePlugin from 'write-file-webpack-plugin';
-import { port as backendPort } from 'toms-shuttles-backend/env';
+import { port as backendPort } from 'toms-shuttles-backend/lib/env';
 import chalk from 'chalk';
 import webpackDev from './webpack.config.dev.babel';
 import outputDir from '../lib';

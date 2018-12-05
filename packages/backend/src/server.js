@@ -1,5 +1,4 @@
 // @flow
-
 import 'pretty-error/start';
 import axios from 'axios';
 import express from 'express';
@@ -10,11 +9,13 @@ import frontendRoutes from 'toms-shuttles-frontend/src/routes';
 import chalk from 'chalk';
 import path from 'path';
 import HttpStatus from 'http-status-codes';
-import routes from '../routes';
-import { User } from './entity/User';
-import { Driver } from './entity/Driver';
-import { CreditCard } from './entity/CreditCard';
-import { Passenger } from './entity/Passenger';
+import routes from '../lib/routes';
+import ioEvents from '../lib/io-events';
+import User from './entity/User';
+import Driver from './entity/Driver';
+import CreditCard from './entity/CreditCard';
+import Passenger from './entity/Passenger';
+import { logout } from './helpers';
 
 type params = {
   connection: {
@@ -26,8 +27,26 @@ type params = {
 };
 
 // this is where the app lifts
-export default ({ connection, secret, apiKey, hashFn }: params) => {
+export default ({ connection, secret, apiKey, hashFn, io }: params) => {
   const app = express();
+
+  io.on('connection', socket => {
+    socket.on(ioEvents.LOGGED_IN, ({ username }) => {
+      socket.username = username;
+    });
+
+    socket.on(ioEvents.DISCONNECT, () => {
+      const { username } = socket;
+      if (!username) {
+        return;
+      }
+
+      logout({ connection, username }).catch(err => {
+        console.error('Unable to log user out after they disconnected.');
+        throw err;
+      });
+    });
+  });
 
   app.use(bodyParser.json({ type: 'application/json' }));
   // app.use(app.router);
@@ -61,20 +80,10 @@ export default ({ connection, secret, apiKey, hashFn }: params) => {
   app.get(routes.LOGOUT, async (req, res) => {
     const { username } = req.session;
 
-    let user;
     try {
-      user = await connection.getRepository(User).findOne({ username });
+      await logout({ connection, username });
     } catch (err) {
-      res.status(HttpStatus.IM_A_TEAPOT).send(err);
-    }
-    if (user) {
-      user.loggedIn = 0;
-      console.log(user);
-      try {
-        await connection.getRepository(User).save(user);
-      } catch (err) {
-        res.status(HttpStatus.IM_A_TEAPOT).send(err);
-      }
+      return res.status(HttpStatus.IM_A_TEAPOT).send(err);
     }
 
     try {

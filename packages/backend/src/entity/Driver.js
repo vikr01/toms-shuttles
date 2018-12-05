@@ -1,9 +1,9 @@
 // @flow
 import { Entity, PrimaryColumn, Column, OneToMany } from 'typeorm';
-import { Passenger } from './Passenger';
+import Passenger from './Passenger';
 
 @Entity()
-export class Driver {
+export default class Driver {
   @PrimaryColumn('varchar')
   username = '';
 
@@ -46,5 +46,3 @@ export class Driver {
   @OneToMany(type => Passenger, passenger => passenger.driver)
   passengers: Passenger[];
 }
-
-export default Driver;

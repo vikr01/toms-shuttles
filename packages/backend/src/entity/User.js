@@ -6,11 +6,11 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { CreditCard } from './CreditCard';
-import { Driver } from './Driver';
+import CreditCard from './CreditCard';
+import Driver from './Driver';
 
 @Entity()
-export class User {
+export default class User {
   @PrimaryGeneratedColumn()
   id = undefined;
 
@@ -40,5 +40,3 @@ export class User {
   @JoinColumn()
   driverInfo = Driver;
 }
-
-export default User;

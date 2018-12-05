@@ -35,6 +35,7 @@
       "error",
       "single",
       {"avoidEscape": true, "allowTemplateLiterals": true}
-    ]
+    ],
+    "security/detect-object-injection": 0
   }
 }

@@ -3,7 +3,7 @@ import React from 'react';
 import { compose, withProps, lifecycle } from 'recompose';
 import { withGoogleMap, withScriptjs } from 'react-google-maps';
 import axios from 'axios';
-import backendRoutes from 'toms-shuttles-backend/routes';
+import backendRoutes from 'toms-shuttles-backend/lib/routes';
 import MainComponent from './MainComponent';
 
 const GMapsControl = compose(

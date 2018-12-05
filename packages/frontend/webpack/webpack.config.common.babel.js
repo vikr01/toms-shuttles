@@ -1,10 +1,9 @@
 // @flow
 import 'dotenv/config';
-import { EnvironmentPlugin, ProvidePlugin, DefinePlugin } from 'webpack';
+import { EnvironmentPlugin, ProvidePlugin } from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 import titleCase from 'title-case';
-import backendRoutes from 'toms-shuttles-backend/routes';
 import Globals from './globals';
 import { productName as name } from '../package.json';
 import outputDir from '../lib';
