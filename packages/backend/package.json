@@ -8,7 +8,7 @@
     "Thomas Pedersen <thoepedersen@gmail.com> (https://github.com/toep)"
   ],
   "repository": "https://github.com/vikr01/toms-shuttles/tree/master/packages/backend",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
     "prebuild": "yarn run clean",
@@ -40,11 +40,11 @@
     "typeorm": "^0.2.8"
   },
   "peerDependencies": {
-    "toms-shuttles-frontend": "1.0.0-alpha.1"
+    "toms-shuttles-frontend": "*"
   },
   "devDependencies": {
     "sql.js": "^0.5.0",
     "supertest": "^3.3.0",
-    "toms-shuttles-backend": "1.0.0-alpha.1"
+    "toms-shuttles-backend": "*"
   }
 }
