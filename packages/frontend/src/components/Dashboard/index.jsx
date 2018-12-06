@@ -9,7 +9,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
-import backendRoutes from 'toms-shuttles-backend/routes';
+import backendRoutes from 'toms-shuttles-backend/lib/routes';
 import { Redirect } from 'react-router-dom';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
@@ -38,21 +38,6 @@ const styles = theme => ({
     padding: '0 8px',
     ...theme.mixins.toolbar,
   },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
   menuButton: {
     marginLeft: 12,
     marginRight: 36,
@@ -72,17 +57,6 @@ const styles = theme => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
-  drawerPaperClose: {
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    width: theme.spacing.unit * 7,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing.unit * 9,
-    },
-  },
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
@@ -97,18 +71,6 @@ const styles = theme => ({
     height: 320,
   },
 });
-
-const NofiticationBadge = () => {
-  const count = 0; // make state if we choose to add notifications
-  if (count !== 0) {
-    return (
-      <Badge badgeContent={count} color="secondary">
-        <NotificationsIcon />
-      </Badge>
-    );
-  }
-  return <NotificationsIcon />;
-};
 
 type Props = {
   classes: Object,
@@ -150,7 +112,16 @@ class Dashboard extends Component<Props> {
     this.setState({ open: false });
   };
 
-  handleMenuClick = e => {
+  handleMenuClick = async e => {
+    if (e === 'Logout') {
+      try {
+        await axios.get(backendRoutes.LOGOUT);
+      } catch (ee) {
+        console.error(ee);
+        //
+      }
+      this.setState({ redirectToLogin: true });
+    }
     this.setState({ page: e });
   };
 
@@ -193,40 +164,17 @@ class Dashboard extends Component<Props> {
                 component="h1"
                 variant="h6"
                 color="inherit"
-                noWrap
                 className={classes.title}
               >
-                Dashboard
+                {`Tom's Shuttle Service`}
               </Typography>
-              <IconButton color="inherit">
-                <NofiticationBadge />
-              </IconButton>
-            </Toolbar>
-          </AppBar>
-          <Drawer
-            variant="permanent"
-            classes={{
-              paper: classNames(
-                classes.drawerPaper,
-                !open && classes.drawerPaperClose
-              ),
-            }}
-            open={open}
-          >
-            <div className={classes.toolbarIcon}>
-              <IconButton onClick={this.handleDrawerClose}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </div>
-            <Divider />
-            <List>
               <ListItems
                 onClick={e => {
                   this.handleMenuClick(e);
                 }}
               />
-            </List>
-          </Drawer>
+            </Toolbar>
+          </AppBar>
           <ShowMainContent accountType={accountType} page={page} />
         </div>
       </Fragment>

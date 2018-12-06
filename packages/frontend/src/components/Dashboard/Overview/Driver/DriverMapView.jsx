@@ -5,7 +5,7 @@ import { Typography, Button } from '@material-ui/core';
 
 import { geolocated, geoPropTypes } from 'react-geolocated';
 import axios from 'axios';
-import backendRoutes from 'toms-shuttles-backend/routes';
+import backendRoutes from 'toms-shuttles-backend/lib/routes';
 import DriverGMapsControl from './DriverGMapsControl';
 import DisplayStatus from '../../../DisplayStatus';
 

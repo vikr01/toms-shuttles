@@ -1,7 +1,7 @@
-import { User } from '../entity/User';
-import { Driver } from '../entity/Driver';
-import { Passenger } from '../entity/Passenger';
-import { CreditCard } from '../entity/CreditCard';
+import User from '../entity/User';
+import Driver from '../entity/Driver';
+import Passenger from '../entity/Passenger';
+import CreditCard from '../entity/CreditCard';
 
 const synchronize = ['true', true].includes(process.env.SYNCHRONIZE) || false;
 

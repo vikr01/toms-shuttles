@@ -8,15 +8,14 @@
     "Thomas Pedersen <thoepedersen@gmail.com> (https://github.com/toep)"
   ],
   "repository": "https://github.com/vikr01/toms-shuttles/tree/master/packages/frontend",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0",
   "main": "lib/index.js",
   "scripts": {
     "prebuild": "yarn run clean",
     "build": "webpack --config ./webpack/webpack.config.prod.babel.js --colors",
     "clean": "rimraf ./dist",
     "dev": "webpack-dev-server --config ./webpack/webpack.config.devserver.babel.js",
-    "postinstall": "cross-env NODE_ENV=test node -r @babel/register scripts/postinstall.js",
-    "test": "cross-env NODE_ENV=test jest"
+    "postinstall": "cross-env NODE_ENV=test node -r @babel/register scripts/postinstall.js"
   },
   "devDependencies": {
     "@material-ui/core": "^3.1.1",
@@ -40,11 +39,12 @@
     "react-router-dom": "^4.3.1",
     "recompose": "^0.30.0",
     "rimraf": "^2.6.2",
+    "socket.io-client": "^2.2.0",
     "style-loader": "^0.23.1",
     "supertest": "^3.3.0",
     "title-case": "^2.1.1",
-    "toms-shuttles-backend": "1.0.0-alpha.1",
-    "toms-shuttles-frontend": "1.0.0-alpha.1",
+    "toms-shuttles-backend": "*",
+    "toms-shuttles-frontend": "*",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "url-loader": "^1.1.2",
     "webpack": "^4.24.0",

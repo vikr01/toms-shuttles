@@ -1,23 +1,32 @@
 // @flow
 import React, { Fragment, Component } from 'react';
 import axios from 'axios';
-import { Typography, Paper } from '@material-ui/core';
+import {
+  Typography,
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  withStyles,
+} from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import backendRoutes from 'toms-shuttles-backend/routes';
+import backendRoutes from 'toms-shuttles-backend/lib/routes';
 import routes from '../../../routes';
 
 type ClientAccountProps = {
   creditInfo: string,
 };
 
+const obf = (str: string) => {
+  const len = str.length - 4;
+  return str ? '*'.repeat(len) + str.substr(len) : null;
+};
+
 const ClientAccount = ({ creditInfo }: ClientAccountProps) => (
   <Fragment>
-    <Typography variant="h5" className="accountOverviewItem">
-      {`Card number: ${creditInfo}`}
-    </Typography>
-    <Link to={routes.CREDITCARD_ADD} className="accountOverviewItem">
-      Enter Credit card info
-    </Link>
+    <TableCell>{obf(creditInfo) || 'No credit card info saved'}</TableCell>
   </Fragment>
 );
 
@@ -30,21 +39,14 @@ const DriverAccount = ({ active, seatNumber }: DriverAccountProps) => {
   if (active === 0) {
     return (
       <Fragment>
-        <Typography variant="h5" className="accountOverviewItem">
-          {`Seat count: ${seatNumber}`}
-        </Typography>
-        <Link to={routes.CARSEATS_SET} className="accountOverviewItem">
-          Change seat count
-        </Link>
+        <TableCell>{seatNumber}</TableCell>
       </Fragment>
     );
   }
   if (active === 1) {
     return (
       <Fragment>
-        <Typography variant="h5" className="accountOverviewItem">
-          Become inactive to change your seat count
-        </Typography>
+        <TableCell>Become inactive to change your seat count</TableCell>
       </Fragment>
     );
   }
@@ -109,6 +111,7 @@ export default class AccountInfoView extends Component {
       seatNumber,
       active,
     } = this.state;
+
     if (!loaded) {
       return (
         <Typography variant="h4" gutterBottom component="h2">
@@ -128,15 +131,38 @@ export default class AccountInfoView extends Component {
         <Typography variant="h4" gutterBottom component="h2">
           Account details
         </Typography>
-        <div>
-          <Typography variant="h5" className="accountOverviewItem">
-            {`Name: ${name}`}
-          </Typography>
-          <Typography variant="h5" className="accountOverviewItem">
-            {`Username: ${username}`}
-          </Typography>
-          <AccountType {...{ accountType, active, creditInfo, seatNumber }} />
-        </div>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Username</TableCell>
+              {accountType === 'Client' ? (
+                <TableCell>Credit card</TableCell>
+              ) : (
+                <TableCell>Number of seats</TableCell>
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell>{name}</TableCell>
+              <TableCell>{username}</TableCell>
+              <AccountType
+                {...{ accountType, active, creditInfo, seatNumber }}
+              />
+            </TableRow>
+          </TableBody>
+        </Table>
+        <div style={{ height: '20px' }} />
+        {accountType === 'Client' ? (
+          <Link to={routes.CREDITCARD_ADD} className="accountOverviewItem">
+            Enter Credit card info
+          </Link>
+        ) : (
+          <Link to={routes.CARSEATS_SET} className="accountOverviewItem">
+            Change seat count
+          </Link>
+        )}
       </Fragment>
     );
   }

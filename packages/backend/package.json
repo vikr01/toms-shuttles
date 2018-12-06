@@ -8,7 +8,7 @@
     "Thomas Pedersen <thoepedersen@gmail.com> (https://github.com/toep)"
   ],
   "repository": "https://github.com/vikr01/toms-shuttles/tree/master/packages/backend",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
     "prebuild": "yarn run clean",
@@ -19,8 +19,7 @@
     "postinstall": "node -r @babel/register scripts/postinstall.js",
     "prestart": "yarn run stop",
     "start": "cross-env NODE_ENV=production forever dist/index.js",
-    "stop": "forever stop dist/app.js; exit 0",
-    "test": "cross-env NODE_ENV=test jest"
+    "stop": "forever stop dist/app.js; exit 0"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -36,15 +35,16 @@
     "mysql": "^2.16.0",
     "ncp": "^2.0.0",
     "pretty-error": "^2.1.1",
+    "socket.io": "^2.2.0",
     "strip-json-comments": "^2.0.1",
     "typeorm": "^0.2.8"
   },
   "peerDependencies": {
-    "toms-shuttles-frontend": "1.0.0-alpha.1"
+    "toms-shuttles-frontend": "*"
   },
   "devDependencies": {
     "sql.js": "^0.5.0",
     "supertest": "^3.3.0",
-    "toms-shuttles-backend": "1.0.0-alpha.1"
+    "toms-shuttles-backend": "*"
   }
 }

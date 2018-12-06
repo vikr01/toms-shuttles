@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import { Typography, Button } from '@material-ui/core';
 import { geolocated, geoPropTypes } from 'react-geolocated';
 import axios from 'axios';
-import backendRoutes from 'toms-shuttles-backend/routes';
+import backendRoutes from 'toms-shuttles-backend/lib/routes';
 import RequestForm from './RequestForm';
 import GMapsControl from './GMapsControl';
 import CostEstimater from './CostEstimater';
@@ -27,35 +27,43 @@ function LiveGMapView({
   if (showMap) {
     return (
       <Fragment>
-        <RequestForm
-          sendRequestToAirport={doRequestToAirport}
-          sendRequestFromAirport={doRequestFromAirport}
-          haveUserPosition={coords !== undefined}
-          disableRequestButtons={disableRequestButtons}
-        />
-        {duration && distance ? (
-          <Fragment>
-            <Typography variant="h4">
-              {`Estimated duration: ${duration.text}`}
-            </Typography>
-            <CostEstimater meters={distance.value} />
-            <Button
-              variant="contained"
-              onClick={requestRide}
-              disabled={disableRequestButtons}
-            >
-              Make request
-            </Button>
-            <div stype={{ height: '10px' }} />
+        <div className="row">
+          <div className="col">
+            <RequestForm
+              sendRequestToAirport={doRequestToAirport}
+              sendRequestFromAirport={doRequestFromAirport}
+              haveUserPosition={coords !== undefined}
+              disableRequestButtons={disableRequestButtons}
+            />
+          </div>
+          <div className="col">
+            {duration && distance ? (
+              <Fragment>
+                <Typography variant="h4">
+                  {`Estimated duration: ${duration.text}`}
+                </Typography>
+                <CostEstimater meters={distance.value} />
+                <Button
+                  variant="contained"
+                  onClick={requestRide}
+                  disabled={disableRequestButtons}
+                >
+                  Make request
+                </Button>
+                <div style={{ height: '50px' }} />
 
-            {!assignedDriver ? null : (
-              <Typography variant="h4">
-                {`You have been assigned to driver ${assignedDriver.username}`}
-              </Typography>
-            )}
-            <br />
-          </Fragment>
-        ) : null}
+                {!assignedDriver ? null : (
+                  <Typography variant="h4">
+                    {`You have been assigned to driver ${
+                      assignedDriver.username
+                    }`}
+                  </Typography>
+                )}
+                <br />
+              </Fragment>
+            ) : null}
+          </div>
+        </div>
         <div style={{ height: '80vh', width: '100%' }}>
           <GMapsControl
             data={data}

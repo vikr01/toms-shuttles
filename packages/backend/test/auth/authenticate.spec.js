@@ -3,14 +3,16 @@ import { createConnection } from 'typeorm';
 import request from 'supertest';
 import HttpStatus from 'http-status-codes';
 import server from 'toms-shuttles-backend/src/server';
-import routes from 'toms-shuttles-backend/routes';
+import routes from 'toms-shuttles-backend/lib/routes';
 import { apiKey, hashFn } from 'toms-shuttles-backend/src/envVars/parse';
+import socketio from 'socket.io';
 import connectionOptions from '../helpers/dbConfig';
 
 const secret = 'temp-session-secret';
 
 let connection;
 let app;
+const io = socketio();
 
 beforeAll(async () => {
   connection = await createConnection(connectionOptions);
@@ -19,6 +21,7 @@ beforeAll(async () => {
     connection,
     hashFn,
     secret,
+    io,
   });
 });
 

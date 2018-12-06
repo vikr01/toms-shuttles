@@ -3,7 +3,7 @@ import React, { Component, Fragment } from 'react';
 import { Button, CssBaseline, Paper, Typography } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
-import backendRoutes from 'toms-shuttles-backend/routes';
+import backendRoutes from 'toms-shuttles-backend/lib/routes';
 import ValueForm from '../ValueForm';
 import DisplayStatus from '../../../DisplayStatus';
 import routes from '../../../../routes';

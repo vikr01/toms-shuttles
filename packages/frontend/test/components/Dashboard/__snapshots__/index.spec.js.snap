@@ -2,7 +2,7 @@
 
 exports[`Dashboard snapshot matches 1`] = `
 <p
-  className="MuiTypography-root-15 MuiTypography-body1-24"
+  className="MuiTypography-root-12 MuiTypography-body1-21"
 >
   Logging in...
 </p>

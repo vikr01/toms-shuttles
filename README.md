@@ -53,7 +53,7 @@
 
 <div align="center">
 
-[![version](https://img.shields.io/badge/version-1.0.0--alpha.1-blue.svg)](https://github.com/vikr01/toms-shuttles/releases)
+[![Latest Release](https://img.shields.io/github/tag-pre/vikr01/toms-shuttles.svg?label=version&colorB=blue)](https://github.com/vikr01/toms-shuttles/releases/latest)
 [![Deployed with Heroku](https://img.shields.io/badge/deployed%20with-heroku-purple.svg?logo=heroku)](https://sjshuttle.herokuapp.com)
 [![Deploy previews by Netlify](https://img.shields.io/badge/deploy%20previews%20by-netlify-teal.svg?logo=netlify)](https://toms-shuttles.netlify.com)
 
